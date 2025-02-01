@@ -7,16 +7,21 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Rotary_Controller;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  private Joystick joystick;
   private final RobotContainer m_robotContainer;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
   }
-
+  @Override
+  public void robotInit() {
+    joystick = new Joystick(1); // Create a joystick on port 1
+  }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
@@ -54,7 +59,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    System.out.println(Rotary_Controller.RotaryJoystick(joystick));
+  }
 
   @Override
   public void teleopExit() {}
