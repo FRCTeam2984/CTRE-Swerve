@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    System.out.println(Rotary_Controller.RotaryJoystick(joystick));
+    //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
   }
 
   @Override
