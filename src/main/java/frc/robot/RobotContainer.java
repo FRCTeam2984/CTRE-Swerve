@@ -7,9 +7,13 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Rotary_Controller;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -35,9 +40,10 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final Joystick joystick2 = new Joystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
+    private double pigeonYaw;
     public RobotContainer() {
         configureBindings();
     }
@@ -47,10 +53,13 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
+            //pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() - Desired
+            //double Desired = Rotary_Controller.RotaryJoystick(joystick2) - 180;
+            //math.max(math.min(20, (Rotary_Controller.RotaryJoystick(joystick2) - 180)), -20)) / 20
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(joystick.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
                     .withVelocityY(joystick.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(-((((((drivetrain.getPigeon2().getYaw().getValueAsDouble() - (Rotary_Controller.RotaryJoystick(joystick2) - 180))+ (360*1000) + 180) % 360) - 180) - ((Math.max(Math.min(40, (Rotary_Controller.RotaryJoystick(joystick2) - 180)), -40)) / 40) % 180) / 2) * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );
 
