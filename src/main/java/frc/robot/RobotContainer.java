@@ -23,6 +23,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Rotary_Controller;
 
+import frc.robot.Constants;
+
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -39,10 +41,20 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
+    if (!wpilib.Joystick(constants.ID_ROTARY_CONTROLLER).getRawButton(12) || wpilib.Joystick(constants.ID_OPERATOR_CONTROLLER).getRawButton(12)) {
+        // switch operator and rotary IDs
+        int controller_temp = Constants.ID_OPERATOR_CONTROLLER;
+        Constants.ID_OPERATOR_CONTROLLER = Constants.ID_ROTARY_CONTROLLER;
+        Constants.ID_ROTARY_CONTROLLER = controller_temp;
+    }
+
     private final CommandXboxController joystick = new CommandXboxController(0);
+    
     private final Joystick joystick2 = new Joystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+
     
     public RobotContainer() {
         configureBindings();
@@ -57,7 +69,7 @@ public class RobotContainer {
         if((angleDiff <= 1) && (angleDiff >= -1)){
             return 0;
         }
-        System.out.println(powerCurved);
+        //System.out.println(powerCurved);
         return powerCurved * 0.9;
     }
     private void configureBindings() {
