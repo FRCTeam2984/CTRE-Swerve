@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/*
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
@@ -32,7 +32,7 @@ public class OLDRobotContainer {
     public double SpeedModifier = .1;
     public double TurnModifier = .2;
 
-    /* Setting up bindings for necessary control of the swerve drive platform */
+    // Setting up bindings for necessary control of the swerve drive platform 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -105,4 +105,4 @@ public class OLDRobotContainer {
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
     }
-}
+}*/

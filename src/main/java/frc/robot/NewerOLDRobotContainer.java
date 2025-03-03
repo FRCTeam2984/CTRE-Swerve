@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import edu.wpi.first.wpilibj.GenericHID;
 //import frc.robot.commands.Autos;
 //import frc.robot.commands.ExampleCommand;
 //import frc.robot.subsystems.ExampleSubsystem;
@@ -22,13 +23,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class NewerOLDRobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public XboxController m_driverController1, m_driverController2, m_driverController3, m_driverController4;
+  public GenericHID m_driverController1, m_driverController2, m_driverController3, m_driverController4;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public NewerOLDRobotContainer() {
     // Configure the trigger bindings
     configureBindings();
     // The driver's controller
+    System.out.println("Here");
     setDriveControllers();
   }
 
@@ -104,7 +106,7 @@ public class NewerOLDRobotContainer {
 
   // Use this method to set the Controllers to their proper port values
   private void setDriveControllers() {
-    XboxController m_tempController = new XboxController(OperatorConstants.kDriverControllerPort1);
+    GenericHID m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort1);
     // // Trigger controllerIDbutton1 = m_tempController.button(11);
     // // Trigger controllerIDbutton2 = m_tempController.button(12);
 
@@ -118,23 +120,31 @@ public class NewerOLDRobotContainer {
     for(int i=1; i<=4; i++) {
       switch(i) {
         case 1:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort1);
+          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort1);
         case 2:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort2);
+          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort2);
         case 3:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort3);
+          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort3);
         case 4:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort4);
+          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort4);
       }
 
-      if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false))
+      if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)){
         m_driverController1 = m_tempController;
-      if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true))
+        System.out.println(m_tempController);
+      }
+      if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)){
         m_driverController2 = m_tempController;
-      if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == true))
+        System.out.println(m_tempController);
+      }
+      if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == true)){
         m_driverController3 = m_tempController;
-      if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false))
+        System.out.println(m_tempController);
+      }
+      if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)){
         m_driverController4 = m_tempController;
+        System.out.println(m_tempController);
+      }
 
         /* 
       // button 11 and 12 OFF
