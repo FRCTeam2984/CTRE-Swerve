@@ -17,6 +17,12 @@ public class Constants {
         public static final int kDriverControllerPort4 = 3;
     }
 
+    public static final int intakeBeltID = 1;
+    public static final int intakeTopMotorID = 2;
+    public static final int intakeBottomMotorID = 3;
+    public static final int intakePivotMotorID = 4;
+    public static final int intakeTransportPivotID = 5;
+    public static final int elevatorMotorID = 6;
     static int ID_ROTARY_CONTROLLER = 1;
 
     static int ID_OPERATOR_CONTROLLER = 0;

@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 //import frc.robot.commands.ExampleCommand;
 //import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,6 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class NewerOLDRobotContainer {
+  public final Elevator m_elevator = new Elevator();
+  public final Climb m_climb = new Climb();
+  public final Intake m_intake = new Intake();
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public GenericHID m_driverController1, m_driverController2, m_driverController3, m_driverController4;

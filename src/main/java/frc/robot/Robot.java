@@ -12,15 +12,12 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private Joystick joystick;
-  private final NewerOLDRobotContainer m_robotContainer;
+  public static final NewerOLDRobotContainer m_robotContainer = new NewerOLDRobotContainer();
 
   public Robot() {
-    m_robotContainer = new NewerOLDRobotContainer();
   }
   @Override
   public void robotInit() {
-    joystick = new Joystick(1); // Create a joystick on port 1
   }
   @Override
   public void robotPeriodic() {
