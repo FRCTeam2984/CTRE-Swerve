@@ -1,16 +1,16 @@
 package frc.robot.subsystems;
 
-import frc.robot.Robot;
-import frc.robot.Constants;
-import pabeles.concurrency.ConcurrencyOps.Reset;
-import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.units.measure.Current;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import wpilibj.DigitalInput;
 //import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
+import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Intake {
     public Double inPosition;
@@ -25,6 +25,8 @@ public class Intake {
     private String currentState = "none"; 
     private Integer timer;
     public Boolean retractNeeded = false, movingCoral = false;
+
+    public DigitalInput transportArmSensor = new DigitalInput(0);
     
     private SparkLimitSwitch insideTransportSwitch = intakePivot.getForwardLimitSwitch();
     private SparkLimitSwitch outsideTransportSwitch = intakePivot.getReverseLimitSwitch();
@@ -164,7 +166,7 @@ public class Intake {
 	            case ("run belt"): // run belt
                     ++timer;
 	    		    beltDrive.set(ControlMode.PercentOutput, 0.5);
-	    		    if (timer >= 50*3/* || coral detected in arm*/) // 3 seconds
+	    		    if (timer >= 50*3 || transportArmSensor.get()) // 3 seconds
 	    			    currentState = "use transport arm";
 			        break;
 		        case ("use transport arm"): // use transport arm
