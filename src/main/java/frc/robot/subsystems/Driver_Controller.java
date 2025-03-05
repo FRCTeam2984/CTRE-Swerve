@@ -2,6 +2,9 @@
  * Subsystem to run at RobotInit to read and auto set the controllers
  * so they are configured correctly before driving the robot and 
  * without user intervention.
+ * 
+ * Also used to return button values to other subsystems instead of 
+ * previous RobotContainer method.
  */
 package frc.robot.subsystems;
 
@@ -31,9 +34,9 @@ public class Driver_Controller {
     for(int i=1; i<=4; i++) {
         switch (i) {
             case 1:
-                m_tempController = new XboxController(0);
+                m_tempController = new XboxController(3);
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)) {
-                    m_Controller0 = new CommandXboxController(0);
+                    m_Controller0 = new CommandXboxController(3);
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
@@ -73,9 +76,9 @@ public class Driver_Controller {
                     m_Controller3 = m_tempController;
                 }
             case 4:
-                m_tempController = new XboxController(3);
+                m_tempController = new XboxController(0);
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)) {
-                    m_Controller0 = new CommandXboxController(3);
+                    m_Controller0 = new CommandXboxController(0);
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
@@ -90,4 +93,12 @@ public class Driver_Controller {
         }
     }
     
-}}
+}
+public static Boolean buttonExtendClimb(){
+    return m_Controller3.getRawButton(1);}
+public static Boolean buttonRetractClimb(){
+    return m_Controller3.getRawButton(2);}
+public static Boolean buttonRemoveAlgae(){
+    return m_Controller3.getRawButton(3);}
+
+}

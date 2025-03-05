@@ -43,21 +43,31 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-
-    private static CommandXboxController joystick;// = new CommandXboxController(0);
     
-    private final XboxController joystick2;// = new Joystick(1);
+    private static CommandXboxController joystick = Driver_Controller.m_Controller0;// = new CommandXboxController(0);
+    
+    private final XboxController joystick2 = Driver_Controller.m_Controller1;// = new Joystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final Driver_Controller joysticks;
+    
     
     
     public RobotContainer() {
+        
+      try {
+        Thread.sleep(1500);
+    } catch(InterruptedException e) {
+        System.out.println("got interrupted!");
+    }
+        Driver_Controller.define_Controller();
+        //joystick = Driver_Controller.m_Controller0;
+        //joystick2 = Driver_Controller.m_Controller1;
+        try {
+          Thread.sleep(1500);
+      } catch(InterruptedException e) {
+          System.out.println("got interrupted!");
+      }
         configureBindings();
-
-        joysticks.define_Controller();
-        joystick = joysticks.m_Controller0;
-        joystick2 = joysticks.m_Controller1;
     }
     private double rotaryCalc(){
         double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();                 // Grab the yaw value from the swerve drive IMU as a double
