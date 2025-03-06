@@ -157,7 +157,7 @@ public class Intake {
             beltDrive.set(ControlMode.PercentOutput, 0.5);
 	    Double minPower = -0.7, maxPower = 0.7, error = transportEncoder.getPosition()-0.3;
         Double transportGravity = Math.sin(Math.toRadians(error)) / Math.pow(transportPivot.getOutputCurrent(), 2) * 0.1;
-	    if (Robot.m_robotContainer.m_elevator.elevatorTo(Robot.m_robotContainer.m_elevator.bottomPosition) && transportEncoder.getPosition() <= 0.05){
+	    if (Elevator.elevatorTo(Elevator.bottomPosition) && transportEncoder.getPosition() <= 0.05){
             switch (currentState){
 		        case ("start"): // start
 		    	    timer = 0;

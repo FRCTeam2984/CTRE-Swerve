@@ -1,149 +1,107 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-/*
+
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
-*
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- 
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Rotary_Controller;
+import frc.robot.subsystems.Driver_Controller;
+
+import frc.robot.Constants;
+
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public XboxController m_driverController1, m_driverController2, m_driverController3, m_driverController4;
-  public double buttonReefPosition(){
-    if (m_driverController4.getRawButton(10))
-      return (m_driverController4.getRawAxis(0)+2)%3 + m_driverController4.getRawAxis(0)*3+6;
-    return (m_driverController4.getRawAxis(0)+2)%3 + m_driverController4.getRawAxis(0)*3;
-  }
-  // public Boolean buttonExtendClimb(){
-  //   return m_driverController3.getRawButton(1);}
-  // public Boolean buttonRetractClimb(){
-  //   return m_driverController3.getRawButton(2);}
-  // public Boolean buttonRemoveAlgae(){
-  //   return m_driverController3.getRawButton(3);}
-  // public Boolean buttonRetractClimb(){
-  //   return m_driverController3.getRawButton(2);}
+  
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-  // The driver's controller
-  setDriveControllers();
+    public double SpeedModifier = .1;
+    public double TurnModifier = .2;
 
-  * The container for the robot. Contains subsystems, OI devices, and commands. 
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-  }
+    // Setting up bindings for necessary control of the swerve drive platform 
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  *
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+    
+    private static CommandXboxController joystick = new CommandXboxController(Driver_Controller.SwerveCommandXboxControllerPort);// = new CommandXboxController(0);
+    
+    private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
 
-  // Use this method to set the Controllers to their proper port values
-  private void setDriveControllers() {
-    private CommandGenericHID m_tempController = new CommandGenericHID(OperatorConstants.kDriverControllerPort1);
-    // // Trigger controllerIDbutton1 = m_tempController.button(11);
-    // // Trigger controllerIDbutton2 = m_tempController.button(12);
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    
+    
+    
+    public RobotContainer() {
+        //joystick = Driver_Controller.m_Controller0;
+        //joystick2 = Driver_Controller.m_Controller1;
+        configureBindings();
+    }
+    private double rotaryCalc(){
+        double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();                 // Grab the yaw value from the swerve drive IMU as a double
+        double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
+        double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
+        //System.out.println(joystickClamped);
+        double powerCurved = -((((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180) - ((joystickClamped) / 45) % 180) / 2);
+        double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
+        if((angleDiff <= 1) && (angleDiff >= -1)){
+            return 0;
+        }
+        //System.out.println(powerCurved);
+        return powerCurved * 0.9;
+    }
+    private void configureBindings() {
+        // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(Driver_Controller.m_Controller0.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
+                    .withVelocityY(Driver_Controller.m_Controller0.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
+                    .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
+            )
+        );
 
-    // m_tempController.button(11)
-    //     .and(m_tempController.button(12))
-    //     .onTrue(
-    //       private final CommandGenericHID m_driverController1 =
-    //           new CommandGenericHID(OperatorConstants.kDriverControllerPort1);
-    //     )
+        Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-Driver_Controller.m_Controller0.getLeftY(), -Driver_Controller.m_Controller0.getLeftX()))
+        ));
 
-    for(int i=1; i<=4; i++) {
-      switch(i) {
-        case 1:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort1);
-        case 2:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort2);
-        case 3:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort3);
-        case 4:
-          m_tempController = new XboxController(OperatorConstants.kDriverControllerPort4);
-      }
+        // Run SysId routines when holding back/start and X/Y.
+        // Note that each routine should be run exactly once in a single log.
+        Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-      // if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false))
-      //   m_driverController1 = m_tempController;
-      // if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true))
-      //   m_driverController2 = m_tempController;
-      // if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == true))
-      //   m_driverController3 = m_tempController;
-      // if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false))
-      //   m_driverController4 = m_tempController;
+        // reset the field-centric heading on left bumper press
+        Driver_Controller.m_Controller0.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        
-      // button 11 and 12 OFF
-      m_tempController.button(11)
-        .and(m_tempController.button(12))
-        .onFalse(
-          public final CommandGenericHID m_driverController1 = m_tempController;
-        )
-      // button 12 ON
-      m_tempController.button(12)
-        .onTrue(
-          public final CommandGenericHID m_driverController2 = m_tempController;
-        )
-      // button 11 and 12 ON
-      m_tempController.button(11)
-        .and(m_tempController.button(12))
-        .onTrue(
-          public final CommandGenericHID m_driverController3 = m_tempController;
-        )
-      // button 11 ON
-      m_tempController.button(11)
-        .onTrue(
-          public final CommandGenericHID m_driverController4 = m_tempController;
-        )
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
-    // getting values for different buttons
-    
-    // private final CommandGenericHID m_driverController1 =
-    //     new CommandGenericHID(OperatorConstants.kDriverControllerPort1);
-    // private final CommandGenericHID m_driverController2 =
-    //     new CommandGenericHID(OperatorConstants.kDriverControllerPort2);
-    // private final CommandGenericHID m_driverController3 =
-    //     new CommandGenericHID(OperatorConstants.kDriverControllerPort3);
-    // private final CommandGenericHID m_driverController4 =
-    //     new CommandGenericHID(OperatorConstants.kDriverControllerPort4);
-  }
-
-  
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
+    public Command getAutonomousCommand() {
+        return Commands.print("No autonomous command configured");
+    }
 }
- */

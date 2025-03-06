@@ -4,22 +4,22 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants;
 
 public class Elevator{
-  public TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-  Double bottomPosition = 0.0;
-
-	// function for keeping a variable between a lower and upper limit
-  private static Double clamp(Double minimum, Double maximum, Double input){
-    if (input < minimum)
-      return minimum;
-    if (input > maximum)
-      return maximum;
-    return input;
-  }
-
-  // function for moving elevator (you can change function name, i don’t care)
-  // change the math for the units of distance, power at different positions, gravity compensation
-	public Boolean elevatorTo(Double destination){
-    String rawInput = elevatorMotor.getRotorPosition().toString();
+  public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
+    static Double bottomPosition = 0.0;
+  
+    // function for keeping a variable between a lower and upper limit
+    private static Double clamp(Double minimum, Double maximum, Double input){
+      if (input < minimum)
+        return minimum;
+      if (input > maximum)
+        return maximum;
+      return input;
+    }
+  
+    // function for moving elevator (you can change function name, i don’t care)
+    // change the math for the units of distance, power at different positions, gravity compensation
+    public static Boolean elevatorTo(Double destination){
+      String rawInput = elevatorMotor.getRotorPosition().toString();
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder counts

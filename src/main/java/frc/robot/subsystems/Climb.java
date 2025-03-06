@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.Servo;
-
+import frc.robot.subsystems.Driver_Controller;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -19,7 +19,7 @@ public class Climb {
 
 	public void letsClimb(){// add something
 		Double power = 0.0;
-		if(Robot.m_robotContainer.buttonExtendClimb() && System.currentTimeMillis() > 1000){ // right way to calc time?
+		if(Driver_Controller.buttonExtendClimb() && System.currentTimeMillis() > 1000){ // right way to calc time?
 			//Thread.sleep(500);  // change with testing
 			if(Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10)) < 0)
 				power = 0.01; // climb motor unwind, idk what direction is wind and unwind (invert?)
@@ -27,12 +27,12 @@ public class Climb {
 				power = 0.0; // not sure what will happen, put in as a guess
 			// find out led code -> LED light flashes or solid a specific color
 		}
-		if(Robot.m_robotContainer.buttonExtendClimb()){
+		if(Driver_Controller.buttonExtendClimb()){
 			power = -0.01; // climb motor wind to climb, idk what direction is wind and unwind (invert?)
 			if(climb.getReverseLimit().getValue().toString() == "ClosedToGround") // limit switches, use kyle’s limits
 				power = 0.0;//climbMotor.set(ControlMode.PercentOutput, 0);  // not sure what will happen, put in as a guess
 		}
-		if(Robot.m_robotContainer.buttonExtendClimb()) {
+		if(Driver_Controller.buttonExtendClimb()) {
 			servoPosition = openPosition;
 		}
 		else {
