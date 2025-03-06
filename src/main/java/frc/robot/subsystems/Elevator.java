@@ -1,25 +1,33 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import frc.robot.subsystems.Driver_Controller;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants;
 
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-    static Double bottomPosition = 0.0;
+  public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  static Double bottomPosition = 0.0, armTimer = 0.0;
+  Boolean removeButtonLastPressed = false;
+  String state = "idle";
+  int recentLevel = 2;
+  Double[] removeAlgaeH = {20.0, 30.0};
   
-    // function for keeping a variable between a lower and upper limit
-    private static Double clamp(Double minimum, Double maximum, Double input){
-      if (input < minimum)
-        return minimum;
-      if (input > maximum)
-        return maximum;
-      return input;
-    }
+  // function for keeping a variable between a lower and upper limit
+  private static Double clamp(Double minimum, Double maximum, Double input){
+    if (input < minimum)
+      return minimum;
+    if (input > maximum)
+      return maximum;
+    return input;
+  }
   
-    // function for moving elevator (you can change function name, i don’t care)
-    // change the math for the units of distance, power at different positions, gravity compensation
-    public static Boolean elevatorTo(Double destination){
-      String rawInput = elevatorMotor.getRotorPosition().toString();
+  // function for moving elevator (you can change function name, i don’t care)
+  // change the math for the units of distance, power at different positions, gravity compensation
+  public static Boolean elevatorTo(Double destination){
+    String rawInput = elevatorMotor.getRotorPosition().toString();
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder counts
@@ -55,5 +63,64 @@ public class Elevator{
     // set motor power and return whether it is close enough
     elevatorMotor.set(power);
     return closeEnough;
+  }
+
+  // extend or retract the small arm on the elevator
+  public Boolean moveElevatorArm(String extendOrRetract){
+    Double power;
+    if (extendOrRetract == "extend") power = 0.3;
+    else power = -0.3;
+    Boolean done = false;
+    armTimer += 0.02; // adding 20 millisecons per call
+    if (armTimer >= 0.3/power){
+      done = true;
+      power = 0.0;
+      armTimer = 0.0;
+    }
+    armMotor.set(power);
+    return done;
+  }
+
+  // function to be constantly called and remove algae
+  public void removeAlgae(){
+    if (Driver_Controller.buttonL2()) recentLevel = 2;
+    if (Driver_Controller.buttonL3()) recentLevel = 3;
+    if (Driver_Controller.buttonRemoveAlgae()){
+      switch(state){
+        case "idle":
+          if (removeButtonLastPressed == false){
+            state = "preparing";
+          }
+          break;
+        case "preparing":
+          if (elevatorTo(15.0) && moveElevatorArm("extend")){ // making the elevator prepared to move up
+            state = "positioning";
+          }
+          break;
+        case "positioning":
+          if (AutoDrive.autoDrive()){ // automatically driving to the correct position
+            state = "removing";
+          }
+          break;
+        case "removing":
+          if (elevatorTo(removeAlgaeH[recentLevel-2])){ // raising elevator to knock off algae
+            state = "backing up";
+          }
+          break;
+        case "backing up":
+          drivetrain.back up; // back up idk how
+          if (finished){
+            state = "finished";
+          }
+          break;
+        case "finished":
+          if (elevatorTo(bottomPosition) && moveElevatorArm("retract")){
+            state = "idle";
+          }
+          break;
+
+      }
+    }else state = "idle";
+    removeButtonLastPressed = Driver_Controller.buttonRemoveAlgae();
   }
 }
