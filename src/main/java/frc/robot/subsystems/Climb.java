@@ -8,8 +8,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Climb {
 	int openPosition = 0, closedPosition = 90, servoPosition = closedPosition;
-	Servo servo = new Servo(0);
-	TalonFX climb = new TalonFX(1);
+	static Servo servo = new Servo(0);
+	static TalonFX climb = new TalonFX(1);
 
 	//public static void Climb(TalonFX(device ID), DigitalInput(number), Encoder(number))		// not right
 	//DigitalInput limitUnwindedForward = new DigitalInput(number);
