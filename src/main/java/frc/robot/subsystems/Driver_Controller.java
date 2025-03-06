@@ -25,11 +25,13 @@ public class Driver_Controller {
      * m_Controller2           = Rotary Switch and Buttons
      * m_Controller3           = Right Side Buttons
      */
-    public static CommandXboxController m_Controller0;
+    public static CommandXboxController m_Controller0 = new CommandXboxController(0); //Set Temp value to complete initialization of swervedrive
     public static XboxController m_Controller1;
     public static XboxController m_Controller2;
     public static XboxController m_Controller3;
     private static XboxController m_tempController;
+    public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
+    public static int SwerveRotaryEncoderPort;         // Value of rotary encoder for controlling swerve drive
     public static void define_Controller(){
     for(int i=1; i<=4; i++) {
         switch (i) {
@@ -37,9 +39,13 @@ public class Driver_Controller {
                 m_tempController = new XboxController(3);
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller0 = new CommandXboxController(3);
+                    
+                    SwerveCommandXboxControllerPort = 3;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
+                    SwerveRotaryEncoderPort = 3;
+                    System.out.println("Set controller port 3");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -51,9 +57,13 @@ public class Driver_Controller {
                 m_tempController = new XboxController(1);
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller0 = new CommandXboxController(1);
+                    
+                    SwerveCommandXboxControllerPort = 1;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
+                    SwerveRotaryEncoderPort = 1;
+                    System.out.println("Set controller port 1");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -65,9 +75,13 @@ public class Driver_Controller {
                 m_tempController = new XboxController(2);
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller0 = new CommandXboxController(2);
+                    
+                    SwerveCommandXboxControllerPort = 2;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
+                    SwerveRotaryEncoderPort = 2;
+                    System.out.println("Set controller port 2");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -79,9 +93,13 @@ public class Driver_Controller {
                 m_tempController = new XboxController(0);
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller0 = new CommandXboxController(0);
+                    
+                    SwerveCommandXboxControllerPort = 0;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
+                    SwerveRotaryEncoderPort = 0;
+                    System.out.println("Set controller port 0");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -92,7 +110,7 @@ public class Driver_Controller {
 
         }
     }
-    
+    System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
 public static Boolean buttonExtendClimb(){
     return m_Controller3.getRawButton(1);}

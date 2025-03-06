@@ -28,6 +28,7 @@ import frc.robot.subsystems.Driver_Controller;
 import frc.robot.Constants;
 
 public class RobotContainer {
+  
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -44,34 +45,22 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     
-    private static CommandXboxController joystick = Driver_Controller.m_Controller0;// = new CommandXboxController(0);
+    private static CommandXboxController joystick = new CommandXboxController(Driver_Controller.SwerveCommandXboxControllerPort);// = new CommandXboxController(0);
     
-    private final XboxController joystick2 = Driver_Controller.m_Controller1;// = new Joystick(1);
+    private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     
     
     public RobotContainer() {
-        
-      try {
-        Thread.sleep(1500);
-    } catch(InterruptedException e) {
-        System.out.println("got interrupted!");
-    }
-        Driver_Controller.define_Controller();
         //joystick = Driver_Controller.m_Controller0;
         //joystick2 = Driver_Controller.m_Controller1;
-        try {
-          Thread.sleep(1500);
-      } catch(InterruptedException e) {
-          System.out.println("got interrupted!");
-      }
         configureBindings();
     }
     private double rotaryCalc(){
         double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();                 // Grab the yaw value from the swerve drive IMU as a double
-        double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(joystick2);               // Get input from the rotary controller (ID from joystick2)
+        double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
         double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
         //System.out.println(joystickClamped);
         double powerCurved = -((((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180) - ((joystickClamped) / 45) % 180) / 2);
@@ -88,26 +77,26 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(joystick.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
-                    .withVelocityY(joystick.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
+                drive.withVelocityX(Driver_Controller.m_Controller0.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
+                    .withVelocityY(Driver_Controller.m_Controller0.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
                     .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-Driver_Controller.m_Controller0.getLeftY(), -Driver_Controller.m_Controller0.getLeftX()))
         ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-        joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        Driver_Controller.m_Controller0.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

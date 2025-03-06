@@ -18,7 +18,8 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {
-    Driver_Controller.define_Controller();
+    
+
   }
   @Override
   public void robotPeriodic() {
@@ -36,7 +37,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
+    
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -50,6 +51,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Driver_Controller.define_Controller();
     // if (m_autonomousCommand != null) {
     //   m_autonomousCommand.cancel();
     // }
