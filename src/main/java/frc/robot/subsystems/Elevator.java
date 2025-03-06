@@ -75,6 +75,7 @@ public class Elevator{
     if (armTimer >= 0.3/power){
       done = true;
       power = 0.0;
+      armTimer = 0.0;
     }
     armMotor.set(power);
     return done;
@@ -103,6 +104,12 @@ public class Elevator{
           break;
         case "removing":
           if (elevatorTo(removeAlgaeH[recentLevel-2])){ // raising elevator to knock off algae
+            state = "backing up";
+          }
+          break;
+        case "backing up":
+          drivetrain.back up; // back up idk how
+          if (finished){
             state = "finished";
           }
           break;
@@ -113,7 +120,7 @@ public class Elevator{
           break;
 
       }
-    }
+    }else state = "idle";
     removeButtonLastPressed = Driver_Controller.buttonRemoveAlgae();
   }
 }
