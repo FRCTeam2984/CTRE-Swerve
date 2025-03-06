@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Servo;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-public class Climb {
+public class Climb {/*
 	int openPosition = 0, closedPosition = 90, servoPosition = closedPosition;
 	Servo servo = new Servo(0);
 	TalonFX climb = new TalonFX(1);
@@ -41,5 +41,5 @@ public class Climb {
 		servo.setAngle(servoPosition);
 		climb.set(power);
 		
-	}
+	} */
 }

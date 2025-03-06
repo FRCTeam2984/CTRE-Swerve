@@ -29,7 +29,7 @@ public class NewerOLDRobotContainer {
   public final Intake m_intake = new Intake();
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public GenericHID m_driverController1, m_driverController2, m_driverController3, m_driverController4;
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public NewerOLDRobotContainer() {
@@ -37,58 +37,58 @@ public class NewerOLDRobotContainer {
     configureBindings();
     // The driver's controller
     System.out.println("Here");
-    setDriveControllers();
+    //setDriveControllers();
   }
 
   // functions for getting controller values
-  public Boolean speedSwitch(){
-    return m_driverController2.getRawButton(5);}
+  // public Boolean speedSwitch(){
+  //   return m_driverController2.getRawButton(5);}
 
-  public Boolean buttonExtendClimb(){
-    return m_driverController3.getRawButton(1);}
-  public Boolean buttonRetractClimb(){
-    return m_driverController3.getRawButton(2);}
-  public Boolean buttonRemoveAlgae(){
-    return m_driverController3.getRawButton(3);}
-  public Boolean buttonTransportPivot(){
-    return m_driverController3.getRawButton(4);}
-  public Boolean buttonScoreAlgae(){
-    return m_driverController3.getRawButton(5);}
-  public Boolean buttonCoralStationIntake(){
-    return m_driverController3.getRawButton(6);}
-  public Boolean switchAlgaeIntake(){
-    return m_driverController3.getRawButton(7);}
-  public Boolean switchExtraOnOff(){
-    return m_driverController3.getRawButton(8);}
+  // public Boolean buttonExtendClimb(){
+  //   return m_driverController3.getRawButton(1);}
+  // public Boolean buttonRetractClimb(){
+  //   return m_driverController3.getRawButton(2);}
+  // public Boolean buttonRemoveAlgae(){
+  //   return m_driverController3.getRawButton(3);}
+  // public Boolean buttonTransportPivot(){
+  //   return m_driverController3.getRawButton(4);}
+  // public Boolean buttonScoreAlgae(){
+  //   return m_driverController3.getRawButton(5);}
+  // public Boolean buttonCoralStationIntake(){
+  //   return m_driverController3.getRawButton(6);}
+  // public Boolean switchAlgaeIntake(){
+  //   return m_driverController3.getRawButton(7);}
+  // public Boolean switchExtraOnOff(){
+  //   return m_driverController3.getRawButton(8);}
   
-  public Boolean buttonL4(){
-    return m_driverController4.getRawButton(1);}
-  public Boolean buttonL3(){
-    return m_driverController4.getRawButton(2);}
-  public Boolean buttonL2(){
-    return m_driverController4.getRawButton(3);}
-  public Boolean buttonL1(){
-    return m_driverController4.getRawButton(4);}
-  public Boolean buttonResetElevator(){
-    return m_driverController4.getRawButton(5);}
-  public Boolean buttonCoralIntakeGround(){
-    return m_driverController4.getRawButton(6);}
-  public Boolean buttonReverseCoral(){
-    return m_driverController4.getRawButton(7);}
+  // public Boolean buttonL4(){
+  //   return m_driverController4.getRawButton(1);}
+  // public Boolean buttonL3(){
+  //   return m_driverController4.getRawButton(2);}
+  // public Boolean buttonL2(){
+  //   return m_driverController4.getRawButton(3);}
+  // public Boolean buttonL1(){
+  //   return m_driverController4.getRawButton(4);}
+  // public Boolean buttonResetElevator(){
+  //   return m_driverController4.getRawButton(5);}
+  // public Boolean buttonCoralIntakeGround(){
+  //   return m_driverController4.getRawButton(6);}
+  // public Boolean buttonReverseCoral(){
+  //   return m_driverController4.getRawButton(7);}
 
-  public double buttonReefPosition(){
-    if (m_driverController4.getRawButton(10))
-      return (m_driverController4.getRawAxis(0)+2)%3 + m_driverController4.getRawAxis(0)*3+6;
-    return (m_driverController4.getRawAxis(0)+2)%3 + m_driverController4.getRawAxis(0)*3;
-  }
+  // public double buttonReefPosition(){
+  //   if (m_driverController4.getRawButton(10))
+  //     return (m_driverController4.getRawAxis(0)+2)%3 + m_driverController4.getRawAxis(0)*3+6;
+  //   return (m_driverController4.getRawAxis(0)+2)%3 + m_driverController4.getRawAxis(0)*3;
+  // }
 
-  public int getLevel(){
-    if(buttonL1()) return 1;
-    if(buttonL1()) return 2;
-    if(buttonL1()) return 3;
-    if(buttonL1()) return 4;
-    return 0;
-  }
+  // public int getLevel(){
+  //   if(buttonL1()) return 1;
+  //   if(buttonL1()) return 2;
+  //   if(buttonL1()) return 3;
+  //   if(buttonL1()) return 4;
+  //   return 0;
+  // }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -111,46 +111,8 @@ public class NewerOLDRobotContainer {
   }
 
   // Use this method to set the Controllers to their proper port values
-  private void setDriveControllers() {
-    GenericHID m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort1);
-    // // Trigger controllerIDbutton1 = m_tempController.button(11);
-    // // Trigger controllerIDbutton2 = m_tempController.button(12);
-
-    // m_tempController.button(11)
-    //     .and(m_tempController.button(12))
-    //     .onTrue(
-    //       private final CommandGenericHID m_driverController1 =
-    //           new CommandGenericHID(OperatorConstants.kDriverControllerPort1);
-    //     )
-
-    for(int i=1; i<=4; i++) {
-      switch(i) {
-        case 1:
-          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort1);
-        case 2:
-          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort2);
-        case 3:
-          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort3);
-        case 4:
-          m_tempController = new GenericHID(OperatorConstants.kDriverControllerPort4);
-      }
-
-      if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == false)){
-        m_driverController1 = m_tempController;
-        System.out.println(m_tempController);
-      }
-      if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)){
-        m_driverController2 = m_tempController;
-        System.out.println(m_tempController);
-      }
-      if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == true)){
-        m_driverController3 = m_tempController;
-        System.out.println(m_tempController);
-      }
-      if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)){
-        m_driverController4 = m_tempController;
-        System.out.println(m_tempController);
-      }
+  //private void setDriveControllers() {
+    
 
         /* 
       // button 11 and 12 OFF
@@ -175,7 +137,7 @@ public class NewerOLDRobotContainer {
         .onTrue(
           public final CommandGenericHID m_driverController4 = m_tempController;
         )*/
-    }
+    //}
 
     // getting values for different buttons
     
@@ -187,7 +149,7 @@ public class NewerOLDRobotContainer {
     //     new CommandGenericHID(OperatorConstants.kDriverControllerPort3);
     // private final CommandGenericHID m_driverController4 =
     //     new CommandGenericHID(OperatorConstants.kDriverControllerPort4);
-  }
+  //}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
