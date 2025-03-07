@@ -10,29 +10,28 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 public class Intake {
-    public Double inPosition;
-    private TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
-    private SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
-    private SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
-    private SparkMax transportPivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
-    private SparkMax intakePivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
-    private RelativeEncoder transportEncoder = intakePivot.getEncoder();
-    public RelativeEncoder intakeEncoder = intakePivot.getEncoder();
-    private char intakeLastUsed;
-    private String currentState = "none"; 
-    private Integer timer;
-    public Boolean retractNeeded = false, movingCoral = false;
+    public static Double inPosition;
+    private static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
+    private static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
+    private static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
+    private static SparkMax transportPivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
+    private static SparkMax intakePivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
+    public static RelativeEncoder transportEncoder = intakePivot.getEncoder();
+    public static RelativeEncoder intakeEncoder = intakePivot.getEncoder();
+    private static char intakeLastUsed;
+    private static String currentState = "none"; 
+    private static int timer;
+    public static Boolean retractNeeded = false, movingCoral = false;
 
-    public DigitalInput transportArmSensor = new DigitalInput(0);
+    public static DigitalInput transportArmSensor = new DigitalInput(0);
     
-    private SparkLimitSwitch insideTransportSwitch = intakePivot.getForwardLimitSwitch();
-    private SparkLimitSwitch outsideTransportSwitch = intakePivot.getReverseLimitSwitch();
+    private static SparkLimitSwitch insideTransportSwitch = intakePivot.getForwardLimitSwitch();
+    private static SparkLimitSwitch outsideTransportSwitch = intakePivot.getReverseLimitSwitch();
 
-    public SparkLimitSwitch insideSwitch = intakePivot.getForwardLimitSwitch();
-    public SparkLimitSwitch outsideSwitch = intakePivot.getReverseLimitSwitch();
+    public static SparkLimitSwitch insideSwitch = intakePivot.getForwardLimitSwitch();
+    public static SparkLimitSwitch outsideSwitch = intakePivot.getReverseLimitSwitch();
 
     // clamp function (copy-pasted from elevator section)
     private static Double clamp(Double minimum, Double maximum, Double input){

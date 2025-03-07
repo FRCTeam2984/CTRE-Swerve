@@ -4,16 +4,13 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Rotary_Controller;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.subsystems.AutoDriveTest;
-
-import frc.robot.subsystems.Driver_Controller;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
@@ -25,7 +22,6 @@ public class Robot extends TimedRobot {
     
 
   }
-}
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
@@ -78,6 +74,12 @@ public class Robot extends TimedRobot {
     // if (m_robotContainer.buttonReverseCoral()) System.out.println("buttonReverseCoral");
     // System.out.println(m_robotContainer.buttonReefPosition());
     // System.out.println(m_robotContainer.getLevel());
+    System.out.println("\nelevator encoder: ");
+    System.out.println(Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)));
+    System.out.println("\nintake encoder: ");
+    System.out.println(Intake.intakeEncoder.getPosition());
+    System.out.println("\nintake transport encoder: ");
+    System.out.println(Intake.transportEncoder.getPosition());
   }
 
   @Override

@@ -5,15 +5,16 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.subsystems.Driver_Controller;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants;
+import frc.robot.drivetrain;
 
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
   static Double bottomPosition = 0.0, armTimer = 0.0;
-  Boolean removeButtonLastPressed = false;
-  String state = "idle";
-  int recentLevel = 2;
-  Double[] removeAlgaeH = {20.0, 30.0};
+  static Boolean removeButtonLastPressed = false;
+  static String state = "idle";
+  static int recentLevel = 2;
+  static Double[] removeAlgaeH = {20.0, 30.0};
   
   // function for keeping a variable between a lower and upper limit
   private static Double clamp(Double minimum, Double maximum, Double input){

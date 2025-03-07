@@ -1,13 +1,10 @@
 package frc.robot.subsystems;
 
-import frc.robot.Robot;
 import edu.wpi.first.wpilibj.Servo;
-import frc.robot.subsystems.Driver_Controller;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-public class Climb {/*
-	int openPosition = 0, closedPosition = 90, servoPosition = closedPosition;
+public class Climb {
+	static int openPosition = 0, closedPosition = 90, servoPosition = closedPosition;
 	static Servo servo = new Servo(0);
 	static TalonFX climb = new TalonFX(1);
 
@@ -41,5 +38,5 @@ public class Climb {/*
 		servo.setAngle(servoPosition);
 		climb.set(power);
 		
-	} */
+	}
 }
