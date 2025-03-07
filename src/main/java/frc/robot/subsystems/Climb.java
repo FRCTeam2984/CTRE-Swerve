@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Servo;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Climb {
 	static int openPosition = 0, closedPosition = 90, servoPosition = closedPosition;
-	public static Servo servo = new Servo(0);
-	public static TalonFX climb = new TalonFX(1);
+	//public static Servo servo = new Servo(0);
+	public static TalonFX climb = new TalonFX(Constants.climbID);
 
 	//public static void Climb(TalonFX(device ID), DigitalInput(number), Encoder(number))		// not right
 	//DigitalInput limitUnwindedForward = new DigitalInput(number);
@@ -45,7 +46,7 @@ public class Climb {
 		else {
 			servoPosition = closedPosition;
 		}
-		servo.setAngle(servoPosition);
+		//servo.setAngle(servoPosition);
 		climb.set(power);
 		
 	}
