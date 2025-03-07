@@ -12,7 +12,7 @@ import com.revrobotics.spark.SparkMax;
 import frc.robot.Constants;
 
 public class Intake {
-    public static Double inPosition;
+    public static Double inPosition, climbPosition = 1.0;
     private static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
     private static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
     private static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
@@ -44,7 +44,7 @@ public class Intake {
 
     // calculate gravity comp for the intake
 	// change the .1, define inPosition
-    public Double intakeGravity(){
+    public static Double intakeGravity(){
 		Double encoderInput = intakeEncoder.getPosition();
         Double rotations = inPosition-encoderInput;
         return Math.sin(Math.toRadians(rotations)) / Math.pow(intakePivot.getOutputCurrent(), 2) * 0.1;
@@ -81,7 +81,7 @@ public class Intake {
 
     //function to bring intake to a position
     //constants prob not right
-    public void intakeTo(String destination){
+    public static void intakeTo(String destination){
         // processing the input string to find the correct destination
         Double desiredPosition = 0.0;
         movingCoral = true;
@@ -95,6 +95,9 @@ public class Intake {
         if (destination == "stationIntakeCoral")
             intakeLastUsed = 'C';
             desiredPosition = inPosition + 0.07;
+        if (destination == "climbPosition")
+            intakeLastUsed = 'C';
+            desiredPosition = inPosition + climbPosition;
         if (destination == "l1Outtake")
             intakeLastUsed = 'C';
             desiredPosition = inPosition + 0.085;

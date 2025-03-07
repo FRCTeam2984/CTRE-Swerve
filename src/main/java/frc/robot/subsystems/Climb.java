@@ -24,10 +24,20 @@ public class Climb {
 				power = 0.0; // not sure what will happen, put in as a guess
 			// find out led code -> LED light flashes or solid a specific color
 		}
-		if(Driver_Controller.buttonExtendClimb()){
-			power = -0.01; // climb motor wind to climb, idk what direction is wind and unwind (invert?)
-			if(climb.getReverseLimit().getValue().toString() == "ClosedToGround") // limit switches, use kyle’s limits
-				power = 0.0;//climbMotor.set(ControlMode.PercentOutput, 0);  // not sure what will happen, put in as a guess
+		if(Driver_Controller.buttonRetractClimb()){
+			if (Elevator.elevatorTo(Elevator.bottomPosition) && Elevator.extendedOrRetracted == "retracted" && Math.abs(Intake.intakeEncoder.getPosition()-(Intake.climbPosition+Intake.inPosition)) < 0.05 && Intake.transportEncoder.getPosition() < 0.5){
+				power = -0.01; // climb motor wind to climb, idk what direction is wind and unwind (invert?)
+				if(climb.getReverseLimit().getValue().toString() == "ClosedToGround") // limit switches, use kyle’s limits
+					power = 0.0;//climbMotor.set(ControlMode.PercentOutput, 0);  // not sure what will happen, put in as a guess
+			}else{
+				Intake.intakeTo("climbPosition");
+				if (Elevator.extendedOrRetracted != "extended"){
+					if(Elevator.lastExtendOrRetract == "extend"){
+						Elevator.armTimer = 0.0;
+					}
+					Elevator.moveElevatorArm("retract");
+				}
+			}
 		}
 		if(Driver_Controller.buttonExtendClimb()) {
 			servoPosition = openPosition;

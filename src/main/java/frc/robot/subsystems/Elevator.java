@@ -12,7 +12,7 @@ public class Elevator{
   public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
   static Double bottomPosition = 0.0, armTimer = 0.0;
   static Boolean removeButtonLastPressed = false;
-  static String state = "idle";
+  static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
   static int recentLevel = 2;
   static Double[] removeAlgaeH = {20.0, 30.0};
   
@@ -67,7 +67,8 @@ public class Elevator{
   }
 
   // extend or retract the small arm on the elevator
-  public Boolean moveElevatorArm(String extendOrRetract){
+  public static Boolean moveElevatorArm(String extendOrRetract){
+    lastExtendOrRetract = extendOrRetract;
     Double power;
     if (extendOrRetract == "extend") power = 0.3;
     else power = -0.3;
@@ -77,7 +78,9 @@ public class Elevator{
       done = true;
       power = 0.0;
       armTimer = 0.0;
-    }
+      if (extendOrRetract == "extend") extendedOrRetracted = "extended";
+      else extendedOrRetracted = "retracted";
+    }else extendedOrRetracted = "moving";
     armMotor.set(power);
     return done;
   }
