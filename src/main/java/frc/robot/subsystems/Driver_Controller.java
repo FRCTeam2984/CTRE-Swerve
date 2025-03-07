@@ -112,11 +112,53 @@ public class Driver_Controller {
     }
     System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
+
+public Boolean speedSwitch(){
+    return m_Controller1.getRawButton(5);}
+
 public static Boolean buttonExtendClimb(){
     return m_Controller3.getRawButton(1);}
 public static Boolean buttonRetractClimb(){
     return m_Controller3.getRawButton(2);}
 public static Boolean buttonRemoveAlgae(){
-    return m_Controller3.getRawButton(3);}
-
+    return m_Controller3.getRawButton(3);} 
+public Boolean buttonTransportPivot(){
+    return m_Controller3.getRawButton(4);}
+public Boolean buttonScoreAlgae(){
+    return m_Controller3.getRawButton(5);}
+public Boolean buttonCoralStationIntake(){
+    return m_Controller3.getRawButton(6);}
+public Boolean switchAlgaeIntake(){
+    return m_Controller3.getRawButton(7);}
+public Boolean switchExtraOnOff(){
+    return m_Controller3.getRawButton(8);}
+        
+public Boolean buttonL4(){
+    return m_Controller2.getRawButton(1);}
+public Boolean buttonL3(){
+    return m_Controller2.getRawButton(2);}
+public Boolean buttonL2(){
+    return m_Controller2.getRawButton(3);}
+public Boolean buttonL1(){
+    return m_Controller2.getRawButton(4);}
+public Boolean buttonResetElevator(){
+    return m_Controller2.getRawButton(5);}
+public Boolean buttonCoralIntakeGround(){
+    return m_Controller2.getRawButton(6);}
+public Boolean buttonReverseCoral(){
+    return m_Controller2.getRawButton(7);}
+      
+public double buttonReefPosition(){
+    if (m_Controller2.getRawButton(10))
+        return (m_Controller2.getRawAxis(0)+2)%3 + m_Controller2.getRawAxis(0)*3+6;
+    return (m_Controller2.getRawAxis(0)+2)%3 + m_Controller2.getRawAxis(0)*3;
+}
+      
+public int getLevel(){
+    if(buttonL1()) return 1;
+    if(buttonL1()) return 2;
+    if(buttonL1()) return 3;
+    if(buttonL1()) return 4;
+    return 0;
+}
 }

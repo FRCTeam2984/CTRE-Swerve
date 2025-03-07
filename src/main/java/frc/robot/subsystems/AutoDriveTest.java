@@ -127,7 +127,7 @@ public class AutoDriveTest{
     }
     
 
-    }
+    
         /* Else{
                                 if(odoy>scorePos[1][1]){  // means ur in C
                                     System.out.println(“big circle”);
@@ -169,4 +169,5 @@ public class AutoDriveTest{
             double checkDistBetweenPointPrimeAndCircleE;
         
 
+}
 }
