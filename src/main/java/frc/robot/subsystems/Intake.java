@@ -12,12 +12,12 @@ import com.revrobotics.spark.SparkMax;
 import frc.robot.Constants;
 
 public class Intake {
-    public static Double inPosition, climbPosition = 1.0;
-    private static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
-    private static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
-    private static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
-    private static SparkMax transportPivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
-    private static SparkMax intakePivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
+    public static Double inPosition, climbPosition = 1.0, depositCoralPosition = 0.5;
+    public static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
+    public static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
+    public static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
+    public static SparkMax transportPivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
+    public static SparkMax intakePivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
     public static RelativeEncoder transportEncoder = intakePivot.getEncoder();
     public static RelativeEncoder intakeEncoder = intakePivot.getEncoder();
     private static char intakeLastUsed;
@@ -53,7 +53,7 @@ public class Intake {
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
 	public Boolean retractIntake(){
-        Double maxPower = 0.5, minPower = -0.5, power, position = intakeEncoder.getPosition();
+        Double maxPower = 0.5, minPower = -0.5, power, position = intakeEncoder.getPosition(), desiredPosition = inPosition;
         Boolean outside = true;
             
         // using limit switches
@@ -72,7 +72,11 @@ public class Intake {
             bottomIntake.set(0.1);
         }
 
-        power = inPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
+        if (intakeLastUsed == 'C'){
+            desiredPosition = depositCoralPosition;
+        }
+
+        power = desiredPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
         intakePivot.set(Intake.clamp(minPower, maxPower, power));
         if (outside = false && intakeLastUsed == 'C')
             currentState = "start";
@@ -96,7 +100,7 @@ public class Intake {
             intakeLastUsed = 'C';
             desiredPosition = inPosition + 0.07;
         if (destination == "climbPosition")
-            intakeLastUsed = 'C';
+            intakeLastUsed = 'D';
             desiredPosition = inPosition + climbPosition;
         if (destination == "l1Outtake")
             intakeLastUsed = 'C';
@@ -156,7 +160,7 @@ public class Intake {
     // function for putting the coral in the elevator
     void moveCoral(){
         if (currentState != "run belt")
-            beltDrive.set(ControlMode.PercentOutput, 0.5);
+            beltDrive.set(ControlMode.PercentOutput, 0);
 	    Double minPower = -0.7, maxPower = 0.7, error = transportEncoder.getPosition()-0.3;
         Double transportGravity = Math.sin(Math.toRadians(error)) / Math.pow(transportPivot.getOutputCurrent(), 2) * 0.1;
 	    if (Elevator.elevatorTo(Elevator.bottomPosition) && transportEncoder.getPosition() <= 0.05){
@@ -185,7 +189,8 @@ public class Intake {
 		        case ("return transport arm"): // return transport arm
 			        if (insideTransportSwitch.isPressed()){
 				        transportPivot.set(0);
-				        currentState = "none";
+                        intakeLastUsed = 'D';
+				        currentState = "retract intake";
                         break;
 			        }
 			        if (outsideTransportSwitch.isPressed()){
@@ -193,6 +198,9 @@ public class Intake {
 			        }
 			        transportPivot.set(clamp(minPower, maxPower, transportGravity+transportEncoder.getPosition()));
 			        break;
+                case ("retract intake"):
+                    if(retractIntake()) currentState = "none";
+                    break;
 	        }
         }else{
             if (insideTransportSwitch.isPressed()){

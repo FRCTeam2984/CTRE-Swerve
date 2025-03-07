@@ -122,39 +122,39 @@ public static Boolean buttonRetractClimb(){
     return m_Controller3.getRawButton(2);}
 public static Boolean buttonRemoveAlgae(){
     return m_Controller3.getRawButton(3);} 
-public Boolean buttonTransportPivot(){
+public static Boolean buttonTransportPivot(){
     return m_Controller3.getRawButton(4);}
-public Boolean buttonScoreAlgae(){
+public static Boolean buttonScoreAlgae(){
     return m_Controller3.getRawButton(5);}
-public Boolean buttonCoralStationIntake(){
+public static Boolean buttonCoralStationIntake(){
     return m_Controller3.getRawButton(6);}
-public Boolean switchAlgaeIntake(){
+public static Boolean switchAlgaeIntake(){
     return m_Controller3.getRawButton(7);}
-public Boolean switchExtraOnOff(){
+public static Boolean switchExtraOnOff(){
     return m_Controller3.getRawButton(8);}
         
-public Boolean buttonL4(){
+public static Boolean buttonL4(){
     return m_Controller2.getRawButton(1);}
-public Boolean buttonL3(){
+public static Boolean buttonL3(){
     return m_Controller2.getRawButton(2);}
-public Boolean buttonL2(){
+public static Boolean buttonL2(){
     return m_Controller2.getRawButton(3);}
-public Boolean buttonL1(){
+public static Boolean buttonL1(){
     return m_Controller2.getRawButton(4);}
-public Boolean buttonResetElevator(){
+public static Boolean buttonResetElevator(){
     return m_Controller2.getRawButton(5);}
-public Boolean buttonCoralIntakeGround(){
+public static Boolean buttonCoralIntakeGround(){
     return m_Controller2.getRawButton(6);}
-public Boolean buttonReverseCoral(){
+public static Boolean buttonReverseCoral(){
     return m_Controller2.getRawButton(7);}
       
-public double buttonReefPosition(){
+public static double buttonReefPosition(){
     if (m_Controller2.getRawButton(10))
         return (m_Controller2.getRawAxis(0)+2)%3 + m_Controller2.getRawAxis(0)*3+6;
     return (m_Controller2.getRawAxis(0)+2)%3 + m_Controller2.getRawAxis(0)*3;
 }
       
-public int getLevel(){
+public static int getLevel(){
     if(buttonL1()) return 1;
     if(buttonL1()) return 2;
     if(buttonL1()) return 3;

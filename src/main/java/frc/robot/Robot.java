@@ -9,6 +9,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.OperatorConstants;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 public class Robot extends TimedRobot {
@@ -80,6 +87,16 @@ public class Robot extends TimedRobot {
     System.out.println(Intake.intakeEncoder.getPosition());
     System.out.println("\nintake transport encoder: ");
     System.out.println(Intake.transportEncoder.getPosition());
+    switch(0){
+      case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.05); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
+      case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
+      case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
+      case (3): if (Driver_Controller.buttonResetElevator()) Intake.transportPivot.set(0.05); else Intake.transportPivot.set(0); break;
+      case (4): if (Driver_Controller.buttonResetElevator()) Intake.intakePivot.set(0.05); else Intake.intakePivot.set(0); break;
+      case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.05); else Elevator.elevatorMotor.set(0); break;
+      case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(0.05); else Elevator.armMotor.set(0); break;
+      case (7): if (Driver_Controller.buttonResetElevator()) Climb.climb.set(0.05); else Climb.climb.set(0); break;
+    }
   }
 
   @Override

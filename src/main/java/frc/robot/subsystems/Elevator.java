@@ -32,8 +32,7 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder counts
-		Double encoderDestination = destination * 0.1;//CHANGE THIS
-    Double minPower = -0.9, maxPower = 0.9, gravityComp = 0.05, error = encoderDestination - position, power;
+    Double minPower = -0.9, maxPower = 0.9, gravityComp = 0.05, error = destination - position, power;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 
