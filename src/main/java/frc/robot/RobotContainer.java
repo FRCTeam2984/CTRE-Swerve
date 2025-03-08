@@ -45,9 +45,9 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     
-    private static CommandXboxController joystick = new CommandXboxController(Driver_Controller.SwerveCommandXboxControllerPort);// = new CommandXboxController(0);
+    //private static CommandXboxController joystick = new CommandXboxController(Driver_Controller.SwerveCommandXboxControllerPort);// = new CommandXboxController(0);
     
-    private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
+    //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -59,8 +59,9 @@ public class RobotContainer {
         configureBindings();
     }
     private double rotaryCalc(){
+        Driver_Controller.SwerveInputPeriodic();
         double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();                 // Grab the yaw value from the swerve drive IMU as a double
-        double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
+        double rotaryJoystickInput = Driver_Controller.SwerveEncoderPassthrough;               // Get input from the rotary controller (ID from joystick2)
         double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
         //System.out.println(joystickClamped);
         double powerCurved = -((((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180) - ((joystickClamped) / 45) % 180) / 2);
@@ -77,8 +78,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(Driver_Controller.m_Controller0.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
-                    .withVelocityY(Driver_Controller.m_Controller0.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
+                drive.withVelocityX(Driver_Controller.SwerveYPassthrough * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
+                    .withVelocityY(Driver_Controller.SwerveXPassthrough * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
                     .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );

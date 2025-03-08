@@ -54,7 +54,7 @@ public class Driver_Controller {
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
                     SwerveRotaryEncoderPort = 3;
-                    System.out.println("Set controller port 3");
+                    //System.out.println("Set controller port 3");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -72,7 +72,7 @@ public class Driver_Controller {
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
                     SwerveRotaryEncoderPort = 1;
-                    System.out.println("Set controller port 1");
+                    //System.out.println("Set controller port 1");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -90,7 +90,7 @@ public class Driver_Controller {
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
                     SwerveRotaryEncoderPort = 2;
-                    System.out.println("Set controller port 2");
+                    //System.out.println("Set controller port 2");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -108,7 +108,7 @@ public class Driver_Controller {
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller1 = m_tempController;
                     SwerveRotaryEncoderPort = 0;
-                    System.out.println("Set controller port 0");
+                    //System.out.println("Set controller port 0");
                 }
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == false)) {
                     m_Controller2 = m_tempController;
@@ -119,7 +119,7 @@ public class Driver_Controller {
 
         }
     }
-    System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
+    //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
 
 public Boolean speedSwitch(){
@@ -171,10 +171,21 @@ public static int getLevel(){
     return 0;
 }
 
-public static SwerveControlSet(boolean command){
+public static void SwerveControlSet(boolean command){
     SwerveCommandControl = command;
 }
-
+public static void SwerveInputPeriodic(){
+    if (SwerveCommandControl){
+        SwerveEncoderPassthrough = SwerveCommandEncoderValue;
+        SwerveXPassthrough = SwerveCommandXValue;
+        SwerveYPassthrough = SwerveCommandYValue;
+    }
+    else{
+        SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);
+        SwerveXPassthrough = m_Controller0.getLeftX();
+        SwerveYPassthrough = m_Controller0.getLeftY();
+    }
+}
 
 
 }
