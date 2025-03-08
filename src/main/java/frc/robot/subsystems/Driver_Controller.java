@@ -32,6 +32,15 @@ public class Driver_Controller {
     private static XboxController m_tempController;
     public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
     public static int SwerveRotaryEncoderPort;         // Value of rotary encoder for controlling swerve drive
+
+    private static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
+    public static double SwerveEncoderPassthrough;     // Encoder pass back to swervedrive system
+    public static double SwerveXPassthrough;           // X value pass back to swervedrive system
+    public static double SwerveYPassthrough;           // Y value pass back to swervedrive system
+    public static double SwerveCommandEncoderValue;    // Command requested encoder value for swervedrive
+    public static double SwerveCommandXValue;          // Command requested X value for swervedrive
+    public static double SwerveCommandYValue;          // Command requested Y value for swervedrive
+
     public static void define_Controller(){
     for(int i=1; i<=4; i++) {
         switch (i) {
@@ -161,4 +170,11 @@ public static int getLevel(){
     if(buttonL1()) return 4;
     return 0;
 }
+
+public static SwerveControlSet(boolean command){
+    SwerveCommandControl = command;
+}
+
+
+
 }

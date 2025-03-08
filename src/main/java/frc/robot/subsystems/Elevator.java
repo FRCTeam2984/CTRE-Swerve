@@ -101,7 +101,7 @@ public class Elevator{
           }
           break;
         case "positioning":
-          if (AutoDrive.autoDrive()){ // automatically driving to the correct position
+          if (AutoDriveTest.autoDrive()){ // automatically driving to the correct position
             state = "removing";
           }
           break;
@@ -111,7 +111,7 @@ public class Elevator{
           }
           break;
         case "backing up":
-          drivetrain.back up; // back up idk how
+          drivetrain.back up; // back up idk how  SIENA FIND OUT
           if (finished){
             state = "finished";
           }

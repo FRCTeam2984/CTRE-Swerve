@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
     
 
   }
+
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
@@ -87,6 +88,7 @@ public class Robot extends TimedRobot {
     System.out.println(Intake.intakeEncoder.getPosition());
     System.out.println("\nintake transport encoder: ");
     System.out.println(Intake.transportEncoder.getPosition());
+    AutoDriveTest.driveStraightToCircle();
     switch(0){
       case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.05); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
       case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
@@ -102,7 +104,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
-    AutoDriveTest.determineArea(0.0,0.0,0.0);
+    /* AutoDriveTest.determineArea(kDefaultPeriod, kDefaultPeriod, kDefaultPeriod);
+    AutoDriveTest.driveStraightToCircle(); */
   }
 
   @Override

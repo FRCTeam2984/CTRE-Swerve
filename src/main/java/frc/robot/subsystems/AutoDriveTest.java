@@ -1,9 +1,10 @@
 package frc.robot.subsystems;
 
 import frc.robot.Robot;
+
 public class AutoDriveTest{   
-    public static double odox = 2.86;// the x axis in m given by odometry;
-    public static double odoy = 4.19;// y axis m value given by odometry;
+    public static double odox = 7;// the x axis in m given by odometry;
+    public static double odoy = 6;// y axis m value given by odometry;
     public static double odoangle = 0;// degrees given by odometry, will be impt for turning and driving
     // if lost refer to team home and or desmos graph called "autodrive math"
 
@@ -62,11 +63,15 @@ public class AutoDriveTest{
         // these lines go through the center and point and d circle (black on desmos) and E circle (red on desmos)
         static double reciprocalDInequ =  (-(scorePos[0][1]-DCoords[0][1])/(scorePos[0][0]-DCoords[0][0])*((odoy-scorePos[0][1]) + odox));
         static double reciprocalEInequ = ((scorePos[0][1]-ECoords[0][1])/(scorePos[0][0]-ECoords[0][0])*(odoy-scorePos[0][1]) + odox);  
+
+        static String areaName;
+
                                         // the blue and red lines perpendicular to d and e inequal
         public AutoDriveTest(double odox, double odoy, double odoangle){
             // do i need parameters????????????????????????
             //AutoDrivetest math = new AutoDriveTest();
             AutoDriveTest.determineArea(odox, odoy, odoangle);
+            AutoDriveTest.driveStraightToCircle();
         }
         public static void determineArea(double odox, double odoy, double odoangle){
             /* Optional<Alliance> ally = DriverStation.getAlliance();
@@ -77,32 +82,40 @@ public class AutoDriveTest{
             System.out.println("works!!");
             if(stage == close1){
                 if(bigCircleDist >= dFReef){
+                    areaName = "big circle";
                     System.out.println("big circle");
                     if(circleDCheck <= dCircleDist){
+                        areaName = "circle d";
                         System.out.println("circle d");
                     }
                     else if(circleECheck <= ECircleDist){
+                        areaName = "circle e";
                         System.out.println("circle e");
                     }
                     else if(odox <=  DInequality && odox<  EInequality){ 
                     // checks red inequality and black in equality   checks whether u are in the c, cprime, or score
                         if(odox<= DCoords[0][0]){
                             if(odoy <= scorePos[1][1]){
+                                areaName = "area c";
                                 System.out.println("area c");
                                 // drive then return bool if it is in right position
                             }
                             else {
+                                areaName = "area c prime";
                                 System.out.println("area c prime");
                             }
                         }
                         else{
+                            areaName = "score automatically";
                             System.out.println("score automatically");
                         }
                     }
                     else if(odoy <= scorePos[0][1]){
+                        areaName = "area a";
                         System.out.println("area a");
                     }
                     else{
+                        areaName = "area a prime";
                         System.out.println("a prime");
                     }
                                                 
@@ -114,9 +127,11 @@ public class AutoDriveTest{
                                                     
                     if(odox >= reciprocalDInequ && odox >= reciprocalEInequ ){
                         if(odoy>scorePos[1][1]){  // means ur in B
+                            areaName = "area b";
                             System.out.println("area b");
                         }
                         else{
+                            areaName = "area b prime";
                             System.out.println("area b prime");
                         }
                                                 
@@ -162,12 +177,27 @@ public class AutoDriveTest{
 
         }*/
         public static void driveStraightToCircle(){
-            double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle
-            double originBaseOdoy = odoy - scorePos[1][0];
-            // heres the plan we are going to calculate the distance of the two points created by the tangent and circle and the d and e circle, which would be four numbers 
-            double checkDistBetweenPointAndCircleE;
-            double checkDistBetweenPointPrimeAndCircleE;
-        
+            double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle   // this is c on desmos
+            double originBasedOdoY = odoy - scorePos[1][0];  // this is b on desmos
+            double originBasedOdoXSquared = originBasedOdoX * originBasedOdoX;   
+            double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;   
 
-}
+            // reference to straight line to circle desmos graph, REMEMBER x and y r switched compared to the desmos
+            // may have to swap originbasedodoy and originbasedodox with each other idk
+           
+            
+            double pointY = ((2*originBasedOdoY)*(bigCircleDist) + (Math.sqrt((Math.pow((-2*originBasedOdoY*(bigCircleDist)),2)-4*((originBasedOdoXSquared)+(originBasedOdoYSquared))*((bigCircleDist*bigCircleDist)-bigCircleDist*(originBasedOdoXSquared))))))/(2*(originBasedOdoXSquared + originBasedOdoYSquared));
+            double pointYPrime = ((2*originBasedOdoY)*(bigCircleDist) - (Math.sqrt((Math.pow((-2*originBasedOdoY*(bigCircleDist)),2)-4*((originBasedOdoXSquared)+(originBasedOdoYSquared))*((bigCircleDist*bigCircleDist)-bigCircleDist*(originBasedOdoXSquared))))))/(2*(originBasedOdoXSquared + originBasedOdoYSquared));
+            double pointX = ((bigCircleDist*bigCircleDist)/originBasedOdoX) - ((originBasedOdoY*(pointY))/originBasedOdoX);
+            double pointXPrime = ((bigCircleDist*bigCircleDist)/originBasedOdoX) - ((originBasedOdoY*(pointYPrime))/originBasedOdoX);
+            // double distBetweenPointAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));
+            double distBetweenPointPrimeAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));   // NOT SQUARE ROOTED NEED TO TAKE INTO ACCOUNT WHEN DOING MATH DONT FORGET PLS
+            
+            System.out.println("("+pointX + "," + pointY+")");
+            System.out.println("("+pointXPrime + "," + pointYPrime+")");
+
+            //if(areaName.equals("area b")){
+
+            //}
+        }
 }
