@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.subsystems.Driver_Controller;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -9,7 +10,7 @@ import frc.robot.drivetrain;
 
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-  public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  public static TalonSRX armMotor = new TalonSRX(Constants.elevatorArmMotorID);
   static Double bottomPosition = 0.0, armTimer = 0.0;
   static Boolean removeButtonLastPressed = false;
   static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
@@ -80,7 +81,7 @@ public class Elevator{
       if (extendOrRetract == "extend") extendedOrRetracted = "extended";
       else extendedOrRetracted = "retracted";
     }else extendedOrRetracted = "moving";
-    armMotor.set(power);
+    armMotor.set(ControlMode.PercentOutput, power);
     return done;
   }
 

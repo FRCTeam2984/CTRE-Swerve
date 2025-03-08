@@ -129,18 +129,22 @@ public static Boolean buttonExtendClimb(){
     return m_Controller3.getRawButton(1);}
 public static Boolean buttonRetractClimb(){
     return m_Controller3.getRawButton(2);}
-public static Boolean buttonRemoveAlgae(){
-    return m_Controller3.getRawButton(3);} 
-public static Boolean buttonTransportPivot(){
-    return m_Controller3.getRawButton(4);}
 public static Boolean buttonScoreAlgae(){
-    return m_Controller3.getRawButton(5);}
+    return m_Controller3.getRawButton(3);}
 public static Boolean buttonCoralStationIntake(){
-    return m_Controller3.getRawButton(6);}
-public static Boolean switchAlgaeIntake(){
+    return m_Controller3.getRawButton(4);}
+public static Boolean buttonCoralIntakeGround(){
+    return m_Controller2.getRawButton(5);}
+public static Boolean buttonReverseCoral(){
+    return m_Controller2.getRawButton(6);}
+public static Boolean buttonTransportPivot(){
     return m_Controller3.getRawButton(7);}
+public static Boolean buttonRemoveAlgae(){
+    return m_Controller3.getRawButton(8);} 
+public static Boolean switchAlgaeIntake(){
+    return m_Controller3.getRawButton(9);}
 public static Boolean switchExtraOnOff(){
-    return m_Controller3.getRawButton(8);}
+    return m_Controller3.getRawButton(10);}
         
 public static Boolean buttonL4(){
     return m_Controller2.getRawButton(1);}
@@ -152,10 +156,6 @@ public static Boolean buttonL1(){
     return m_Controller2.getRawButton(4);}
 public static Boolean buttonResetElevator(){
     return m_Controller2.getRawButton(5);}
-public static Boolean buttonCoralIntakeGround(){
-    return m_Controller2.getRawButton(6);}
-public static Boolean buttonReverseCoral(){
-    return m_Controller2.getRawButton(7);}
       
 public static double buttonReefPosition(){
     if (m_Controller2.getRawButton(10))

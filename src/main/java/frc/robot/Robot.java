@@ -12,6 +12,7 @@ import frc.robot.Constants.OperatorConstants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -60,6 +61,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    SignalLogger.enableAutoLogging(false);
+    SignalLogger.stop();
     Driver_Controller.define_Controller();
     // if (m_autonomousCommand != null) {
     //   m_autonomousCommand.cancel();
@@ -82,6 +85,17 @@ public class Robot extends TimedRobot {
     // if (m_robotContainer.buttonReverseCoral()) System.out.println("buttonReverseCoral");
     // System.out.println(m_robotContainer.buttonReefPosition());
     // System.out.println(m_robotContainer.getLevel());
+    
+  }
+  public static int timeslice;
+  @Override
+  public void teleopPeriodic() {
+    SignalLogger.enableAutoLogging(false);
+    SignalLogger.stop();
+    timeslice++;
+    if ((timeslice%50)==0) {
+    //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
+    //AutoDriveTest.determineArea(0.0,0.0,0.0);
     System.out.println("\nelevator encoder: ");
     System.out.println(Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)));
     System.out.println("\nintake encoder: ");
@@ -106,6 +120,24 @@ public class Robot extends TimedRobot {
     //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
     /* AutoDriveTest.determineArea(kDefaultPeriod, kDefaultPeriod, kDefaultPeriod);
     AutoDriveTest.driveStraightToCircle(); */
+    System.out.println("\ntransport sensor 1: ");
+    System.out.println(Climb.climb.getForwardLimit().getValue().toString() == "ClosedToGround");
+    System.out.println("\ntransport sensor 2: ");
+    System.out.println(Climb.climb.getReverseLimit().getValue().toString() == "ClosedToGround");
+    }
+    //if (Driver_Controller.buttonRemoveAlgae())Intake.moveCoral();// else Intake.transportPivot.set(0);
+    //if(Driver_Controller.buttonTransportPivot()) Intake.currentState = "start";
+    Climb.letsClimb();
+    switch(5){
+      case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.25); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
+      //case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
+      //case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
+      case (3): if (Driver_Controller.buttonResetElevator()) Intake.transportPivot.set(0.15); else Intake.transportPivot.set(0); break;
+      case (4): if (Driver_Controller.buttonResetElevator()) Intake.intakePivot.set(0.5); else Intake.intakePivot.set(0); break;
+      case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.5); else Elevator.elevatorMotor.set(0); break;
+      case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(ControlMode.PercentOutput, 0.3); else Elevator.armMotor.set(ControlMode.PercentOutput, 0); break;
+      case (7): if (Driver_Controller.buttonResetElevator()) Climb.climb.set(0.9); else Climb.climb.set(0); break;
+    }
   }
 
   @Override
