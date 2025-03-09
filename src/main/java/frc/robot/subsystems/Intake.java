@@ -23,7 +23,7 @@ public class Intake {
     public static String currentState = "none"; 
     private static int timer;
     public static Boolean retractNeeded = false, movingCoral = false;
-    public static Double inPosition = 0.0, transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-15.5;
+    public static Double inPosition = 0.0, transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-27;
 
     public static DigitalInput transportArmSensor = new DigitalInput(0);
     
@@ -164,7 +164,10 @@ public class Intake {
     */public static void moveCoral(){
         if (currentState != "run belt")
             beltDrive.set(ControlMode.PercentOutput, 0);
-	    Double minPower = -0.2, maxPower = 0.0;// error = transportEncoder.getPosition()-0.3;
+        if (currentState != "use transport arm" && currentState != "return transport arm"){
+            transportPivot.set(0);
+        }
+	    Double minPower = -0.2, maxPower = 0.2;// error = transportEncoder.getPosition()-0.3;
         Double transportGravity = 0.0;//*Math.sin(Math.toRadians(error)) / Math.pow(transportPivot.getOutputCurrent(), 2) * 0.1;
 	    //if (Elevator.elevatorTo(Elevator.bottomPosition) && transportEncoder.getPosition() <= 0.05){
             switch (currentState){
@@ -175,7 +178,7 @@ public class Intake {
 	            case ("run belt"): // run belt
                     ++timer;
 	    		    beltDrive.set(ControlMode.PercentOutput, 0.5);
-	    		    if (timer >= 50*3 || transportArmSensor.get()) // 3 seconds
+	    		    if (timer >= 50*3 || transportArmSensor.get() == false) // 3 seconds
 	    			    currentState = "use transport arm";
 			        break;
 		        case ("use transport arm"): // use transport arm
@@ -198,10 +201,10 @@ public class Intake {
                         break;
 			        }
 			        if (outsideTransportSwitch.isPressed()){
-				        maxPower = 0.0;
+				        minPower = 0.0;
 			        }
-			        //transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportEncoder.getPosition())/30));
-                    System.out.println(clamp(minPower, maxPower, transportGravity+(transportEncoder.getPosition()-transportInsidePosition)/30));
+			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/30+0.1));
+                    System.out.println(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/30+0.1));
 			        break;
                 case ("retract intake"):
                     //if(retractIntake()) currentState = "none";

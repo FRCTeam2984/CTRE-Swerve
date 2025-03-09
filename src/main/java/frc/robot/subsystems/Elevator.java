@@ -11,7 +11,7 @@ import frc.robot.drivetrain;
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static TalonSRX armMotor = new TalonSRX(Constants.elevatorArmMotorID);
-  static Double bottomPosition = 0.0, armTimer = 0.0;
+  static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0;
   static Boolean removeButtonLastPressed = false;
   static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
   static int recentLevel = 2;
@@ -33,7 +33,7 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder counts
-    Double minPower = -0.9, maxPower = 0.9, gravityComp = 0.05, error = destination - position, power;
+    Double minPower = -0.2, maxPower = 0.2, gravityComp = 0.0, error = destination - position, power;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 

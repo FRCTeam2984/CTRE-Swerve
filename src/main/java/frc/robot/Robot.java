@@ -102,43 +102,58 @@ public class Robot extends TimedRobot {
     System.out.println(Intake.intakeEncoder.getPosition());
     System.out.println("\nintake transport encoder: ");
     System.out.println(Intake.transportEncoder.getPosition());
-    AutoDriveTest.driveStraightToCircle();
-    switch(0){
+    System.out.println(Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround");
+    System.out.println(Elevator.elevatorMotor.getForwardLimit().getValue().toString() == "ClosedToGround");
+    //AutoDriveTest.driveStraightToCircle();
+    switch(-1){
       case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.05); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
-      case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
-      case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
+      //case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
+      //case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
       case (3): if (Driver_Controller.buttonResetElevator()) Intake.transportPivot.set(0.05); else Intake.transportPivot.set(0); break;
       case (4): if (Driver_Controller.buttonResetElevator()) Intake.intakePivot.set(0.05); else Intake.intakePivot.set(0); break;
-      case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.05); else Elevator.elevatorMotor.set(0); break;
-      case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(0.05); else Elevator.armMotor.set(0); break;
+      case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.3); else Elevator.elevatorMotor.set(0); break;
+      case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(ControlMode.PercentOutput, 0.3); else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0); break;
       case (7): if (Driver_Controller.buttonResetElevator()) Climb.climb.set(0.05); else Climb.climb.set(0); break;
     }
   }
-
-  @Override
-  public void teleopPeriodic() {
-    //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
-    /* AutoDriveTest.determineArea(kDefaultPeriod, kDefaultPeriod, kDefaultPeriod);
-    AutoDriveTest.driveStraightToCircle(); */
-    System.out.println("\ntransport sensor 1: ");
-    System.out.println(Climb.climb.getForwardLimit().getValue().toString() == "ClosedToGround");
-    System.out.println("\ntransport sensor 2: ");
-    System.out.println(Climb.climb.getReverseLimit().getValue().toString() == "ClosedToGround");
-    }
-    //if (Driver_Controller.buttonRemoveAlgae())Intake.moveCoral();// else Intake.transportPivot.set(0);
-    //if(Driver_Controller.buttonTransportPivot()) Intake.currentState = "start";
-    Climb.letsClimb();
-    switch(5){
-      case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.25); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
-      //case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
-      //case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
-      case (3): if (Driver_Controller.buttonResetElevator()) Intake.transportPivot.set(0.15); else Intake.transportPivot.set(0); break;
-      case (4): if (Driver_Controller.buttonResetElevator()) Intake.intakePivot.set(0.5); else Intake.intakePivot.set(0); break;
-      case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.5); else Elevator.elevatorMotor.set(0); break;
-      case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(ControlMode.PercentOutput, 0.3); else Elevator.armMotor.set(ControlMode.PercentOutput, 0); break;
-      case (7): if (Driver_Controller.buttonResetElevator()) Climb.climb.set(0.9); else Climb.climb.set(0); break;
-    }
+  if (Driver_Controller.buttonL1()) Elevator.elevatorTo(20.0);
+  if (Driver_Controller.buttonL2()) Elevator.elevatorTo(40.0);
+  if (Driver_Controller.buttonL3()) Elevator.elevatorTo(60.0);
+  if (Driver_Controller.buttonL4()) Elevator.elevatorTo(80.0);
+  if (Driver_Controller.buttonResetElevator() && Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround"){
+    Elevator.elevatorMotor.set(-0.1);
+  }else{
+    Elevator.elevatorMotor.set(0);
   }
+  
+  
+  Climb.letsClimb();
+  }
+
+  // @Override
+  // public void teleopPeriodic() {
+  //   //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
+  //   /* AutoDriveTest.determineArea(kDefaultPeriod, kDefaultPeriod, kDefaultPeriod);
+  //   AutoDriveTest.driveStraightToCircle(); */
+  //   System.out.println("\ntransport sensor 1: ");
+  //   System.out.println(Climb.climb.getForwardLimit().getValue().toString() == "ClosedToGround");
+  //   System.out.println("\ntransport sensor 2: ");
+  //   System.out.println(Climb.climb.getReverseLimit().getValue().toString() == "ClosedToGround");
+  
+  //   //if (Driver_Controller.buttonRemoveAlgae())Intake.moveCoral();// else Intake.transportPivot.set(0);
+  //   //if(Driver_Controller.buttonTransportPivot()) Intake.currentState = "start";
+  //   Climb.letsClimb();
+  //   switch(5){
+  //     case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.25); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
+  //     //case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
+  //     //case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
+  //     case (3): if (Driver_Controller.buttonResetElevator()) Intake.transportPivot.set(0.15); else Intake.transportPivot.set(0); break;
+  //     case (4): if (Driver_Controller.buttonResetElevator()) Intake.intakePivot.set(0.5); else Intake.intakePivot.set(0); break;
+  //     case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.5); else Elevator.elevatorMotor.set(0); break;
+  //     case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(ControlMode.PercentOutput, 0.3); else Elevator.armMotor.set(ControlMode.PercentOutput, 0); break;
+  //     case (7): if (Driver_Controller.buttonResetElevator()) Climb.climb.set(0.9); else Climb.climb.set(0); break;
+  //   }
+  // }
 
   @Override
   public void teleopExit() {}
