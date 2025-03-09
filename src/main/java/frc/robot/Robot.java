@@ -64,28 +64,8 @@ public class Robot extends TimedRobot {
     SignalLogger.enableAutoLogging(false);
     SignalLogger.stop();
     Driver_Controller.define_Controller();
-    // if (m_autonomousCommand != null) {
-    //   m_autonomousCommand.cancel();
-    // }
-    // if (m_robotContainer.speedSwitch()) System.out.println("speedSwitch");
-    // if (m_robotContainer.buttonExtendClimb()) System.out.println("buttonExtendClimb");
-    // if (m_robotContainer.buttonRetractClimb()) System.out.println("buttonRetractClimb");
-    // if (m_robotContainer.buttonRemoveAlgae()) System.out.println("buttonRemoveAlgae");
-    // if (m_robotContainer.buttonTransportPivot()) System.out.println("buttonTransportPivot");
-    // if (m_robotContainer.buttonScoreAlgae()) System.out.println("buttonScoreAlgae");
-    // if (m_robotContainer.buttonCoralStationIntake()) System.out.println("buttonCoralStationIntake");
-    // if (m_robotContainer.switchAlgaeIntake()) System.out.println("switchAlgaeIntake");
-    // if (m_robotContainer.switchExtraOnOff()) System.out.println("switchExtraOnOff");
-    // if (m_robotContainer.buttonL4()) System.out.println("buttonL4");
-    // if (m_robotContainer.buttonL3()) System.out.println("buttonL3");
-    // if (m_robotContainer.buttonL2()) System.out.println("buttonL2");
-    // if (m_robotContainer.buttonL1()) System.out.println("buttonL1");
-    // if (m_robotContainer.buttonResetElevator()) System.out.println("buttonResetElevator");
-    // if (m_robotContainer.buttonCoralIntakeGround()) System.out.println("buttonCoralIntakeGround");
-    // if (m_robotContainer.buttonReverseCoral()) System.out.println("buttonReverseCoral");
-    // System.out.println(m_robotContainer.buttonReefPosition());
-    // System.out.println(m_robotContainer.getLevel());
-    
+    Intake.currentState = "none";
+    Intake.inPosition = Intake.intakeEncoder.getPosition();
   }
   public static int timeslice;
   @Override
@@ -99,34 +79,25 @@ public class Robot extends TimedRobot {
     System.out.println("\nelevator encoder: ");
     System.out.println(Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)));
     System.out.println("\nintake encoder: ");
-    System.out.println(Intake.intakeEncoder.getPosition());
-    System.out.println("\nintake transport encoder: ");
-    System.out.println(Intake.transportEncoder.getPosition());
-    System.out.println(Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround");
-    System.out.println(Elevator.elevatorMotor.getForwardLimit().getValue().toString() == "ClosedToGround");
+    System.out.println(Intake.intakeEncoder.getPosition()-Intake.inPosition);
     //AutoDriveTest.driveStraightToCircle();
-    switch(-1){
+    switch(4){
       case (0): if (Driver_Controller.buttonResetElevator()) Intake.beltDrive.set(ControlMode.PercentOutput, 0.05); else Intake.beltDrive.set(ControlMode.PercentOutput, 0); break;
       //case (1): if (Driver_Controller.buttonResetElevator()) Intake.bottomIntake.set(0.05); else Intake.bottomIntake.set(0); break;
       //case (2): if (Driver_Controller.buttonResetElevator()) Intake.topIntake.set(0.05); else Intake.topIntake.set(0); break;
       case (3): if (Driver_Controller.buttonResetElevator()) Intake.transportPivot.set(0.05); else Intake.transportPivot.set(0); break;
       case (4): if (Driver_Controller.buttonResetElevator()) Intake.intakePivot.set(0.05); else Intake.intakePivot.set(0); break;
-      case (5): if (Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(0.3); else Elevator.elevatorMotor.set(0); break;
-      case (6): if (Driver_Controller.buttonResetElevator()) Elevator.armMotor.set(ControlMode.PercentOutput, 0.3); else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0); break;
-      case (7): if (Driver_Controller.buttonResetElevator()) Climb.climb.set(0.05); else Climb.climb.set(0); break;
     }
   }
-  if (Driver_Controller.buttonL1()) Elevator.elevatorTo(20.0);
-  if (Driver_Controller.buttonL2()) Elevator.elevatorTo(40.0);
-  if (Driver_Controller.buttonL3()) Elevator.elevatorTo(60.0);
-  if (Driver_Controller.buttonL4()) Elevator.elevatorTo(80.0);
-  if (Driver_Controller.buttonResetElevator() && Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround"){
-    Elevator.elevatorMotor.set(-0.1);
-  }else{
+  if (Driver_Controller.buttonL2()) Elevator.elevatorTo(20.0);
+  if (Driver_Controller.buttonL1() && Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround"){
+    Elevator.elevatorMotor.set(-0.05);
+  }else if (Driver_Controller.buttonResetElevator()){
     Elevator.elevatorMotor.set(0);
   }
   
-  
+  if (Driver_Controller.buttonRemoveAlgae()) Intake.moveCoral();
+  if (Driver_Controller.buttonTransportPivot()) Intake.currentState = "start";
   Climb.letsClimb();
   }
 

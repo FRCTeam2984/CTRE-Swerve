@@ -47,7 +47,7 @@ public class Elevator{
 			
 		// set motor power based on error or set it to keep position
 		if (Math.abs(error) > maxError)
-			power = error/100 + gravityComp;
+			power = error/200 + gravityComp;
     else {
 	    power = gravityComp;
 	    closeEnough = true;

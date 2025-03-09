@@ -13,8 +13,8 @@ import frc.robot.Constants;
 
 public class Intake {
     public static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
-    //public static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
-    //public static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
+    public static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
+    public static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
     public static SparkMax transportPivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
     public static SparkMax intakePivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
     public static RelativeEncoder transportEncoder = transportPivot.getEncoder();
@@ -23,7 +23,7 @@ public class Intake {
     public static String currentState = "none"; 
     private static int timer;
     public static Boolean retractNeeded = false, movingCoral = false;
-    public static Double inPosition = 0.0, transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-27;
+    public static Double inPosition = intakeEncoder.getPosition(), transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-27;
 
     public static DigitalInput transportArmSensor = new DigitalInput(0);
     
@@ -44,15 +44,14 @@ public class Intake {
             return maximum;
         return input;
     }
-/* 
+
     // calculate gravity comp for the intake
 	// change the .1, define inPosition
     public static Double intakeGravity(){
-		Double encoderInput = intakeEncoder.getPosition();
-        Double rotations = inPosition-encoderInput;
-        return Math.sin(Math.toRadians(rotations)) / Math.pow(intakePivot.getOutputCurrent(), 2) * 0.1;
+        Double rotations = intakeEncoder.getPosition()-inPosition;
+        return Math.sin((Math.PI*2)*(rotations-6/*stable position*/)/105) * -0.1;
     }
-
+/* 
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
 	public Boolean retractIntake(){
@@ -149,10 +148,10 @@ public class Intake {
         spinRollers(rollerPower);
         power = desiredPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
         intakePivot.set(clamp(minPower, maxPower, power)); 
-    }
+    }*/
 
     // function for literally just spinning the rollers
-    void spinRollers(Double speed){
+    public static void spinRollers(Double speed){
         // limiting power if it is using a lot of power
         if (bottomIntake.getOutputCurrent() > 2.5)
             speed = 0.1;
@@ -161,7 +160,7 @@ public class Intake {
     }
 
     // function for putting the coral in the elevator
-    */public static void moveCoral(){
+    public static void moveCoral(){
         if (currentState != "run belt")
             beltDrive.set(ControlMode.PercentOutput, 0);
         if (currentState != "use transport arm" && currentState != "return transport arm"){
@@ -183,7 +182,7 @@ public class Intake {
 			        break;
 		        case ("use transport arm"): // use transport arm
 			        if (insideTransportSwitch.isPressed()){
-				        minPower = 0.0;
+				        maxPower = 0.0;
 			        }
 			        if (outsideTransportSwitch.isPressed()){
 				        transportPivot.set(0);
@@ -192,6 +191,7 @@ public class Intake {
                     }
 			        transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/30));
                     System.out.println(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/30));
+                    System.out.println(transportEncoder.getPosition()-elevatorSideValue);
 			        break;
 		        case ("return transport arm"): // return transport arm
 			        if (insideTransportSwitch.isPressed()){
@@ -212,10 +212,10 @@ public class Intake {
 	        }
         /* }else{
             if (insideTransportSwitch.isPressed()){
-                minPower = 0.0;
+                maxPower = 0.0;
             }
             if (outsideTransportSwitch.isPressed()){
-                maxPower = 0.0;
+                minPower = 0.0;
             }
             transportPivot.set(clamp(minPower, maxPower, transportGravity+transportEncoder.getPosition()));
         }*/
