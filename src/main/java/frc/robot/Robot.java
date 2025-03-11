@@ -61,8 +61,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    SignalLogger.enableAutoLogging(false);
-    SignalLogger.stop();
+    SignalLogger.enableAutoLogging(true);
+    //SignalLogger.stop();
     Driver_Controller.define_Controller();
     Intake.currentState = "none";
     Intake.inPosition = Intake.intakeEncoder.getPosition();
@@ -70,8 +70,8 @@ public class Robot extends TimedRobot {
   public static int timeslice;
   @Override
   public void teleopPeriodic() {
-    SignalLogger.enableAutoLogging(false);
-    SignalLogger.stop();
+    SignalLogger.enableAutoLogging(true);
+    //SignalLogger.stop();
     timeslice++;
     if ((timeslice%50)==0) {
     //System.out.println(Rotary_Controller.RotaryJoystick(joystick));

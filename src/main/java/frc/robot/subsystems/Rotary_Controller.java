@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 
@@ -14,12 +15,12 @@ public class Rotary_Controller {
             double midmax = ((mid - _min) / (_max - _min));
             return midmax;
         }
-        public void reset_angle(double angle, XboxController xboxController){
+        public void reset_angle(double angle, Joystick xboxController){
             angle_offset = 0.0;
             angle_offset = angle - RotaryJoystick(xboxController);
             System.out.println("Angle reset called");
         }
-        public static double RotaryJoystick(XboxController xboxController){
+        public static double RotaryJoystick(Joystick xboxController){
             
             double x = xboxController.getRawAxis(0);
             double y = xboxController.getRawAxis(1);
