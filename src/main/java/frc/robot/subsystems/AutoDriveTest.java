@@ -190,7 +190,11 @@ public class AutoDriveTest{
             double pointYPrime = ((2*originBasedOdoY)*(bigCircleDist) - (Math.sqrt((Math.pow((-2*originBasedOdoY*(bigCircleDist)),2)-4*((originBasedOdoXSquared)+(originBasedOdoYSquared))*((bigCircleDist*bigCircleDist)-bigCircleDist*(originBasedOdoXSquared))))))/(2*(originBasedOdoXSquared + originBasedOdoYSquared));
             double pointX = ((bigCircleDist*bigCircleDist)/originBasedOdoX) - ((originBasedOdoY*(pointY))/originBasedOdoX);
             double pointXPrime = ((bigCircleDist*bigCircleDist)/originBasedOdoX) - ((originBasedOdoY*(pointYPrime))/originBasedOdoX);
+<<<<<<< Updated upstream
             // double distBetweenPointAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));
+=======
+            double distBetweenPointAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));
+>>>>>>> Stashed changes
             double distBetweenPointPrimeAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));   // NOT SQUARE ROOTED NEED TO TAKE INTO ACCOUNT WHEN DOING MATH DONT FORGET PLS
             
             System.out.println("("+pointX + "," + pointY+")");
@@ -200,4 +204,8 @@ public class AutoDriveTest{
 
             //}
         }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
