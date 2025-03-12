@@ -135,9 +135,9 @@ public static Boolean buttonScoreAlgae(){
 public static Boolean buttonCoralStationIntake(){
     return m_Controller3.getRawButton(4);}
 public static Boolean buttonCoralIntakeGround(){
-    return m_Controller2.getRawButton(5);}
+    return m_Controller3.getRawButton(6);}
 public static Boolean buttonReverseCoral(){
-    return m_Controller2.getRawButton(6);}
+    return m_Controller3.getRawButton(5);}
 public static Boolean buttonTransportPivot(){
     return m_Controller3.getRawButton(7);}
 public static Boolean buttonRemoveAlgae(){

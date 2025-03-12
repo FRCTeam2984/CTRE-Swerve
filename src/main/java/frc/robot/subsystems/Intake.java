@@ -37,7 +37,7 @@ public class Intake {
         transportEncoder.setPosition(0.0);
     }
     // clamp function (copy-pasted from elevator section)
-    private static Double clamp(Double minimum, Double maximum, Double input){
+    public static Double clamp(Double minimum, Double maximum, Double input){
         if (input < minimum)
             return minimum;
         if (input > maximum)
@@ -49,42 +49,42 @@ public class Intake {
 	// change the .1, define inPosition
     public static Double intakeGravity(){
         Double rotations = intakeEncoder.getPosition()-inPosition;
-        return Math.sin((Math.PI*2)*(rotations-6/*stable position*/)/105) * -0.1;
+        return Math.sin(360.0*(Math.PI/180.0)*(rotations-7/*stable position*/)/105) * -0.05;
     }
-/* 
+
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
-	public Boolean retractIntake(){
+	public static Boolean retractIntake(){
         Double maxPower = 0.5, minPower = -0.5, power, position = intakeEncoder.getPosition(), desiredPosition = inPosition;
         Boolean outside = true;
-            
+          
         // using limit switches
-        if (outsideSwitch.isPressed()){
-            minPower = 0.0;
-        }
         if (insideSwitch.isPressed()){
+            maxPower = 0.0;
+        }
+        if (outsideSwitch.isPressed()){
             minPower = 0.0;
             maxPower = 0.0;
             outside = false;
             movingCoral = true;
-        
+        }
         // using or not using the bottom intake motor depending on after algae or coral
-        spinRollers(0.0);
+        spinRollers(0.0);/*  
         if (intakeLastUsed == 'A' && !insideSwitch.isPressed())
             bottomIntake.set(0.1);
         }
 
         if (intakeLastUsed == 'C'){
-            desiredPosition = depositCoralPosition;
-        }
+            //desiredPosition = depositCoralPosition;
+        }*/
 
-        power = desiredPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
+        power = intakeGravity()+(desiredPosition-position)/105-0.05; // pivot power based linearly on error + gravity comp
         intakePivot.set(Intake.clamp(minPower, maxPower, power));
         if (outside = false && intakeLastUsed == 'C')
             currentState = "start";
         return outside;
     }
-
+/* 
     //function to bring intake to a position
     //constants prob not right
     public static void intakeTo(String destination){
@@ -119,26 +119,25 @@ public class Intake {
         // setting power of the pivot motor
         power = desiredPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
         intakePivot.set(clamp(minPower, maxPower, power));
-    }
+    }*/
 
     // function for intaking coral
     // change constants!!!!
-    public void intakeCoral(Boolean reversing){
+    public static void intakeCoral(Boolean reversing){
         Double position = intakeEncoder.getPosition();
-        Double maxPower = 0.5, minPower = -0.5, power, rollerPower = -0.5, desiredPosition = inPosition+0.4;
+        Double maxPower = 0.3, minPower = -0.3, power, rollerPower = 0.0, desiredPosition = inPosition+45;
 
         intakeLastUsed = 'C';
 		movingCoral = true;
 
         // handle limit switches
-        if (insideSwitch.isPressed())
-            maxPower = 0.0;
-        if (outsideSwitch.isPressed()){
+        if (outsideSwitch.isPressed())
+            minPower = 0.0;
+        if (insideSwitch.isPressed() || desiredPosition-position > 43){
             minPower = 0.0;
             maxPower = 0.0;
-        }else
-            // not using the rollers when not out to conserve power
-            rollerPower = 0.0;
+            rollerPower = 0.5;
+        }
 
         // handling reverse intake button
         if (reversing)
@@ -146,9 +145,10 @@ public class Intake {
 
         // set roller and pivot motor speeds
         spinRollers(rollerPower);
-        power = desiredPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
+        power = (desiredPosition-position)/105+intakeGravity(); // pivot power based linearly on error + gravity comp
+        System.out.println(power);
         intakePivot.set(clamp(minPower, maxPower, power)); 
-    }*/
+    }
 
     // function for literally just spinning the rollers
     public static void spinRollers(Double speed){
