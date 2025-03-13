@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Limelight.limelightInit();
     SignalLogger.enableAutoLogging(true);
     //SignalLogger.stop();
     Driver_Controller.define_Controller();

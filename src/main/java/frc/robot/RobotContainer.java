@@ -24,7 +24,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Rotary_Controller;
 import frc.robot.subsystems.Driver_Controller;
-
+import frc.robot.subsystems.Limelight;
 import frc.robot.Constants;
 
 public class RobotContainer {
@@ -49,7 +49,7 @@ public class RobotContainer {
     
     //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     
     
@@ -60,6 +60,7 @@ public class RobotContainer {
     }
     private double rotaryCalc(){
         //Driver_Controller.SwerveInputPeriodic();
+        Limelight.limelightOdometryUpdate();
         double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
         double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
         //System.out.println(pigeonYaw);
