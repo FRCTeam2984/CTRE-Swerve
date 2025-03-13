@@ -78,6 +78,7 @@ public class AutoDriveTest{
             Int dF
             if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) { */
+            Driver_Controller.SwerveControlSet(true);
             stage = close1; // will delete later
             System.out.println("works!!");
             if(stage == close1){
@@ -177,10 +178,10 @@ public class AutoDriveTest{
 
         }*/
         public static void driveStraightToCircle(){
-            double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle   // this is c on desmos
-            double originBasedOdoY = odoy - scorePos[1][0];  // this is b on desmos
-            double originBasedOdoXSquared = originBasedOdoX * originBasedOdoX;   
-            double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;   
+            static double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle   // this is c on desmos
+            static double originBasedOdoY = odoy - scorePos[1][0];  // this is b on desmos
+            static double originBasedOdoXSquared = originBasedOdoX * originBasedOdoX;   
+            static double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;   
 
             // reference to straight line to circle desmos graph, REMEMBER x and y r switched compared to the desmos
             // may have to swap originbasedodoy and originbasedodox with each other idk
@@ -190,22 +191,52 @@ public class AutoDriveTest{
             double pointYPrime = ((2*originBasedOdoY)*(bigCircleDist) - (Math.sqrt((Math.pow((-2*originBasedOdoY*(bigCircleDist)),2)-4*((originBasedOdoXSquared)+(originBasedOdoYSquared))*((bigCircleDist*bigCircleDist)-bigCircleDist*(originBasedOdoXSquared))))))/(2*(originBasedOdoXSquared + originBasedOdoYSquared));
             double pointX = ((bigCircleDist*bigCircleDist)/originBasedOdoX) - ((originBasedOdoY*(pointY))/originBasedOdoX);
             double pointXPrime = ((bigCircleDist*bigCircleDist)/originBasedOdoX) - ((originBasedOdoY*(pointYPrime))/originBasedOdoX);
-<<<<<<< Updated upstream
-            // double distBetweenPointAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));
-=======
-            double distBetweenPointAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));
->>>>>>> Stashed changes
-            double distBetweenPointPrimeAndCircleE = (Math.pow((odox - ECoords[0][0]), 2) + Math.pow((odoy- ECoords[1][0]), 2));   // NOT SQUARE ROOTED NEED TO TAKE INTO ACCOUNT WHEN DOING MATH DONT FORGET PLS
-            
+            double distBetweenPointAndCircleE = (Math.pow((pointX - ECoords[0][0]), 2) + Math.pow((pointY- ECoords[1][0]), 2));
+            double distBetweenPointPrimeAndCircleE = (Math.pow((pointXPrime - ECoords[0][0]), 2) + Math.pow((pointYPrime- ECoords[1][0]), 2));   // NOT SQUARE ROOTED NEED TO TAKE INTO ACCOUNT WHEN DOING MATH DONT FORGET PLS
+            double distBetweenPointAndCircleD = (Math.pow((pointX - DCoords[0][0]), 2) + Math.pow((pointY- DCoords[1][0]), 2));
+            double distBetweenPointPrimeAndCircleD = (Math.pow((pointXPrime - DCoords[0][0]), 2) + Math.pow((pointYPrime- DCoords[1][0]), 2));   // NOT SQUARE ROOTED NEED TO TAKE INTO ACCOUNT WHEN DOING MATH DONT FORGET PLS
+
             System.out.println("("+pointX + "," + pointY+")");
             System.out.println("("+pointXPrime + "," + pointYPrime+")");
 
-            //if(areaName.equals("area b")){
+            if(areaName.equals("area b")){
+                if((distBetweenPointAndCircleE > distBetweenPointPrimeAndCircleE) && (distBetweenPointAndCircleD > distBetweenPointPrimeAndCircleD)){
+                    // go to point (not prime point)
+                    double angleToDrivetoPoint = ((pointY - originBasedOdoY)/(pointX - originBasedOdoX));
+                    // may need to convert this angle to something but this should be the degrees needed to turn (slope) to eventually get to the point
+                    // drive to the point
+                    Drive_Controller.SwerveCommandEncoderValue(angleToDrivetoPoint);
 
-            //}
+                }
+                else{
+                    double angleToDrivetoPointPrime = ((pointYPrime - originBasedOdoY)/(pointXPrime - originBasedOdoY));
+                    // may need to convert this angle to something but this should be the degrees needed to turn (slope) to eventually get to the point
+                    // drive to point prime
+                }
+            }
         }
-<<<<<<< Updated upstream
+
+        public static void curveAlongCircle(){
+            boolean goAlongCircle = true;
+            double slopeForGoingAlongCircle;
+            double newYPoint;
+            while(goAlongCircle = true){
+                if(originBasedOdoY < 0)  // on left or right side of circle
+                    newYPoint = -Math.sqrt(bigCircleDist - (originBasedOdoXSquared*originBasedOdoXSquared));  
+                else{
+                    newYPoint = Math.sqrt(bigCircleDist - (originBasedOdoXSquared*originBasedOdoXSquared));
+                }
+                if((originBasedOdoX < 0) && (originBasedOdoY > 0)){  // quad 2
+                    slopeForGoingAlongCircle = (originBasedOdoX/newYPoint);
+                }
+                slopeForGoingAlongCircle = (-originBasedOdoX/newYPoint); // this will only work for close 1. . .
+                Drive_Controller.SwerveCommandEncoderValue(slopeForGoingAlongCircle);
+            }
+        }
 }
-=======
-}
->>>>>>> Stashed changes
+
+
+Driver_Controller.SwerveCommandEncoderValue  -> degrees
+Driver_Controller.SwerveCommandXValue  -> x values
+
+Driver_Controller.SwerveControlSet();

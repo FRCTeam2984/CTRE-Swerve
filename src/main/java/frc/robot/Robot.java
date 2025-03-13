@@ -104,8 +104,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //System.out.println(Rotary_Controller.RotaryJoystick(joystick));
-    /* AutoDriveTest.determineArea(kDefaultPeriod, kDefaultPeriod, kDefaultPeriod);
-    AutoDriveTest.driveStraightToCircle(); */
+    // AutoDriveTest.determineArea(kDefaultPeriod, kDefaultPeriod, kDefaultPeriod);
+    AutoDriveTest.driveStraightToCircle();
   }
 
   @Override
