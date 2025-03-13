@@ -75,14 +75,14 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
+        //drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(Driver_Controller.SwerveYPassthrough * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
-                    .withVelocityY(Driver_Controller.SwerveXPassthrough * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
-                    .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
-            )
-        );
+            // drivetrain.applyRequest(() ->
+            //     drive.withVelocityX(Driver_Controller.SwerveYPassthrough * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
+            //         .withVelocityY(Driver_Controller.SwerveXPassthrough * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
+            //         .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
+            // )
+        //);
 
         Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
         Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->
