@@ -103,7 +103,6 @@ public class AutoDriveTest{
             Int dF
             if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) { */
-<<<<<<< HEAD
             Driver_Controller.SwerveControlSet(true);
                         stage = close1; // will delete later
                         System.out.println("works!!");
@@ -114,76 +113,6 @@ public class AutoDriveTest{
                                 if(circleDCheck <= DCircleDist){
                                     areaName = areaD;
                                     System.out.println(areaD);
-=======
-            stage = close1; // will delete later
-            System.out.println("works!!");
-            if(stage == close1){
-                if(bigCircleDist >= dFReef){
-                    areaName = "big circle";
-                    System.out.println("big circle");
-                    if(circleDCheck <= dCircleDist){
-                        areaName = "circle d";
-                        System.out.println("circle d");
-                    }
-                    else if(circleECheck <= ECircleDist){
-                        areaName = "circle e";
-                        System.out.println("circle e");
-                    }
-                    else if(odox <=  DInequality && odox<  EInequality){ 
-                    // checks red inequality and black in equality   checks whether u are in the c, cprime, or score
-                        if(odox<= DCoords[0][0]){
-                            if(odoy <= scorePos[1][1]){
-                                areaName = "area c";
-                                System.out.println("area c");
-                                // drive then return bool if it is in right position
-                            }
-                            else {
-                                areaName = "area c prime";
-                                System.out.println("area c prime");
-                            }
-                        }
-                        else{
-                            areaName = "score automatically";
-                            System.out.println("score automatically");
-                        }
-                    }
-                    else if(odoy <= scorePos[0][1]){
-                        areaName = "area a";
-                        System.out.println("area a");
-                    }
-                    else{
-                        areaName = "area a prime";
-                        System.out.println("a prime");
-                    }
-                                                
-                }
-                                                
-                                            
-                                                
-                else{
-                                                    
-                    if(odox >= reciprocalDInequ && odox >= reciprocalEInequ ){
-                        if(odoy>scorePos[1][1]){  // means ur in B
-                            areaName = "area b";
-                            System.out.println("area b");
-                        }
-                        else{
-                            areaName = "area b prime";
-                            System.out.println("area b prime");
-                        }
-                                                
-                    }
-                }
-                    System.exit(0);  // may need to delete
-            }
-    }
-    
-
-    
-        /* Else{
-                                if(odoy>scorePos[1][1]){  // means ur in C
-                                    System.out.println("big circle"”");
->>>>>>> 0324aaa5512ae3535c852248ab326474790a6281
                                 }
                                 else if(circleECheck <= ECircleDist){
                                     areaName = areaE;
