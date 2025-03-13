@@ -117,7 +117,6 @@ public class Driver_Controller {
                 if ((m_tempController.getRawButton(11) == true) && (m_tempController.getRawButton(12) == true)) {
                     m_Controller3 = m_tempController;
                 }
-
         }
     }
     //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
