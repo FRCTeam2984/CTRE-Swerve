@@ -8,6 +8,7 @@
  */
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -26,7 +27,7 @@ public class Driver_Controller {
      * m_Controller3           = Right Side Buttons
      */
     public static CommandXboxController m_Controller0 = new CommandXboxController(0); //Set Temp value to complete initialization of swervedrive
-    public static XboxController m_Controller1;
+    public static Joystick m_Controller1;
     public static XboxController m_Controller2;
     public static XboxController m_Controller3;
     private static XboxController m_tempController;
@@ -52,7 +53,7 @@ public class Driver_Controller {
                     SwerveCommandXboxControllerPort = 3;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
-                    m_Controller1 = m_tempController;
+                    m_Controller1 = new Joystick(3);
                     SwerveRotaryEncoderPort = 3;
                     //System.out.println("Set controller port 3");
                 }
@@ -70,7 +71,7 @@ public class Driver_Controller {
                     SwerveCommandXboxControllerPort = 1;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
-                    m_Controller1 = m_tempController;
+                    m_Controller1 = new Joystick(1);
                     SwerveRotaryEncoderPort = 1;
                     //System.out.println("Set controller port 1");
                 }
@@ -88,7 +89,7 @@ public class Driver_Controller {
                     SwerveCommandXboxControllerPort = 2;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
-                    m_Controller1 = m_tempController;
+                    m_Controller1 = new Joystick(2);
                     SwerveRotaryEncoderPort = 2;
                     //System.out.println("Set controller port 2");
                 }
@@ -106,7 +107,7 @@ public class Driver_Controller {
                     SwerveCommandXboxControllerPort = 0;
                 }
                 if ((m_tempController.getRawButton(11) == false) && (m_tempController.getRawButton(12) == true)) {
-                    m_Controller1 = m_tempController;
+                    m_Controller1 = new Joystick(0);
                     SwerveRotaryEncoderPort = 0;
                     //System.out.println("Set controller port 0");
                 }
@@ -129,18 +130,22 @@ public static Boolean buttonExtendClimb(){
     return m_Controller3.getRawButton(1);}
 public static Boolean buttonRetractClimb(){
     return m_Controller3.getRawButton(2);}
-public static Boolean buttonRemoveAlgae(){
-    return m_Controller3.getRawButton(3);} 
-public static Boolean buttonTransportPivot(){
-    return m_Controller3.getRawButton(4);}
 public static Boolean buttonScoreAlgae(){
-    return m_Controller3.getRawButton(5);}
+    return m_Controller3.getRawButton(3);}
 public static Boolean buttonCoralStationIntake(){
+    return m_Controller3.getRawButton(4);}
+public static Boolean buttonCoralIntakeGround(){
     return m_Controller3.getRawButton(6);}
-public static Boolean switchAlgaeIntake(){
+public static Boolean buttonReverseCoral(){
+    return m_Controller3.getRawButton(5);}
+public static Boolean buttonTransportPivot(){
     return m_Controller3.getRawButton(7);}
+public static Boolean buttonRemoveAlgae(){
+    return m_Controller3.getRawButton(8);} 
+public static Boolean switchAlgaeIntake(){
+    return m_Controller3.getRawButton(9);}
 public static Boolean switchExtraOnOff(){
-    return m_Controller3.getRawButton(8);}
+    return m_Controller3.getRawButton(10);}
         
 public static Boolean buttonL4(){
     return m_Controller2.getRawButton(1);}
@@ -152,10 +157,6 @@ public static Boolean buttonL1(){
     return m_Controller2.getRawButton(4);}
 public static Boolean buttonResetElevator(){
     return m_Controller2.getRawButton(5);}
-public static Boolean buttonCoralIntakeGround(){
-    return m_Controller2.getRawButton(6);}
-public static Boolean buttonReverseCoral(){
-    return m_Controller2.getRawButton(7);}
       
 public static double buttonReefPosition(){
     if (m_Controller2.getRawButton(10))
@@ -181,7 +182,7 @@ public static void SwerveInputPeriodic(){
         SwerveYPassthrough = SwerveCommandYValue;
     }
     else{
-        SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);
+        //SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);
         SwerveXPassthrough = m_Controller0.getLeftX();
         SwerveYPassthrough = m_Controller0.getLeftY();
     }

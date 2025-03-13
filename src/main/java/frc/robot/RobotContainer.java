@@ -59,30 +59,53 @@ public class RobotContainer {
         configureBindings();
     }
     private double rotaryCalc(){
-        Driver_Controller.SwerveInputPeriodic();
-        double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();                 // Grab the yaw value from the swerve drive IMU as a double
-        double rotaryJoystickInput = Driver_Controller.SwerveEncoderPassthrough;               // Get input from the rotary controller (ID from joystick2)
-        double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
+        //Driver_Controller.SwerveInputPeriodic();
+        double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
+        double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
+        //System.out.println(pigeonYaw);
+        //System.out.println(rotaryJoystickInput);
+        //double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
         //System.out.println(joystickClamped);
-        double powerCurved = -((((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180) - ((joystickClamped) / 45) % 180) / 2);
-        double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
-        if((angleDiff <= 1) && (angleDiff >= -1)){
-            return 0;
+        double diff = pigeonYaw - (rotaryJoystickInput);
+        double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
+        //System.out.println(diffmod180);
+        double powerCurved = -diffmod180;
+        powerCurved = Math.max(-45,Math.min(45,powerCurved));
+        //double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
+        if((diffmod180 <= 1) && (diffmod180 >= -1)){
+            //return 0;
         }
-        //System.out.println(powerCurved);
-        return powerCurved * 0.9;
+        System.out.println(powerCurved *0.9/45.0);
+        return powerCurved * 0.09;
+    }
+    final double pos[] = {-1.0,-0.75,-0.5,-0.1, 0, 0.1, 0.5, 0.75,1};
+    final double pwr[] = {-1, -0.3,-0.1,    0, 0,    0, 0.1,   .3,1};
+    private double joystick_curve(double joy) {
+
+        int i;
+        if (joy<=-1) joy=-1;
+        if (joy>=1) joy=1;
+        for (i=0;i<8;i++) {
+            if ((pos[i]<=joy) && (pos[i+1]>=joy)) {
+                    System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
+                    return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
+                }
+        }
+        return(0);
     }
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        //drivetrain.setDefaultCommand(
+        boolean drive_enable=true;
+        if (drive_enable){
+        drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
-            // drivetrain.applyRequest(() ->
-            //     drive.withVelocityX(Driver_Controller.SwerveYPassthrough * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
-            //         .withVelocityY(Driver_Controller.SwerveXPassthrough * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
-            //         .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
-            // )
-        //);
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(joystick_curve(Driver_Controller.m_Controller0.getLeftY())) // Drive forward with negative Y (forward)
+                    .withVelocityY(joystick_curve(Driver_Controller.m_Controller0.getLeftX())) // Drive left with negative X (left)
+                    .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier*0) // Drive counterclockwise with negative X (left)
+            )
+        );}
 
         Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
         Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->

@@ -18,9 +18,9 @@ public class Constants {
     }
 
     public static final int climbID = 17;
-    public static final int intakeBeltID = 16; // incorrect
-    public static final int intakeTopMotorID = 22; // incorrect
-    public static final int intakeBottomMotorID = 21; // incorrect
+    public static final int intakeBeltID = 16;
+    public static final int intakeTopMotorID = 22;
+    public static final int intakeBottomMotorID = 21;
     public static final int intakePivotMotorID = 14; // incorrect
     public static final int intakeTransportPivotID = 15; // incorrect
     public static final int elevatorMotorID = 18; // incorrect

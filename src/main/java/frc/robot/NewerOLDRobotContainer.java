@@ -24,9 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class NewerOLDRobotContainer {
-  public final Elevator m_elevator = new Elevator();
-  public final Climb m_climb = new Climb();
-  public final Intake m_intake = new Intake();
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   

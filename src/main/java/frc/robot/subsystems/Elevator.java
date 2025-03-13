@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.subsystems.Driver_Controller;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -9,8 +10,8 @@ import frc.robot.drivetrain;
 
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-  public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
-  static Double bottomPosition = 0.0, armTimer = 0.0;
+  public static TalonSRX armMotor = new TalonSRX(Constants.elevatorArmMotorID);
+  static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0;
   static Boolean removeButtonLastPressed = false;
   static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
   static int recentLevel = 2;
@@ -32,7 +33,7 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder counts
-    Double minPower = -0.9, maxPower = 0.9, gravityComp = 0.05, error = destination - position, power;
+    Double minPower = -0.2, maxPower = 0.2, gravityComp = 0.0, error = destination - position, power;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 
@@ -46,7 +47,7 @@ public class Elevator{
 			
 		// set motor power based on error or set it to keep position
 		if (Math.abs(error) > maxError)
-			power = error/100 + gravityComp;
+			power = error/200 + gravityComp;
     else {
 	    power = gravityComp;
 	    closeEnough = true;
@@ -80,7 +81,7 @@ public class Elevator{
       if (extendOrRetract == "extend") extendedOrRetracted = "extended";
       else extendedOrRetracted = "retracted";
     }else extendedOrRetracted = "moving";
-    armMotor.set(power);
+    armMotor.set(ControlMode.PercentOutput, power);
     return done;
   }
 
