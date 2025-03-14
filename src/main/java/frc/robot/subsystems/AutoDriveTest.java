@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+/* package frc.robot.subsystems;
 
 import frc.robot.Robot;
 
@@ -99,10 +99,10 @@ public class AutoDriveTest{
             AutoDriveTest.driveStraightToCircle();
         }
         public static void determineArea(double odox, double odoy, double odoangle){
-            /* Optional<Alliance> ally = DriverStation.getAlliance();
+            Optional<Alliance> ally = DriverStation.getAlliance();
             Int dF
             if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) { */
+            if (ally.get() == Alliance.Red) { 
             Driver_Controller.SwerveControlSet(true);
                         stage = close1; // will delete later
                         System.out.println("works!!");
@@ -122,8 +122,8 @@ public class AutoDriveTest{
                                 static double EInequality = (-(scorePos[0][0]-ECoords[0][0])/(scorePos[0][1]-ECoords[0][1])*(odoy-scorePos[0][1]) + odox);  
                                 // these lines go through the center and point and d circle (black on desmos) and E circle (red on desmos)
                                 static double reciprocalDInequ =  (-(scorePos[0][1]-DCoords[0][1])/(scorePos[0][0]-DCoords[0][0])*((odoy-scorePos[0][1]) + odox));
-                                static double reciprocalEInequ = ((scorePos[0][1]-ECoords[0][1])/(scorePos[0][0]-ECoords[0][0])*(odoy-scorePos[0][1]) + odox);   */
-                                else if(odox <=  DInequality && odox<  EInequality){ 
+                                static double reciprocalEInequ = ((scorePos[0][1]-ECoords[0][1])/(scorePos[0][0]-ECoords[0][0])*(odoy-scorePos[0][1]) + odox);   
+                                //else if(odox <=  DInequality && odox<  EInequality){ 
                                 // checks red inequality and black in equality   checks whether u are in the c, cprime, or score
                                     if(odox<= DCoords[0][0]){
                                         if(odoy <= scorePos[1][1]){
@@ -156,7 +156,7 @@ public class AutoDriveTest{
                                                             
                             else{
                                                                 
-                                if(odox >= reciprocalDInequ && odox >= reciprocalEInequ ){
+                                //if(odox >= reciprocalDInequ && odox >= reciprocalEInequ ){
                                     if(odoy>scorePos[1][1]){  // means ur in B
                                         areaName = areaB;
                                         System.out.println(areaB);
@@ -170,7 +170,7 @@ public class AutoDriveTest{
                             }
                                 System.exit(0);  // may need to delete
                         }
-                        else if(stage == close2){
+                        //else if(stage == close2){
                             if(bigCircleDist >= dFReef){
                                 areaName = bigCircle;
                                 System.out.println(bigCircle);
@@ -265,12 +265,13 @@ public class AutoDriveTest{
             
             
             
-                    }*/
+                    }
+*/   /* 
                     public static void driveStraightToCircle(){
                         /* double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle   // this is c on desmos
                         double originBasedOdoY = odoy - scorePos[1][0];  // this is b on desmos
                          double originBasedOdoXSquared = originBasedOdoX * originBasedOdoX;   
-                         double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;   */
+                         double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;   
             
                         // reference to straight line to circle desmos graph, REMEMBER x and y r switched compared to the desmos
                         // may have to swap originbasedodoy and originbasedodox with each other idk
@@ -383,5 +384,5 @@ public class AutoDriveTest{
                         }
             
                     }
-            }
+            }*/
                     

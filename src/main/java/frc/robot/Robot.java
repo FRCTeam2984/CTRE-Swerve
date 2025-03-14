@@ -17,6 +17,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import networktablesdesktopclient.Vector2;
+import networktablesdesktopclient.NetworkTablesDesktopClient;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -72,6 +74,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    Vector2 robotPos = new Vector2();
+    robotPos = NetworkTablesDesktopClient.getRobotPosition();
+    double odoX = robotPos.x, odoY = robotPos.y;
     SignalLogger.enableAutoLogging(false);
     SignalLogger.stop();
   /*if (Driver_Controller.buttonL2()) Elevator.elevatorTo(20.0);
