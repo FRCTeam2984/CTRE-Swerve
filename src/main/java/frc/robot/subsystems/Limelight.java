@@ -10,12 +10,12 @@ import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 
 public class Limelight {
-    static boolean hasTarget = LimelightHelpers.getTV("limelight"); // Do you have a valid target?
-    static Pose2d LimelightGeneratedPose2d = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+    static boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
+    static Pose2d LimelightGeneratedPose2d = LimelightHelpers.getBotPose2d_wpiBlue("");
     static double seconds = Utils.getCurrentTimeSeconds();
     public static void limelightInit(){
         // Set camera offset from middle of robot
-        LimelightHelpers.setCameraPose_RobotSpace("limelight", 
+        LimelightHelpers.setCameraPose_RobotSpace("", 
         0.5,    // Forward offset (meters)
         0.0,    // Side offset (meters)
         0.5,    // Height offset (meters)
@@ -28,9 +28,9 @@ public class Limelight {
     public static void limelightOdometryUpdate(){
         System.out.println(hasTarget);
         
-        if (hasTarget){
+        //if (hasTarget){
             RobotContainer.drivetrain.addVisionMeasurement(LimelightGeneratedPose2d, seconds);
             System.out.println(LimelightGeneratedPose2d);
-        }
+        //}
     }
 }
