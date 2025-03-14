@@ -60,7 +60,7 @@ public class RobotContainer {
     }
     private double rotaryCalc(){
         //Driver_Controller.SwerveInputPeriodic();
-        Limelight.limelightOdometryUpdate();
+        
         double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
         double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
         //System.out.println(pigeonYaw);
@@ -76,7 +76,7 @@ public class RobotContainer {
         if((diffmod180 <= 1) && (diffmod180 >= -1)){
             //return 0;
         }
-        System.out.println(powerCurved *0.9/45.0);
+        //System.out.println(powerCurved *0.9/45.0);
         return powerCurved * 0.09;
     }
     final double pos[] = {-1.0,-0.75,-0.5,-0.1, 0, 0.1, 0.5, 0.75,1};
@@ -88,7 +88,7 @@ public class RobotContainer {
         if (joy>=1) joy=1;
         for (i=0;i<8;i++) {
             if ((pos[i]<=joy) && (pos[i+1]>=joy)) {
-                    System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
+                    //System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
                     return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
                 }
         }
@@ -104,7 +104,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(joystick_curve(Driver_Controller.m_Controller0.getLeftY())) // Drive forward with negative Y (forward)
                     .withVelocityY(joystick_curve(Driver_Controller.m_Controller0.getLeftX())) // Drive left with negative X (left)
-                    .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier*0) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(rotaryCalc() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );}
 

@@ -33,23 +33,15 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder counts
-    Double minPower = -0.2, maxPower = 0.2, gravityComp = 0.0, error = destination - position, power;
+    Double minPower = -0.2, maxPower = 0.2, error = destination - position, power;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
-
-    // calculate gravity comp based on current position
-    if (position > 10)
-      gravityComp = 0.05;
-    if (position > 20)
-      gravityComp = 0.1;
-    if (position > 30)
-      gravityComp = 0.15;
 			
 		// set motor power based on error or set it to keep position
 		if (Math.abs(error) > maxError)
-			power = error/200 + gravityComp;
+			power = error/200;
     else {
-	    power = gravityComp;
+	    power = 0.0;
 	    closeEnough = true;
     }
 

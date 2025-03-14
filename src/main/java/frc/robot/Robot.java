@@ -4,24 +4,16 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.*;
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.OperatorConstants;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkLimitSwitch;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import networktablesdesktopclient.Vector2;
-import networktablesdesktopclient.NetworkTablesDesktopClient;
-
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Driver_Controller;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
@@ -69,30 +61,35 @@ public class Robot extends TimedRobot {
     //SignalLogger.stop();
     Driver_Controller.define_Controller();
     Intake.currentState = "none";
-    Intake.inPosition = Intake.intakeEncoder.getPosition();
+    
   }
 
   @Override
   public void teleopPeriodic() {
-    Vector2 robotPos = new Vector2();
-    robotPos = NetworkTablesDesktopClient.getRobotPosition();
-    double odoX = robotPos.x, odoY = robotPos.y;
-    SignalLogger.enableAutoLogging(false);
+    Limelight.limelightOdometryUpdate();
+    Intake.intakeLastUsed = 'C';
+    if (Intake.outsideSwitch.isPressed()){
+      Intake.inPosition = Intake.intakeEncoder.getPosition();
+    } else if (Intake.insideSwitch.isPressed()){
+      Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;
+    }
+   SignalLogger.enableAutoLogging(false);
     SignalLogger.stop();
-  /*if (Driver_Controller.buttonL2()) Elevator.elevatorTo(20.0);
+  if (Driver_Controller.buttonL2())Elevator.elevatorMotor.set(1);// Elevator.elevatorTo(20.0);
   if (Driver_Controller.buttonL1() && Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround"){
-    Elevator.elevatorMotor.set(-0.05);
+    Elevator.elevatorMotor.set(-0.5);
   }else if (Driver_Controller.buttonResetElevator()){
     Elevator.elevatorMotor.set(0);
   }
-  
+
   if (Driver_Controller.buttonRemoveAlgae()) Intake.moveCoral();
   if (Driver_Controller.buttonTransportPivot()) Intake.currentState = "start";
   Climb.letsClimb();
-  System.out.println(Intake.intakeEncoder.getPosition()-Intake.inPosition);*/
+  System.out.println(Intake.intakeEncoder.getPosition()-Intake.inPosition);
+
     if (Driver_Controller.buttonCoralStationIntake()) Intake.retractIntake();
     else if (Driver_Controller.buttonCoralIntakeGround()) Intake.intakeCoral(Driver_Controller.buttonReverseCoral());
-    else Intake.intakePivot.set(0.0);
+    else Intake.intakePivot.set(0);
   }
 
   @Override

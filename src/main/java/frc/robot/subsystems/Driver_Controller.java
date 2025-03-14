@@ -185,7 +185,7 @@ public static void SwerveInputPeriodic(){
         SwerveYPassthrough = SwerveCommandYValue;
     }
     else{
-        //SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);
+        SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);
         SwerveXPassthrough = m_Controller0.getLeftX();
         SwerveYPassthrough = m_Controller0.getLeftY();
     }

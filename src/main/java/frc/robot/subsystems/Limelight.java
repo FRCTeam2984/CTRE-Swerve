@@ -16,16 +16,19 @@ public class Limelight {
     public static void limelightInit(){
         // Set camera offset from middle of robot
         LimelightHelpers.setCameraPose_RobotSpace("limelight", 
-        0.5,    // Forward offset (meters)
-        0.0,    // Side offset (meters)
-        0.5,    // Height offset (meters)
+        0.27,    // Forward offset (meters)
+        0.04,    // Side offset (meters)
+        0.37,    // Height offset (meters)
         0.0,    // Roll (degrees)
-        30.0,   // Pitch (degrees)
+        0.0,   // Pitch (degrees)
         0.0     // Yaw (degrees)
         );
     }
                   
     public static void limelightOdometryUpdate(){
+        hasTarget = LimelightHelpers.getTV("limelight");
+        LimelightGeneratedPose2d = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+        seconds = Utils.getCurrentTimeSeconds();
         System.out.println(hasTarget);
         
         if (hasTarget){
