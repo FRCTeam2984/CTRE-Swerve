@@ -12,23 +12,28 @@ public class Climb {
 	public static Double inPosition = Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10));
 
 	public static void letsClimb(){
-		if (climb.getReverseLimit().getValue().toString() == "ClosedToGround") inPosition = Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10));
+		Double position = Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10));
+		if (climb.getReverseLimit().getValue().toString() == "ClosedToGround") inPosition = position;
 		++timer;
 		if (Driver_Controller.buttonExtendClimb() && extendLastPressed == false){
 			timer = 0;
 		}
 		Double power = 0.0;
-		if(Driver_Controller.buttonExtendClimb() && System.currentTimeMillis() > 1000){
-			if(timer > 25 && inPosition-Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10)) > -100.0){
+		if(Driver_Controller.buttonExtendClimb()){
+			if(timer > 25 && inPosition-position> -100.0){
 				power = 0.5;
 			}
 			// find out led code -> LED light flashes or solid a specific color
 		}
-		if(Driver_Controller.buttonRetractClimb()){
+		if(Driver_Controller.buttonRetractClimb() && climb.getReverseLimit().getValue().toString() != "ClosedToGround"){
 			//if (Elevator.elevatorTo(Elevator.bottomPosition) && Elevator.extendedOrRetracted == "retracted" && Math.abs(Intake.intakeEncoder.getPosition()-(Intake.climbPosition+Intake.inPosition)) < 0.05 && Intake.transportEncoder.getPosition() < 0.5){
 				
-			if(climb.getReverseLimit().getValue().toString() != "ClosedToGround") // limit switch
-				power = -0.5; // retract climb
+			if(Driver_Controller.switchExtraOnOff() || (inPosition-position) < -50){
+				power = -0.5;
+			}else{
+				power = -0.025;
+			}
+				
 			/* }else{
 				Intake.intakeTo("climbPosition");
 				if (Elevator.extendedOrRetracted != "extended"){

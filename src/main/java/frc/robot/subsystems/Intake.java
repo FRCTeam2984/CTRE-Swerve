@@ -84,7 +84,6 @@ public class Intake {
             power = intakeGravity()+(desiredPosition-position)/155-0.2; // pivot power based linearly on error + gravity comp
         }else{
             power = intakeGravity()-0.01;
-            System.out.println(power);
         }
         
         intakePivot.set(Intake.clamp(minPower, maxPower, power));
@@ -102,13 +101,13 @@ public class Intake {
         if (destination == "intakeAlgae")
             intakeLastUsed = 'A';
             desiredPosition = inPosition + 0.1;
-            if (bottomIntake.getOutputCurrent() > 2.5)
+            if (bottomIntake.getOutputCurrent() > 3.5)
                 bottomIntake.set(0.1);
             else
                 bottomIntake.set(0.5);
         if (destination == "stationIntakeCoral")
             intakeLastUsed = 'C';
-            desiredPosition = inPosition + 0.07;
+            desiredPosition = inPosition + 10;
         if (destination == "climbPosition")
             intakeLastUsed = 'D';
             desiredPosition = inPosition + climbPosition;
@@ -182,7 +181,7 @@ public class Intake {
 	        		break;
 	            case ("run belt"): // run belt
                     ++timer;
-	    		    beltDrive.set(ControlMode.PercentOutput, 0.5);
+	    		    beltDrive.set(ControlMode.PercentOutput, -0.5);
 	    		    if (timer >= 50*3 || transportArmSensor.get() == false) // 3 seconds
 	    			    currentState = "use transport arm";
 			        break;
@@ -207,7 +206,7 @@ public class Intake {
 			        if (outsideTransportSwitch.isPressed()){
 				        minPower = 0.0;
 			        }
-			        //transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/30+0.1));
+			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/30+0.1));
                     break;
                 case ("retract intake"):
                     if(retractIntake()) currentState = "none";

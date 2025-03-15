@@ -11,9 +11,9 @@ import frc.robot.drivetrain;
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static TalonSRX armMotor = new TalonSRX(Constants.elevatorArmMotorID);
-  static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0;
+  public static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0, l2Position = 70.5, l3Position = 117.8, l4Position = 188.25;
   static Boolean removeButtonLastPressed = false;
-  static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
+  public static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
   static int recentLevel = 2;
   static Double[] removeAlgaeH = {20.0, 30.0};
   
@@ -32,15 +32,15 @@ public class Elevator{
     String rawInput = elevatorMotor.getRotorPosition().toString();
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
-		// convert destination from input units to encoder counts
-    Double minPower = -0.2, maxPower = 0.2, error = destination - position, power;
+		// convert destination from input units to encoder rotations
+    Double minPower = -0.7, maxPower = 0.7, error = destination - position, power = 0.0;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 			
 		// set motor power based on error or set it to keep position
-		if (Math.abs(error) > maxError)
-			power = error/200;
-    else {
+    if (error > 0) power = 1.0;
+    if (error < 0) power = -1.0;
+    if (Math.abs(error) < maxError){
 	    power = 0.0;
 	    closeEnough = true;
     }
@@ -48,11 +48,13 @@ public class Elevator{
     // Clamp power and use limit switches
     if (elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround")
       power = Elevator.clamp(0.0, maxPower, power);
-    else if (elevatorMotor.getForwardLimit().getValue().toString() == "ClosedToGround")
-      power = Elevator.clamp(minPower, 0.0, power);
+    /*else if (elevatorMotor.getForwardLimit().getValue().toString() == "ClosedToGround")
+      power = Elevator.clamp(minPower, 0.0, power);*/
     else
       power = Elevator.clamp(minPower, maxPower, power);
-
+    System.out.println("elevator values:");
+    System.out.println(power);
+    System.out.println(error);
     // set motor power and return whether it is close enough
     elevatorMotor.set(power);
     return closeEnough;
@@ -61,17 +63,16 @@ public class Elevator{
   // extend or retract the small arm on the elevator
   public static Boolean moveElevatorArm(String extendOrRetract){
     lastExtendOrRetract = extendOrRetract;
-    Double power;
-    if (extendOrRetract == "extend") power = 0.3;
-    else power = -0.3;
     Boolean done = false;
+    Double power;
+    if (extendOrRetract == "extend") power = 0.3; else power = -0.3;
     armTimer += 0.02; // adding 20 millisecons per call
-    if (armTimer >= 0.3/power){
+    if (armTimer >= 0.2/Math.abs(power) || extendOrRetract.substring(0, 3) == extendedOrRetracted.substring(0, 3)){
+      if (armTimer >= 0.15/Math.abs(power) || extendedOrRetracted == "moving") power /= 3;
       done = true;
       power = 0.0;
       armTimer = 0.0;
-      if (extendOrRetract == "extend") extendedOrRetracted = "extended";
-      else extendedOrRetracted = "retracted";
+      if (extendOrRetract == "extend") extendedOrRetracted = "extended"; else extendedOrRetracted = "retracted";
     }else extendedOrRetracted = "moving";
     armMotor.set(ControlMode.PercentOutput, power);
     return done;

@@ -62,7 +62,7 @@ public class Rotary_Controller {
                     mid = z;
                     angle = 300 + generate_angle_midmax(mid, _min, _max) * 60;
                 }
-                angle += angle_offset;
+                //angle += angle_offset;
             return angle;
     }
 }

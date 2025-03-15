@@ -10,9 +10,9 @@ import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 
 public class Limelight {
-    static boolean hasTarget = LimelightHelpers.getTV("limelight"); // Do you have a valid target?
-    static Pose2d LimelightGeneratedPose2d = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
-    static double seconds = Utils.getCurrentTimeSeconds();
+    public static boolean hasTarget = LimelightHelpers.getTV("limelight"); // Do you have a valid target?
+    public static Pose2d LimelightGeneratedPose2d = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+    public static double seconds = Utils.getCurrentTimeSeconds();
     public static void limelightInit(){
         // Set camera offset from middle of robot
         LimelightHelpers.setCameraPose_RobotSpace("limelight", 
