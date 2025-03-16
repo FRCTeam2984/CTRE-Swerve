@@ -118,16 +118,14 @@ public class Driver_Controller {
                     m_Controller3 = m_tempController;
                 }
         }
-        m_Controller0 = new CommandXboxController(0);
-        m_Controller1 = new Joystick(1);
-        m_Controller2 = new XboxController(2);
-        m_Controller3 = new XboxController(3);
     }
     //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
 
-public Boolean speedSwitch(){
+public static Boolean speedSwitch(){
     return m_Controller1.getRawButton(5);}
+public static Boolean buttonResetIntake(){
+    return m_Controller1.getRawButton(7);}
 
 public static Boolean buttonExtendClimb(){
     return m_Controller3.getRawButton(1);}

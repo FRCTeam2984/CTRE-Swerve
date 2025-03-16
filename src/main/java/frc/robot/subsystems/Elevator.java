@@ -12,13 +12,13 @@ public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static TalonSRX armMotor = new TalonSRX(Constants.elevatorArmMotorID);
   public static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0, l2Position = 70.5, l3Position = 117.8, l4Position = 188.25;
-  static Boolean removeButtonLastPressed = false;
+  public static Boolean removeButtonLastPressed = false;
   public static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
-  static int recentLevel = 2;
-  static Double[] removeAlgaeH = {20.0, 30.0};
+  public static int recentLevel = 2;
+  public static Double[] removeAlgaeH = {20.0, 30.0};
   
   // function for keeping a variable between a lower and upper limit
-  private static Double clamp(Double minimum, Double maximum, Double input){
+  public static Double clamp(Double minimum, Double maximum, Double input){
     if (input < minimum)
       return minimum;
     if (input > maximum)
@@ -33,13 +33,14 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
      
 		// convert destination from input units to encoder rotations
-    Double minPower = -0.7, maxPower = 0.7, error = destination - position, power = 0.0;
+    Double minPower = -0.6, maxPower = 0.6, error = destination - position, power = 0.0;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 			
 		// set motor power based on error or set it to keep position
-    if (error > 0) power = 1.0;
-    if (error < 0) power = -1.0;
+    //if (error > 0) power = 1.0;
+    //if (error < 0) power = -1.0;
+    power = error/30;
     if (Math.abs(error) < maxError){
 	    power = 0.0;
 	    closeEnough = true;
@@ -52,9 +53,6 @@ public class Elevator{
       power = Elevator.clamp(minPower, 0.0, power);*/
     else
       power = Elevator.clamp(minPower, maxPower, power);
-    System.out.println("elevator values:");
-    System.out.println(power);
-    System.out.println(error);
     // set motor power and return whether it is close enough
     elevatorMotor.set(power);
     return closeEnough;

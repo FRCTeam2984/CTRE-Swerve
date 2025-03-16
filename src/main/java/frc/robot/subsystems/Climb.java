@@ -20,7 +20,7 @@ public class Climb {
 		}
 		Double power = 0.0;
 		if(Driver_Controller.buttonExtendClimb()){
-			if(timer > 25 && inPosition-position> -100.0){
+			if(timer > 25 && inPosition-position> -87){
 				power = 0.5;
 			}
 			// find out led code -> LED light flashes or solid a specific color
@@ -28,7 +28,7 @@ public class Climb {
 		if(Driver_Controller.buttonRetractClimb() && climb.getReverseLimit().getValue().toString() != "ClosedToGround"){
 			//if (Elevator.elevatorTo(Elevator.bottomPosition) && Elevator.extendedOrRetracted == "retracted" && Math.abs(Intake.intakeEncoder.getPosition()-(Intake.climbPosition+Intake.inPosition)) < 0.05 && Intake.transportEncoder.getPosition() < 0.5){
 				
-			if(Driver_Controller.switchExtraOnOff() || (inPosition-position) < -50){
+			if(inPosition-position < -50){
 				power = -0.5;
 			}else{
 				power = -0.025;
@@ -53,5 +53,6 @@ public class Climb {
 		servo.setAngle(servoPosition);
 		climb.set(power);
 		extendLastPressed = Driver_Controller.buttonExtendClimb();
+		System.out.println(inPosition-position);
 	}
 }

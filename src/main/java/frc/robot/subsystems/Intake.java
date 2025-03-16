@@ -13,18 +13,18 @@ import frc.robot.Constants;
 
 public class Intake {
     public static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
-    private static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
-    private static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
+    public static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
+    public static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
     public static SparkMax transportPivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
     public static SparkMax intakePivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
     public static RelativeEncoder transportEncoder = transportPivot.getEncoder();
     public static RelativeEncoder intakeEncoder = intakePivot.getEncoder();
     public static char intakeLastUsed;
     public static String currentState = "none"; 
-    private static int timer;
+    public static int timer;
     public static Boolean retractNeeded = false, movingCoral = false;
     // KEvin, inPosition being set to the initial getPposition is annoying and dangerous, and requires that the robot always start int he same config!
-    public static Double inPosition, transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-27;
+    public static Double inPosition = 0.0, transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-27;
 
     public static DigitalInput transportArmSensor = new DigitalInput(0);
     
@@ -56,7 +56,7 @@ public class Intake {
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
 	public static Boolean retractIntake(){
-        Double maxPower = 0.5, minPower = -0.5, power, position = intakeEncoder.getPosition(), desiredPosition = inPosition+9.5;
+        Double maxPower = 0.5, minPower = -0.5, power, position = intakeEncoder.getPosition(), desiredPosition = inPosition;
         Boolean outside = true, hold = false;
         
         if (intakeLastUsed == 'C'){
@@ -67,24 +67,32 @@ public class Intake {
         if (insideSwitch.isPressed()){
             maxPower = 0.0;
         }
-        if (outsideSwitch.isPressed() || Math.abs(position - desiredPosition) < 2){
-            minPower = 0.0;
-            maxPower = 0.0;
+        if (outsideSwitch.isPressed()){
+            minPower = maxPower = 0.0;
             outside = false;
             movingCoral = true;
+        }if(Math.abs(position - desiredPosition) < 2){
+            minPower = maxPower = intakeGravity();
+            outside = false;
         }
         // using or not using the bottom intake motor depending on after algae or coral
         spinRollers(0.0);
-        /*if (intakeLastUsed == 'A' && !insideSwitch.isPressed())
-            bottomIntake.set(0.1);
-        }*/
+        if (intakeLastUsed == 'A' && !insideSwitch.isPressed()){
+            //bottomIntake.set(0.7);
+        }
 
         if (outside == false && intakeLastUsed == 'C') hold = true;
         if (hold == false){
-            power = intakeGravity()+(desiredPosition-position)/155-0.2; // pivot power based linearly on error + gravity comp
+            power = intakeGravity()+(desiredPosition-position)/155; // pivot power based linearly on error + gravity comp
+            if (desiredPosition-position > 0){
+                power += 0.1;
+            }else{
+                power -= 0.1;
+            }
         }else{
-            power = intakeGravity()-0.01;
+            power = intakeGravity();
         }
+        if (outsideSwitch.isPressed() == false && intakeLastUsed != 'C' && inPosition-position < 5) power -= 0.2;
         
         intakePivot.set(Intake.clamp(minPower, maxPower, power));
         if (outside = false && intakeLastUsed == 'C')
@@ -98,22 +106,24 @@ public class Intake {
         // processing the input string to find the correct destination
         Double desiredPosition = 0.0;
         movingCoral = true;
-        if (destination == "intakeAlgae")
+        if (destination == "intakeAlgae"){
             intakeLastUsed = 'A';
-            desiredPosition = inPosition + 0.1;
-            if (bottomIntake.getOutputCurrent() > 3.5)
-                bottomIntake.set(0.1);
-            else
-                bottomIntake.set(0.5);
-        if (destination == "stationIntakeCoral")
+            desiredPosition = inPosition + 17;
+            // if (bottomIntake.getOutputCurrent() > 5){
+            //     bottomIntake.set(-0.1);
+            // }else{
+            //     bottomIntake.set(-0.5);
+            // }
+        }if (destination == "stationIntakeCoral"){
             intakeLastUsed = 'C';
-            desiredPosition = inPosition + 10;
-        if (destination == "climbPosition")
+            desiredPosition = inPosition + 5;
+        }if (destination == "climbPosition"){
             intakeLastUsed = 'D';
             desiredPosition = inPosition + climbPosition;
-        if (destination == "l1Outtake")
+        }if (destination == "l1Outtake"){
             intakeLastUsed = 'C';
             desiredPosition = inPosition + 0.085;
+        }
         Double position, maxPower = 0.5, minPower = -0.5, power;
         position = intakeEncoder.getPosition();
         
@@ -124,7 +134,8 @@ public class Intake {
             minPower = 0.0;
             
         // setting power of the pivot motor
-        power = desiredPosition-position+intakeGravity(); // pivot power based linearly on error + gravity comp
+        power = (desiredPosition-position)/10+intakeGravity(); // pivot power based linearly on error + gravity comp
+        if (Math.abs(desiredPosition-position) < 1) power = intakeGravity();
         intakePivot.set(clamp(minPower, maxPower, power));
     }
 
@@ -151,7 +162,7 @@ public class Intake {
 
         // set roller and pivot motor speeds
         spinRollers(rollerPower);
-        power = (desiredPosition-position)/105+intakeGravity(); // pivot power based linearly on error + gravity comp
+        power = (desiredPosition-position)/105+intakeGravity()+0.1; // pivot power based linearly on error + gravity comp
         intakePivot.set(clamp(minPower, maxPower, power)); 
     }
 
@@ -182,20 +193,25 @@ public class Intake {
 	            case ("run belt"): // run belt
                     ++timer;
 	    		    beltDrive.set(ControlMode.PercentOutput, -0.5);
-	    		    if (timer >= 50*3 || transportArmSensor.get() == false) // 3 seconds
+	    		    if (timer >= 50*2 || transportArmSensor.get() == false){ // 3 seconds
 	    			    currentState = "use transport arm";
+                        timer = 0;
+                    }
 			        break;
 		        case ("use transport arm"): // use transport arm
+                    ++timer;
 			        if (insideTransportSwitch.isPressed()){
 				        maxPower = 0.0;
 			        }
-			        if (outsideTransportSwitch.isPressed()){
+			        if (outsideTransportSwitch.isPressed() || timer > 50*1){
 				        transportPivot.set(0);
 				        currentState = "return transport arm";
                         break;
                     }
-			        transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/30));
-			        break;
+                    if (retractIntake() == false){
+			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/30));
+                    }
+                    break;
 		        case ("return transport arm"): // return transport arm
 			        if (insideTransportSwitch.isPressed()){
 				        transportPivot.set(0);
@@ -209,7 +225,7 @@ public class Intake {
 			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/30+0.1));
                     break;
                 case ("retract intake"):
-                    if(retractIntake()) currentState = "none";
+                    if(retractIntake() == false) currentState = "none";
                     break;
 	        }
         /* }else{

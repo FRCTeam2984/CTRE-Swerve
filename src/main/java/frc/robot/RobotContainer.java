@@ -82,17 +82,20 @@ public class RobotContainer {
         //System.out.println(powerCurved *0.9/45.0);
         return powerCurved * 0.09;
     }
-    final double pos[] = {-1.0,-0.75,-0.5,-0.1, 0, 0.1, 0.5, 0.75,1};
-    final double pwr[] = {-1, -0.3,-0.1,    0, 0,    0, 0.1,   .3,1};
+    final double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
+    final double pwr[] = {-1  , -0.3,-0.1,-0.02,    0, 0,   0,0.02, 0.1,   .3,1};
     private double joystick_curve(double joy) {
-
+        Double speedMult = 1.0;
+        if (Driver_Controller.speedSwitch()){
+           // speedMult = 0.3;
+        }
         int i;
         if (joy<=-1) joy=-1;
         if (joy>=1) joy=1;
-        for (i=0;i<8;i++) {
+        for (i=0;i<10;i++) {
             if ((pos[i]<=joy) && (pos[i+1]>=joy)) {
                     //System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
-                    return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
+                    return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed * speedMult);
                 }
         }
         return(0);

@@ -29,7 +29,6 @@ public class Limelight {
         hasTarget = LimelightHelpers.getTV("limelight");
         LimelightGeneratedPose2d = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
         seconds = Utils.getCurrentTimeSeconds();
-        System.out.println(hasTarget);
         
         if (hasTarget){
             RobotContainer.drivetrain.addVisionMeasurement(LimelightGeneratedPose2d, seconds);
