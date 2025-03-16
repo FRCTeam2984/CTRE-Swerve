@@ -4,11 +4,15 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.AutoDriveTest;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Driver_Controller;
 import frc.robot.subsystems.Elevator;
@@ -45,12 +49,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+<<<<<<< HEAD
     // init controllers???
     Driver_Controller.define_Controller();
     // init limelight
     Limelight.limelightInit();
     // reset robot orientation
     RobotContainer.rotaryCalc(true);
+=======
+    Driver_Controller.SwerveControlSet(true);
+    // todo: init controllers???
+    // todo: init limelight
+    // todo: reset robot orientation
+>>>>>>> 8c3f6ecbb3032b7d7a7c3129bf0d532e8cc00b39
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -58,13 +69,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-
+    Driver_Controller.SwerveInputPeriodic();
+    //Driver_Controller.SwerveCommandXValue = -0.5;
+    //Driver_Controller.SwerveCommandEncoderValue = 300;
     // todo: drive 1m south (towards driver/operators)
     // todo: reset rotary_joystick
+    AutoDriveTest.AutoDrive(1.0, 2.0, 0.0);
   }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    Driver_Controller.SwerveControlSet(false);
+  }
 
   @Override
   public void teleopInit() {
@@ -83,6 +99,11 @@ public class Robot extends TimedRobot {
     Boolean elevatorArmButton = Driver_Controller.buttonL1();
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     Limelight.limelightOdometryUpdate();
+<<<<<<< HEAD
+=======
+    Driver_Controller.SwerveInputPeriodic();
+    Intake.intakeLastUsed = 'C';
+>>>>>>> 8c3f6ecbb3032b7d7a7c3129bf0d532e8cc00b39
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}

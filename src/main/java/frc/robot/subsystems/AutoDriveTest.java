@@ -1,7 +1,10 @@
-/* package frc.robot.subsystems;
+package frc.robot.subsystems;
 
 import frc.robot.Robot;
 
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DriverStation;
 public class AutoDriveTest{   
     public static double odox = 7;// the x axis in m given by odometry;
     public static double odoy = 6;// y axis m value given by odometry;
@@ -87,44 +90,46 @@ public class AutoDriveTest{
         static double originBasedOdoY = odoy - scorePos[0][1];  // this is b on desmos
         static double originBasedOdoXSquared = originBasedOdoX * originBasedOdoX;   
         static double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;
-
-
-
-
+        static double DInequality;
+        static double EInequality;
+        static double reciprocalDInequ;
+        static double reciprocalEInequ;
                                         // the blue and red lines perpendicular to d and e inequal
-        public AutoDriveTest(double odox, double odoy, double odoangle){
+        public static void AutoDrive(double odox, double odoy, double odoangle){
             // do i need parameters????????????????????????
             //AutoDrivetest math = new AutoDriveTest();
             AutoDriveTest.determineArea(odox, odoy, odoangle);
             AutoDriveTest.driveStraightToCircle();
         }
         public static void determineArea(double odox, double odoy, double odoangle){
-            Optional<Alliance> ally = DriverStation.getAlliance();
-            Int dF
+            Optional ally = DriverStation.getAlliance(); //Optional[Alliance]
+            int dF;
             if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) { 
+            if (ally.get().toString() == "Red") { 
             Driver_Controller.SwerveControlSet(true);
                         stage = close1; // will delete later
                         System.out.println("works!!");
                         if(stage == close1){
                             if(bigCircleDist >= dFReef){
                                 areaName = bigCircle;
+                                System.out.println("115");
                                 System.out.println(bigCircle);
                                 if(circleDCheck <= DCircleDist){
                                     areaName = areaD;
                                     System.out.println(areaD);
                                 }
-                                else if(circleECheck <= ECircleDist){
+                                else{ if(circleECheck <= ECircleDist){
                                     areaName = areaE;
                                     System.out.println(areaE);
-                                }
-                                /*static double DInequality = ((scorePos[0][0]-DCoords[0][0])/(scorePos[0][1]-DCoords[0][1]))*((odoy-scorePos[0][1]) + odox);
-                                static double EInequality = (-(scorePos[0][0]-ECoords[0][0])/(scorePos[0][1]-ECoords[0][1])*(odoy-scorePos[0][1]) + odox);  
+                                }}
+                                DInequality = ((scorePos[0][0]-DCoords[0][0])/(scorePos[0][1]-DCoords[0][1]))*((odoy-scorePos[0][1]) + odox);
+                                EInequality = (-(scorePos[0][0]-ECoords[0][0])/(scorePos[0][1]-ECoords[0][1])*(odoy-scorePos[0][1]) + odox);  
                                 // these lines go through the center and point and d circle (black on desmos) and E circle (red on desmos)
-                                static double reciprocalDInequ =  (-(scorePos[0][1]-DCoords[0][1])/(scorePos[0][0]-DCoords[0][0])*((odoy-scorePos[0][1]) + odox));
-                                static double reciprocalEInequ = ((scorePos[0][1]-ECoords[0][1])/(scorePos[0][0]-ECoords[0][0])*(odoy-scorePos[0][1]) + odox);   
+                                reciprocalDInequ =  (-(scorePos[0][1]-DCoords[0][1])/(scorePos[0][0]-DCoords[0][0])*((odoy-scorePos[0][1]) + odox));
+                                reciprocalEInequ = ((scorePos[0][1]-ECoords[0][1])/(scorePos[0][0]-ECoords[0][0])*(odoy-scorePos[0][1]) + odox);   
                                 //else if(odox <=  DInequality && odox<  EInequality){ 
                                 // checks red inequality and black in equality   checks whether u are in the c, cprime, or score
+                                
                                     if(odox<= DCoords[0][0]){
                                         if(odoy <= scorePos[1][1]){
                                             areaName = areaC;
@@ -151,7 +156,7 @@ public class AutoDriveTest{
                                 }
                                                             
                             }
-                                                            
+                                                    
                                                         
                                                             
                             else{
@@ -168,11 +173,12 @@ public class AutoDriveTest{
                                                             
                                 }
                             }
-                                System.exit(0);  // may need to delete
+                                //System.exit(0);  // may need to delete
                         }
                         //else if(stage == close2){
                             if(bigCircleDist >= dFReef){
                                 areaName = bigCircle;
+                                
                                 System.out.println(bigCircle);
                                 if(circleDCheck <= DCircleDist){
                                     areaName = areaD;
@@ -227,9 +233,9 @@ public class AutoDriveTest{
                                                             
                                 }
                             }
-                                System.exit(0);  // may need to delete
+                                //System.exit(0);  // may need to delete
                         }
-                }
+                
                 
             
                 
@@ -265,10 +271,10 @@ public class AutoDriveTest{
             
             
             
-                    }
-*/   /* 
+                    }*/
+   
                     public static void driveStraightToCircle(){
-                        /* double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle   // this is c on desmos
+                        double originBasedOdoX = odox - scorePos[0][0];  // because we will subtract the reef (4.5,4) from the og points as we want reef to be at origin for cleaner math to find tangent line to circle   // this is c on desmos
                         double originBasedOdoY = odoy - scorePos[1][0];  // this is b on desmos
                          double originBasedOdoXSquared = originBasedOdoX * originBasedOdoX;   
                          double originBasedOdoYSquared = originBasedOdoY * originBasedOdoY;   
@@ -305,6 +311,7 @@ public class AutoDriveTest{
                                 // may need to convert this angle to something but this should be the degrees needed to turn (slope) to eventually get to the point
                                 // drive to point prime
                             }
+                            System.out.println(angleToDriveToPoint);
                             Driver_Controller.SwerveCommandEncoderValue = angleToDriveToPoint;  // slope will be constantly changing, somehow adjust code to do this
 
                         }
@@ -384,5 +391,5 @@ public class AutoDriveTest{
                         }
             
                     }
-            }*/
+            }
                     
