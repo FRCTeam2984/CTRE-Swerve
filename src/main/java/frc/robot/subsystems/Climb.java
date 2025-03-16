@@ -53,6 +53,5 @@ public class Climb {
 		servo.setAngle(servoPosition);
 		climb.set(power);
 		extendLastPressed = Driver_Controller.buttonExtendClimb();
-		System.out.println(inPosition-position);
 	}
 }

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.AutoDriveTest;
+//import frc.robot.subsystems.AutoDriveTest;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Driver_Controller;
 import frc.robot.subsystems.Elevator;
@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    
     Driver_Controller.SwerveControlSet(true);
     // init controllers???
     Driver_Controller.define_Controller();
@@ -59,10 +60,15 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    Driver_Controller.SwerveCommandControl = true;
+    Driver_Controller.SwerveCommandEncoderValue=RobotContainer.robotOffset+RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
+    Driver_Controller.SwerveCommandXValue = 0;
+    Driver_Controller.SwerveCommandYValue = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
+    driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
     //Driver_Controller.SwerveCommandXValue = -0.5;
     //Driver_Controller.SwerveCommandEncoderValue = 300;
@@ -85,6 +91,7 @@ public class Robot extends TimedRobot {
     RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
     currentLevel = -1;
     Intake.timer = 0;
+    Driver_Controller.SwerveCommandControl = false;
   }
 
   @Override
@@ -183,22 +190,30 @@ public class Robot extends TimedRobot {
     
   }
   public void driveSouthPastLine() {
+    Double desiredPosition = 6.5;
+    String alliance = "none";
+    if (DriverStation.getAlliance().toString().charAt(9) == 'B'){
+      alliance = "blue";
+      desiredPosition = 6.5;
+    }else if (DriverStation.getAlliance().toString().charAt(9) == 'R'){
+      alliance = "red";
+      desiredPosition = 11.0;
+    }
     Limelight.limelightOdometryUpdate();
-    if (Limelight.LimelightGeneratedPose2d.getY() > 5)
-     // swerveOverrideJoy_x = 0;
-     // swerveOverrideJoy_y = 0.1; // should be a fairly slow drive
-     // swerveOverrideJoy_rotate = 0;
-     System.out.println("Robot.java LimelightPose2d is > 5");
-    else {
-      SwerveCommandControl
-        SwerveCommandEncoderValue;
-        SwerveCommandXValue;
-        SwerveCommandYValue;
-     // swerveOverrideJoy_y = 0;
-     // swerveOverrideJoy_x = 0;
-     // swerveOverrideJoy_rotate = 0;
+    System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
+    if ((alliance == "blue")?RobotContainer.drivetrain.getState().Pose.getX() > desiredPosition:RobotContainer.drivetrain.getState().Pose.getX() < desiredPosition){
+        // move past the starting line
+       // don't turn
+      Driver_Controller.SwerveCommandXValue=((alliance == "blue")?-0.5:-0.5);
+      Driver_Controller.SwerveCommandYValue=0; // drive slowly towards the driver/operator stations
+      System.out.println("Robot.java LimelightPose2d is > 5");
+    } else {
+        // don't move
+      //Driver_Controller.SwerveCommandEncoderValue=RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
+      Driver_Controller.SwerveCommandXValue=0;
+      Driver_Controller.SwerveCommandYValue=0;
      System.out.println("Robot.java LimelightPose2d is < 5");
     }
-    //serveOverrideJoy = true;
+    Driver_Controller.SwerveCommandControl = true;
   }
 }

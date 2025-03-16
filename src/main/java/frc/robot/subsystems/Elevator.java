@@ -65,7 +65,7 @@ public class Elevator{
     Double power;
     if (extendOrRetract == "extend") power = 0.3; else power = -0.3;
     armTimer += 0.02; // adding 20 millisecons per call
-    if (armTimer >= 0.2/Math.abs(power) || extendOrRetract.substring(0, 3) == extendedOrRetracted.substring(0, 3)){
+    if (armTimer >= 0.25/Math.abs(power) || extendOrRetract.substring(0, 3) == extendedOrRetracted.substring(0, 3)){
       if (armTimer >= 0.15/Math.abs(power) || extendedOrRetracted == "moving") power /= 3;
       done = true;
       power = 0.0;
