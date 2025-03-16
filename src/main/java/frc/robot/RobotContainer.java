@@ -29,74 +29,76 @@ import frc.robot.Constants;
 
 public class RobotContainer {
     public static double robotOffset = 0;
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
-    public double SpeedModifier = .1;
-    public double TurnModifier = .2;
-
-    // Setting up bindings for necessary control of the swerve drive platform 
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
-    private final Telemetry logger = new Telemetry(MaxSpeed);
-
+    private static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+        private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     
-    //private static CommandXboxController joystick = new CommandXboxController(Driver_Controller.SwerveCommandXboxControllerPort);// = new CommandXboxController(0);
+        public double SpeedModifier = .1;
+        public double TurnModifier = .2;
     
-    //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
-
-    public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        // Setting up bindings for necessary control of the swerve drive platform 
+        private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+                .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     
+        private final Telemetry logger = new Telemetry(MaxSpeed);
     
-    
-    public RobotContainer() {
-        //joystick = Driver_Controller.m_Controller0;
-        //joystick2 = Driver_Controller.m_Controller1;
-        configureBindings();
-    }
-    public static double rotaryCalc(Boolean resetToRobot){
-        //Driver_Controller.SwerveInputPeriodic();
         
-        double pigeonYaw = robotOffset+drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
-        double rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from joystick2)
-        //System.out.println(pigeonYaw);
-        //System.out.println(rotaryJoystickInput);
-        //double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
-        //System.out.println(joystickClamped);
-        double diff = pigeonYaw - (rotaryJoystickInput);
-        double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
-        if (resetToRobot){
-            robotOffset -= diffmod180;
+        //private static CommandXboxController joystick = new CommandXboxController(Driver_Controller.SwerveCommandXboxControllerPort);// = new CommandXboxController(0);
+        
+        //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
+    
+        public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        
+        
+        
+        public RobotContainer() {
+            //joystick = Driver_Controller.m_Controller0;
+            //joystick2 = Driver_Controller.m_Controller1;
+            configureBindings();
         }
-        //System.out.println(diffmod180);
-        double powerCurved = -diffmod180;
-        powerCurved = Math.max(-45,Math.min(45,powerCurved));
-        //double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
-        if((diffmod180 <= 1) && (diffmod180 >= -1)){
-            //return 0;
-        }
-        //System.out.println(powerCurved *0.9/45.0);
-        return powerCurved * 0.09;
+        public static double rotaryCalc(Boolean resetToRobot){
+            //Driver_Controller.SwerveInputPeriodic();
+            
+            double pigeonYaw = robotOffset+drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
+            double rotaryJoystickInput = Driver_Controller.SwerveEncoderPassthrough;               // Get input from the rotary controller (ID from joystick2)
+            //System.out.println(pigeonYaw);
+            //System.out.println(rotaryJoystickInput);
+            //double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
+            //System.out.println(joystickClamped);
+            double diff = pigeonYaw - (rotaryJoystickInput);
+            double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
+            if (resetToRobot){
+                robotOffset -= diffmod180;
+            }
+            //System.out.println(diffmod180);
+            double powerCurved = -diffmod180;
+            powerCurved = Math.max(-45,Math.min(45,powerCurved));
+            //double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
+            if((diffmod180 <= 1) && (diffmod180 >= -1)){
+                //return 0;
+            }
+            //System.out.println(powerCurved *0.9/45.0);
+            return powerCurved * 0.09;
+        
     }
-    final double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
-    final double pwr[] = {-1  , -0.3,-0.1,-0.02,    0, 0,   0,0.02, 0.1,   .3,1};
-    private double joystick_curve(double joy) {
+
+    final static double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
+    final static double pwr[] = {-1  , -0.3,-0.1,-0.02,    0, 0,   0,0.02, 0.1,   .3,1};
+    public static double joystick_curve(double joy) {
         Double speedMult = 1.0;
         if (Driver_Controller.speedSwitch()){
-           // speedMult = 0.3;
+            // speedMult = 0.3;
         }
         int i;
         if (joy<=-1) joy=-1;
         if (joy>=1) joy=1;
         for (i=0;i<10;i++) {
-            if ((pos[i]<=joy) && (pos[i+1]>=joy)) {
-                    //System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
-                    return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed * speedMult);
-                }
+        if ((pos[i]<=joy) && (pos[i+1]>=joy)) {
+            //System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
+            return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed* speedMult);
+            }
         }
         return(0);
     }
@@ -108,8 +110,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(joystick_curve(Driver_Controller.m_Controller0.getLeftY())) // Drive forward with negative Y (forward)
-                    .withVelocityY(joystick_curve(Driver_Controller.m_Controller0.getLeftX())) // Drive left with negative X (left)
+                drive.withVelocityX(Driver_Controller.SwerveXPassthrough) // Drive forward with negative Y (forward)
+                    .withVelocityY(Driver_Controller.SwerveYPassthrough) // Drive left with negative X (left)
                     .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );}
