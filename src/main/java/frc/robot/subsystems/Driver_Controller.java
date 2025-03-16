@@ -11,6 +11,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 
 
 public class Driver_Controller {
@@ -179,15 +180,15 @@ public static void SwerveControlSet(boolean command){
     SwerveCommandControl = command;
 }
 public static void SwerveInputPeriodic(){
-    if (SwerveCommandControl){
+    if (SwerveCommandControl){ // Command Mode
         SwerveEncoderPassthrough = SwerveCommandEncoderValue;
         SwerveXPassthrough = SwerveCommandXValue;
         SwerveYPassthrough = SwerveCommandYValue;
     }
-    else{
-        SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);
-        SwerveXPassthrough = m_Controller0.getLeftX();
-        SwerveYPassthrough = m_Controller0.getLeftY();
+    else{ //Controller Mode
+        SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(m_Controller1);
+        SwerveXPassthrough = RobotContainer.joystick_curve(m_Controller0.getLeftY());
+        SwerveYPassthrough = RobotContainer.joystick_curve(m_Controller0.getLeftX());
     }
 }
 
