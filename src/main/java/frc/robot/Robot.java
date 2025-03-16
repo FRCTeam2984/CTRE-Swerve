@@ -49,19 +49,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-<<<<<<< HEAD
+    Driver_Controller.SwerveControlSet(true);
     // init controllers???
     Driver_Controller.define_Controller();
     // init limelight
     Limelight.limelightInit();
     // reset robot orientation
     RobotContainer.rotaryCalc(true);
-=======
-    Driver_Controller.SwerveControlSet(true);
-    // todo: init controllers???
-    // todo: init limelight
-    // todo: reset robot orientation
->>>>>>> 8c3f6ecbb3032b7d7a7c3129bf0d532e8cc00b39
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -74,7 +68,6 @@ public class Robot extends TimedRobot {
     //Driver_Controller.SwerveCommandEncoderValue = 300;
     // todo: drive 1m south (towards driver/operators)
     // todo: reset rotary_joystick
-    AutoDriveTest.AutoDrive(1.0, 2.0, 0.0);
   }
 
   @Override
@@ -99,11 +92,8 @@ public class Robot extends TimedRobot {
     Boolean elevatorArmButton = Driver_Controller.buttonL1();
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     Limelight.limelightOdometryUpdate();
-<<<<<<< HEAD
-=======
     Driver_Controller.SwerveInputPeriodic();
     Intake.intakeLastUsed = 'C';
->>>>>>> 8c3f6ecbb3032b7d7a7c3129bf0d532e8cc00b39
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
@@ -200,6 +190,10 @@ public class Robot extends TimedRobot {
      // swerveOverrideJoy_rotate = 0;
      System.out.println("Robot.java LimelightPose2d is > 5");
     else {
+      SwerveCommandControl
+        SwerveCommandEncoderValue;
+        SwerveCommandXValue;
+        SwerveCommandYValue;
      // swerveOverrideJoy_y = 0;
      // swerveOverrideJoy_x = 0;
      // swerveOverrideJoy_rotate = 0;
