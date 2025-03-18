@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.Optional;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -86,9 +87,10 @@ public class Robot extends TimedRobot {
     Elevator.extendedOrRetracted = "retracted";
     Limelight.limelightInit();
     Driver_Controller.define_Controller();
+    RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
     Intake.currentState = "none";
     Intake.intakeLastUsed = 'D';
-    RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
+    
     currentLevel = -1;
     Intake.timer = 0;
     Driver_Controller.SwerveCommandControl = false;
@@ -96,11 +98,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    System.out.println(Driver_Controller.buttonReefPosition());
     Boolean elevatorArmButton = Driver_Controller.buttonL1();
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     Limelight.limelightOdometryUpdate();
     Driver_Controller.SwerveInputPeriodic();
-    Intake.intakeLastUsed = 'C';
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
@@ -117,20 +119,28 @@ public class Robot extends TimedRobot {
       else Elevator.elevatorMotor.set(0.0);
       break;
     case (2):
-      if (Elevator.elevatorTo(Elevator.bottomPosition+Elevator.l2Position)) currentLevel = -1;
+      if (Elevator.elevatorTo(Elevator.l2Position)) currentLevel = -1;
       break;
     case (3):
-      if (Elevator.elevatorTo(Elevator.bottomPosition+Elevator.l3Position)) currentLevel = -1;
+      if (Elevator.elevatorTo(Elevator.l3Position)) currentLevel = -1;
       break;
     case (4):
-      if (Elevator.elevatorTo(Elevator.bottomPosition+Elevator.l4Position)) currentLevel = -1;
+      if (Elevator.elevatorTo(Elevator.l4Position)) currentLevel = -1;
       break;
   }
   
   //System.out.println(Elevator.bottomPosition-Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)));
   if (elevatorArmButton && armButtonLastPressed == false) retractElevatorArm = retractElevatorArm^true;
-  if (!retractElevatorArm && Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend"); 
-  else if (retractElevatorArm && Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
+
+  if (!retractElevatorArm){
+    if (Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend");
+    else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, 0.025);
+    else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
+  }else{
+    if (Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
+    else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, -0.025);
+    else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
+  }
   armButtonLastPressed = elevatorArmButton;
     
     if (Driver_Controller.buttonTransportPivot()){
@@ -156,7 +166,7 @@ public class Robot extends TimedRobot {
     else if (Driver_Controller.buttonReverseCoral()) intakeState = "reset intake";
     else if (Driver_Controller.buttonCoralIntakeGround()) intakeState = "ground intake";
     else if (Driver_Controller.buttonCoralStationIntake()) intakeState = "station intake";
-    
+    intakeState = "im jealous that justin is with lukas now and im really sad :(";
     switch(intakeState){
       case "reset intake": 
         if (Intake.outsideSwitch.isPressed()) Intake.intakePivot.set(0);
@@ -164,7 +174,7 @@ public class Robot extends TimedRobot {
         Intake.intakeLastUsed = 'D';
         break;
       case "ground intake": Intake.intakeCoral(Driver_Controller.buttonResetIntake()); break;
-      case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.5); break;
+      case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.35); break;
       case "intake algae": Intake.intakeTo("intakeAlgae"); break;
       case "retract": Intake.retractIntake();
     }

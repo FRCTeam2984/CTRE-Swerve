@@ -162,8 +162,8 @@ public static Boolean buttonResetElevator(){
       
 public static double buttonReefPosition(){
     if (m_Controller2.getRawButton(10))
-        return ((2-m_Controller2.getRawAxis(0))%3 + Math.round(m_Controller2.getRawAxis(1))*3)+6;
-    return (-m_Controller2.getRawAxis(0)+2)%3 + Math.round(m_Controller2.getRawAxis(1))*3;
+        return (((2-m_Controller2.getRawAxis(0))%3 + Math.round(m_Controller2.getRawAxis(1))*3)+5)%12+1;
+    return ((-m_Controller2.getRawAxis(0)+2)%3 + Math.round(m_Controller2.getRawAxis(1))*3+11)%12+1;
 }
       
 public static int getLevel(){

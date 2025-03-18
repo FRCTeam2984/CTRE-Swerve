@@ -31,9 +31,9 @@ public class Elevator{
   public static Boolean elevatorTo(Double destination){
     String rawInput = elevatorMotor.getRotorPosition().toString();
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
-     
+    Double error = destination - position;
 		// convert destination from input units to encoder rotations
-    Double minPower = -0.6, maxPower = 0.6, error = destination - position, power = 0.0;
+    Double minPower = -0.6, maxPower = 0.6, power = 0.0;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 			
@@ -45,7 +45,9 @@ public class Elevator{
 	    power = 0.0;
 	    closeEnough = true;
     }
-
+    //System.out.println("elevator");
+    //System.out.println(destination-position);
+    //System.out.println(power);
     // Clamp power and use limit switches
     if (elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround")
       power = Elevator.clamp(0.0, maxPower, power);
