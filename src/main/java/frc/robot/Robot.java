@@ -8,16 +8,23 @@ import java.util.Optional;
 
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.AutoDriveTest;
+import frc.robot.subsystems.AutoDriveFinal;
 import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Driver_Controller;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import networktablesdesktopclient.NetworkTablesDesktopClient;
+import com.ctre.phoenix6.swerve.*;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
+
 public class Robot extends TimedRobot {
   public static int currentLevel = 0;
   public Command m_autonomousCommand;
@@ -26,6 +33,8 @@ public class Robot extends TimedRobot {
   Boolean armButtonLastPressed = false, retractElevatorArm = true;
 
   public Robot() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
+    // double[] value = table.getEntry("robotPose")
   }
   @Override
   public void robotInit() {
@@ -49,6 +58,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     Driver_Controller.SwerveControlSet(true);
     // init controllers???
     Driver_Controller.define_Controller();
@@ -64,6 +74,11 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Driver_Controller.SwerveInputPeriodic();
+    AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
+    //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
+    // AutoDriveTest.AutoDrive(0, 0, 0);
+    //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
+
     //Driver_Controller.SwerveCommandXValue = -0.5;
     //Driver_Controller.SwerveCommandEncoderValue = 300;
     // todo: drive 1m south (towards driver/operators)
@@ -89,6 +104,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    
+    // NetworkTablesDesktopClient.getRobotPosition();
     Boolean elevatorArmButton = Driver_Controller.buttonL1();
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     Limelight.limelightOdometryUpdate();
@@ -160,7 +177,7 @@ public class Robot extends TimedRobot {
       case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.5); break;
       case "intake algae": Intake.intakeTo("intakeAlgae"); break;
       case "retract": Intake.retractIntake();
-    }
+    } 
     
   }
 
@@ -190,10 +207,10 @@ public class Robot extends TimedRobot {
      // swerveOverrideJoy_rotate = 0;
      System.out.println("Robot.java LimelightPose2d is > 5");
     else {
-      SwerveCommandControl
-        SwerveCommandEncoderValue;
-        SwerveCommandXValue;
-        SwerveCommandYValue;
+      // SwerveCommandControl;
+        // SwerveCommandEncoderValue;
+        // SwerveCommandXValue;
+        // SwerveCommandYValue;
      // swerveOverrideJoy_y = 0;
      // swerveOverrideJoy_x = 0;
      // swerveOverrideJoy_rotate = 0;
