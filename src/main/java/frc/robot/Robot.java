@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    Driver_Controller.SwerveCommandControl = true;
+    Driver_Controller.SwerveControlSet(true);
     Driver_Controller.SwerveCommandEncoderValue=RobotContainer.robotOffset+RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
     Driver_Controller.SwerveCommandXValue = 0;
     Driver_Controller.SwerveCommandYValue = 0;
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
-    AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
+    //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
     // AutoDriveTest.AutoDrive(0, 0, 0);
     //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
     
     currentLevel = -1;
     Intake.timer = 0;
-    Driver_Controller.SwerveCommandControl = false;
+    Driver_Controller.SwerveControlSet(false);
   }
 
   @Override
@@ -239,6 +239,6 @@ public class Robot extends TimedRobot {
       Driver_Controller.SwerveCommandYValue=0;
      System.out.println("Robot.java LimelightPose2d is < 5");
     }
-    Driver_Controller.SwerveCommandControl = true;
+    Driver_Controller.SwerveControlSet(true);
   }
 }
