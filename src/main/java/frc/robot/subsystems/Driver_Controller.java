@@ -35,7 +35,7 @@ public class Driver_Controller {
     public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
     public static int SwerveRotaryEncoderPort;         // Value of rotary encoder for controlling swerve drive
 
-    private static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
+    public static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
     public static double SwerveEncoderPassthrough;     // Encoder pass back to swervedrive system
     public static double SwerveXPassthrough;           // X value pass back to swervedrive system
     public static double SwerveYPassthrough;           // Y value pass back to swervedrive system
@@ -162,8 +162,8 @@ public static Boolean buttonResetElevator(){
       
 public static double buttonReefPosition(){
     if (m_Controller2.getRawButton(10))
-        return (m_Controller2.getRawAxis(0)+2)%3 + m_Controller2.getRawAxis(0)*3+6;
-    return (m_Controller2.getRawAxis(0)+2)%3 + m_Controller2.getRawAxis(0)*3;
+        return (((2-m_Controller2.getRawAxis(0))%3 + Math.round(m_Controller2.getRawAxis(1))*3)+5)%12+1;
+    return ((-m_Controller2.getRawAxis(0)+2)%3 + Math.round(m_Controller2.getRawAxis(1))*3+11)%12+1;
 }
       
 public static int getLevel(){

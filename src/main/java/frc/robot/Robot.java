@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.Optional;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -14,7 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.AutoDriveFinal;
+//import frc.robot.subsystems.AutoDriveTest;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Driver_Controller;
@@ -69,10 +70,15 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    Driver_Controller.SwerveCommandControl = true;
+    Driver_Controller.SwerveCommandEncoderValue=RobotContainer.robotOffset+RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
+    Driver_Controller.SwerveCommandXValue = 0;
+    Driver_Controller.SwerveCommandYValue = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
+    driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
     AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
@@ -95,11 +101,13 @@ public class Robot extends TimedRobot {
     Elevator.extendedOrRetracted = "retracted";
     Limelight.limelightInit();
     Driver_Controller.define_Controller();
+    RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
     Intake.currentState = "none";
     Intake.intakeLastUsed = 'D';
-    RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
+    
     currentLevel = -1;
     Intake.timer = 0;
+    Driver_Controller.SwerveCommandControl = false;
   }
 
   @Override
@@ -110,7 +118,6 @@ public class Robot extends TimedRobot {
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     Limelight.limelightOdometryUpdate();
     Driver_Controller.SwerveInputPeriodic();
-    Intake.intakeLastUsed = 'C';
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
@@ -127,20 +134,28 @@ public class Robot extends TimedRobot {
       else Elevator.elevatorMotor.set(0.0);
       break;
     case (2):
-      if (Elevator.elevatorTo(Elevator.bottomPosition+Elevator.l2Position)) currentLevel = -1;
+      if (Elevator.elevatorTo(Elevator.l2Position)) currentLevel = -1;
       break;
     case (3):
-      if (Elevator.elevatorTo(Elevator.bottomPosition+Elevator.l3Position)) currentLevel = -1;
+      if (Elevator.elevatorTo(Elevator.l3Position)) currentLevel = -1;
       break;
     case (4):
-      if (Elevator.elevatorTo(Elevator.bottomPosition+Elevator.l4Position)) currentLevel = -1;
+      if (Elevator.elevatorTo(Elevator.l4Position)) currentLevel = -1;
       break;
   }
   
   //System.out.println(Elevator.bottomPosition-Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)));
   if (elevatorArmButton && armButtonLastPressed == false) retractElevatorArm = retractElevatorArm^true;
-  if (!retractElevatorArm && Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend"); 
-  else if (retractElevatorArm && Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
+
+  if (!retractElevatorArm){
+    if (Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend");
+    else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, 0.025);
+    else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
+  }else{
+    if (Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
+    else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, -0.025);
+    else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
+  }
   armButtonLastPressed = elevatorArmButton;
     
     if (Driver_Controller.buttonTransportPivot()){
@@ -166,7 +181,7 @@ public class Robot extends TimedRobot {
     else if (Driver_Controller.buttonReverseCoral()) intakeState = "reset intake";
     else if (Driver_Controller.buttonCoralIntakeGround()) intakeState = "ground intake";
     else if (Driver_Controller.buttonCoralStationIntake()) intakeState = "station intake";
-    
+    intakeState = "im jealous that justin is with lukas now and im really sad :(";
     switch(intakeState){
       case "reset intake": 
         if (Intake.outsideSwitch.isPressed()) Intake.intakePivot.set(0);
@@ -174,7 +189,7 @@ public class Robot extends TimedRobot {
         Intake.intakeLastUsed = 'D';
         break;
       case "ground intake": Intake.intakeCoral(Driver_Controller.buttonResetIntake()); break;
-      case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.5); break;
+      case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.35); break;
       case "intake algae": Intake.intakeTo("intakeAlgae"); break;
       case "retract": Intake.retractIntake();
     } 
@@ -200,22 +215,30 @@ public class Robot extends TimedRobot {
     
   }
   public void driveSouthPastLine() {
+    Double desiredPosition = 6.5;
+    String alliance = "none";
+    if (DriverStation.getAlliance().toString().charAt(9) == 'B'){
+      alliance = "blue";
+      desiredPosition = 6.5;
+    }else if (DriverStation.getAlliance().toString().charAt(9) == 'R'){
+      alliance = "red";
+      desiredPosition = 11.0;
+    }
     Limelight.limelightOdometryUpdate();
-    if (Limelight.LimelightGeneratedPose2d.getY() > 5)
-     // swerveOverrideJoy_x = 0;
-     // swerveOverrideJoy_y = 0.1; // should be a fairly slow drive
-     // swerveOverrideJoy_rotate = 0;
-     System.out.println("Robot.java LimelightPose2d is > 5");
-    else {
-      // SwerveCommandControl;
-        // SwerveCommandEncoderValue;
-        // SwerveCommandXValue;
-        // SwerveCommandYValue;
-     // swerveOverrideJoy_y = 0;
-     // swerveOverrideJoy_x = 0;
-     // swerveOverrideJoy_rotate = 0;
+    System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
+    if ((alliance == "blue")?RobotContainer.drivetrain.getState().Pose.getX() > desiredPosition:RobotContainer.drivetrain.getState().Pose.getX() < desiredPosition){
+        // move past the starting line
+       // don't turn
+      Driver_Controller.SwerveCommandXValue=((alliance == "blue")?-0.5:-0.5);
+      Driver_Controller.SwerveCommandYValue=0; // drive slowly towards the driver/operator stations
+      System.out.println("Robot.java LimelightPose2d is > 5");
+    } else {
+        // don't move
+      //Driver_Controller.SwerveCommandEncoderValue=RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
+      Driver_Controller.SwerveCommandXValue=0;
+      Driver_Controller.SwerveCommandYValue=0;
      System.out.println("Robot.java LimelightPose2d is < 5");
     }
-    //serveOverrideJoy = true;
+    Driver_Controller.SwerveCommandControl = true;
   }
 }
