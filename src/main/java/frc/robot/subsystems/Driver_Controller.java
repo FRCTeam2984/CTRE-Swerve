@@ -35,7 +35,7 @@ public class Driver_Controller {
     public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
     public static int SwerveRotaryEncoderPort;         // Value of rotary encoder for controlling swerve drive
 
-    public static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
+    private static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
     public static double SwerveEncoderPassthrough;     // Encoder pass back to swervedrive system
     public static double SwerveXPassthrough;           // X value pass back to swervedrive system
     public static double SwerveYPassthrough;           // Y value pass back to swervedrive system
@@ -119,6 +119,10 @@ public class Driver_Controller {
                     m_Controller3 = m_tempController;
                 }
         }
+        // m_Controller0 = new CommandXboxController(0);
+        // m_Controller1 = new Joystick(1);
+        // m_Controller2 = new XboxController(2);
+        // m_Controller3 = new XboxController(3);
     }
     //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
