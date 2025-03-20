@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.Optional;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -24,7 +25,7 @@ public class Robot extends TimedRobot {
   public static final RobotContainer m_robotContainer = new RobotContainer();
   String intakeState = "retract";
   Boolean armButtonLastPressed = false, retractElevatorArm = true;
-
+  
   public Robot() {
   }
   @Override
@@ -60,20 +61,30 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    Driver_Controller.SwerveCommandControl = true;
+    Driver_Controller.SwerveCommandControl = false;
     Driver_Controller.SwerveCommandEncoderValue=RobotContainer.robotOffset+RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
     Driver_Controller.SwerveCommandXValue = 0;
     Driver_Controller.SwerveCommandYValue = 0;
+    
   }
 
   @Override
   public void autonomousPeriodic() {
-    driveSouthPastLine();
+    //driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
     //Driver_Controller.SwerveCommandXValue = -0.5;
     //Driver_Controller.SwerveCommandEncoderValue = 300;
     // todo: drive 1m south (towards driver/operators)
     // todo: reset rotary_joystick
+    // 4.07, 3.25
+    if (Driver_Controller.m_Controller2.getRawButton(4)){
+      System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
+      Driver_Controller.SwerveControlSet(true);
+      Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
+    }
+    else{
+      Driver_Controller.SwerveControlSet(false);
+    }
   }
 
   @Override
