@@ -31,7 +31,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 
 public class Robot extends TimedRobot {
   public static int currentLevel = 0;
-  private static final String kDefaultAuto = "Default";
+  private static final String kDefaultAuto = "score + de-algae 1x";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
@@ -114,7 +114,20 @@ public class Robot extends TimedRobot {
     switch (m_autoSelected) {
       case kDefaultAuto:
       default:
-        System.out.println("default ran");
+        // go forward if we can't read where we are at the start
+      Driver_Controller.SwerveControlSet(true);
+      RobotContainer.rotaryCalc(true);
+      RobotContainer.drivingOn = 0;
+      AutoDriveFinal.AutoDrive();
+      if (Elevator.elevatorTo(Elevator.levelPosition[4])){
+        System.out.println("elevator L4");
+        if (Elevator.extendedOrRetracted != "retracted"){
+					if(Elevator.lastExtendOrRetract == "extend"){
+						Elevator.armTimer = 0.0;
+					}
+					Elevator.moveElevatorArm("retract");
+				}
+      }
         break;
       case kCustomAuto:
         System.out.println("custom ran");
@@ -195,7 +208,7 @@ public class Robot extends TimedRobot {
       Intake.timer = 0;
     }
     Intake.moveCoral();
-    Climb.letsClimb();
+    // Climb.letsClimb();
     
     // dealing with intake
     intakeState = "retract";
