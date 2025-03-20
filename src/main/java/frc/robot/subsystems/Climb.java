@@ -5,7 +5,7 @@ import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Servo;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-public class Climb {
+public class Climb {/* 
 	public static boolean extendLastPressed;
 	static int closedPosition = -10, openPosition = 60, servoPosition = closedPosition, timer = 0;
 	public static Servo servo = new Servo(0);
@@ -45,7 +45,7 @@ public class Climb {
 					}
 					Elevator.moveElevatorArm("retract");
 				}
-			}*/
+			}* /
 		}
 		if(Driver_Controller.buttonExtendClimb() || Driver_Controller.buttonRetractClimb()) {
 			servoPosition = closedPosition;
@@ -57,4 +57,4 @@ public class Climb {
 		climb.set(power);
 		extendLastPressed = Driver_Controller.buttonExtendClimb();
 	}
-}
+*/}
