@@ -8,11 +8,14 @@ import java.util.Optional;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.SignalLogger;
+// import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AutoDriveFinal;
@@ -28,14 +31,20 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 
 public class Robot extends TimedRobot {
   public static int currentLevel = 0;
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
   String intakeState = "retract";
   Boolean armButtonLastPressed = false, retractElevatorArm = true, autoDriveLastPressed = false;
-
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
   }
   @Override
   public void robotInit() {
@@ -74,11 +83,15 @@ public class Robot extends TimedRobot {
     Driver_Controller.SwerveCommandEncoderValue=/*RobotContainer.robotOffset+*/RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
     Driver_Controller.SwerveCommandXValue = 0;
     Driver_Controller.SwerveCommandYValue = 0;
+    
+    m_autoSelected = m_chooser.getSelected();
+    System.out.println("Auto selected: " + m_autoSelected);
+
   }
 
   @Override
   public void autonomousPeriodic() {
-    driveSouthPastLine();
+    //driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
     //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
@@ -89,6 +102,24 @@ public class Robot extends TimedRobot {
     //Driver_Controller.SwerveCommandEncoderValue = 300;
     // todo: drive 1m south (towards driver/operators)
     // todo: reset rotary_joystick
+    // 4.07, 3.25
+    if (Driver_Controller.m_Controller2.getRawButton(4)){
+      System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
+      Driver_Controller.SwerveControlSet(true);
+      Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
+    }
+    else{
+      Driver_Controller.SwerveControlSet(false);
+    }
+    switch (m_autoSelected) {
+      case kDefaultAuto:
+      default:
+        System.out.println("default ran");
+        break;
+      case kCustomAuto:
+        System.out.println("custom ran");
+      break;
+    }
   }
 
   @Override

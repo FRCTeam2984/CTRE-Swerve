@@ -93,6 +93,7 @@ public class RobotContainer {
 
             return powerCurved * 0.09;
         
+
     }
 
     final static double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
