@@ -1,0 +1,14 @@
+{
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "2984"
+  },
+  "transitory": {
+    "Pose": {
+      "double[]##v_/Pose/robotPose": {
+        "open": true
+      },
+      "open": true
+    }
+  }
+}

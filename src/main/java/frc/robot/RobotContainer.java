@@ -28,6 +28,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.Constants;
 
 public class RobotContainer {
+    public static int drivingOn = 1;
     public static double robotOffset = 0;
     private static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -111,13 +112,13 @@ public class RobotContainer {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         boolean drive_enable=true;
-        if (drive_enable){
+        if (drivingOn == 1){
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(Driver_Controller.SwerveXPassthrough) // Drive forward with negative Y (forward)
                     .withVelocityY(Driver_Controller.SwerveYPassthrough) // Drive left with negative X (left)
-                    .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
             )
         );}
 

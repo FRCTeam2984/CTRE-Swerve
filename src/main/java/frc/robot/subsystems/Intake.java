@@ -71,7 +71,7 @@ public class Intake {
             minPower = maxPower = 0.0;
             outside = false;
             movingCoral = true;
-        }if(Math.abs(position - desiredPosition) < 2){
+        }if(Math.abs(position - desiredPosition) < 2 && intakeLastUsed == 'C'){
             minPower = maxPower = intakeGravity();
             outside = false;
         }
@@ -83,12 +83,12 @@ public class Intake {
 
         if (outside == false && intakeLastUsed == 'C') hold = true;
         if (hold == false){
-            power = intakeGravity()+(desiredPosition-position)/155; // pivot power based linearly on error + gravity comp
-            if (desiredPosition-position > 0){
+            power = intakeGravity()+(desiredPosition-position)/75; // pivot power based linearly on error + gravity comp
+            /*if (desiredPosition-position > 0){
                 power += 0.1;
             }else{
                 power -= 0.1;
-            }
+            }*/
         }else{
             power = intakeGravity();
         }
@@ -135,6 +135,11 @@ public class Intake {
             
         // setting power of the pivot motor
         power = (desiredPosition-position)/10+intakeGravity(); // pivot power based linearly on error + gravity comp
+        if (desiredPosition-position > 0){
+            power += 0.1;
+        }else{
+            power -= 0.1;
+        }
         if (Math.abs(desiredPosition-position) < 1) power = intakeGravity();
         intakePivot.set(clamp(minPower, maxPower, power));
     }
@@ -143,7 +148,7 @@ public class Intake {
     // change constants!!!!
     public static void intakeCoral(Boolean reversing){
         Double position = intakeEncoder.getPosition();
-        Double maxPower = 0.7, minPower = -0.7, power, rollerPower = 0.5, desiredPosition = inPosition+45;
+        Double maxPower = 0.7, minPower = -0.7, power, rollerPower = 0.35, desiredPosition = inPosition+45;
 
         intakeLastUsed = 'C';
 		movingCoral = true;
@@ -184,7 +189,7 @@ public class Intake {
         }
 	    Double minPower = -0.2, maxPower = 0.2;// error = transportEncoder.getPosition()-0.3;
         Double transportGravity = 0.0;//*Math.sin(Math.toRadians(error)) / Math.pow(transportPivot.getOutputCurrent(), 2) * 0.1;
-	    //if (Elevator.elevatorTo(Elevator.bottomPosition) && transportEncoder.getPosition() <= 0.05){
+	    if (Elevator.elevatorTo(Elevator.bottomPosition)){
             switch (currentState){
 		        case ("start"): // start
 		    	    timer = 0;
@@ -228,7 +233,7 @@ public class Intake {
                     if(retractIntake() == false) currentState = "none";
                     break;
 	        }
-        /* }else{
+        }/*else{
             if (insideTransportSwitch.isPressed()){
                 maxPower = 0.0;
             }

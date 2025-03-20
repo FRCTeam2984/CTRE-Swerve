@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Servo;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -12,6 +13,8 @@ public class Climb {
 	public static Double inPosition = Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10));
 
 	public static void letsClimb(){
+		if (Driver_Controller.switchExtraOnOff()) RobotContainer.drivingOn = 1;
+		else RobotContainer.drivingOn = 0;
 		Double position = Double.parseDouble(climb.getRotorPosition().toString().substring(0, 10));
 		if (climb.getReverseLimit().getValue().toString() == "ClosedToGround") inPosition = position;
 		++timer;
@@ -28,7 +31,7 @@ public class Climb {
 		if(Driver_Controller.buttonRetractClimb() && climb.getReverseLimit().getValue().toString() != "ClosedToGround"){
 			//if (Elevator.elevatorTo(Elevator.bottomPosition) && Elevator.extendedOrRetracted == "retracted" && Math.abs(Intake.intakeEncoder.getPosition()-(Intake.climbPosition+Intake.inPosition)) < 0.05 && Intake.transportEncoder.getPosition() < 0.5){
 				
-			if(inPosition-position < -50){
+			if(inPosition-position < -44 || Driver_Controller.switchExtraOnOff()){
 				power = -0.5;
 			}else{
 				power = -0.025;
