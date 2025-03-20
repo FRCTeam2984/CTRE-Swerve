@@ -58,6 +58,7 @@ public class RobotContainer {
             //joystick2 = Driver_Controller.m_Controller1;
             configureBindings();
         }
+<<<<<<< Updated upstream
         public static double rotaryCalc(Boolean resetToRobot){
             //Driver_Controller.SwerveInputPeriodic();
             
@@ -82,6 +83,10 @@ public class RobotContainer {
             //System.out.println(powerCurved *0.9/45.0);
             return powerCurved * 0.09;
         
+=======
+        System.out.println(powerCurved *0.9/45.0); 
+        return powerCurved * 0.09;
+>>>>>>> Stashed changes
     }
 
     final static double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
