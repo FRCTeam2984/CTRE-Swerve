@@ -28,6 +28,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.Constants;
 
 public class RobotContainer {
+    public static Boolean needToReset = true;
     public static int drivingOn = 1;
     public static double robotOffset = 0;
     private static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -38,7 +39,7 @@ public class RobotContainer {
     
         // Setting up bindings for necessary control of the swerve drive platform 
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-                .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
         private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -61,8 +62,10 @@ public class RobotContainer {
         }
         public static double rotaryCalc(Boolean resetToRobot){
             //Driver_Controller.SwerveInputPeriodic();
-            
-            double pigeonYaw = robotOffset+drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
+            double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
+            if (Driver_Controller.SwerveCommandControl == false){
+                pigeonYaw += robotOffset;
+            }
             double rotaryJoystickInput = Driver_Controller.SwerveEncoderPassthrough;               // Get input from the rotary controller (ID from joystick2)
             //System.out.println(pigeonYaw);
             //System.out.println(rotaryJoystickInput);
@@ -71,8 +74,14 @@ public class RobotContainer {
             double diff = pigeonYaw - (rotaryJoystickInput);
             double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
             if (resetToRobot){
-                robotOffset -= diffmod180;
+                needToReset = true;
             }
+            if (needToReset && Driver_Controller.SwerveCommandControl == false){
+                robotOffset -= diffmod180;
+                needToReset = false;
+            }
+            //System.out.println(rotaryJoystickInput);
+            //System.out.println(pigeonYaw);
             //System.out.println(diffmod180);
             double powerCurved = -diffmod180;
             powerCurved = Math.max(-45,Math.min(45,powerCurved));
@@ -80,7 +89,8 @@ public class RobotContainer {
             if((diffmod180 <= 1) && (diffmod180 >= -1)){
                 //return 0;
             }
-            //System.out.println(powerCurved *0.9/45.0);
+            //System.out.println(rotaryJoystickInput);
+
             return powerCurved * 0.09;
         
     }
@@ -88,17 +98,13 @@ public class RobotContainer {
     final static double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
     final static double pwr[] = {-1  , -0.3,-0.1,-0.02,    0, 0,   0,0.02, 0.1,   .3,1};
     public static double joystick_curve(double joy) {
-        Double speedMult = 1.0;
-        if (Driver_Controller.speedSwitch()){
-            // speedMult = 0.3;
-        }
         int i;
         if (joy<=-1) joy=-1;
         if (joy>=1) joy=1;
         for (i=0;i<10;i++) {
         if ((pos[i]<=joy) && (pos[i+1]>=joy)) {
             //System.out.println( ((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
-            return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed* speedMult);
+            return(((joy-pos[i]) / (pos[i+1]-pos[i]) * (pwr[i+1]-pwr[i]) + pwr[i]) * MaxSpeed);
             }
         }
         return(0);
@@ -113,7 +119,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(Driver_Controller.SwerveXPassthrough) // Drive forward with negative Y (forward)
                     .withVelocityY(Driver_Controller.SwerveYPassthrough) // Drive left with negative X (left)
-                    .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );}
 

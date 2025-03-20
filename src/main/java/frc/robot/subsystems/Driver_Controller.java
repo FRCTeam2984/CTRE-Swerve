@@ -35,7 +35,7 @@ public class Driver_Controller {
     public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
     public static int SwerveRotaryEncoderPort;         // Value of rotary encoder for controlling swerve drive
 
-    private static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
+    public static boolean SwerveCommandControl;       // Controls Swerve command shifting, false = Controller and true = Command
     public static double SwerveEncoderPassthrough;     // Encoder pass back to swervedrive system
     public static double SwerveXPassthrough;           // X value pass back to swervedrive system
     public static double SwerveYPassthrough;           // Y value pass back to swervedrive system
@@ -127,8 +127,10 @@ public class Driver_Controller {
     //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
 
-public static Boolean speedSwitch(){
+public static Boolean driverSwitch(){
     return m_Controller1.getRawButton(5);}
+public static Boolean buttonAutoDrive(){
+    return m_Controller1.getRawButton(1);}
 public static Boolean buttonResetIntake(){
     return m_Controller1.getRawButton(7);}
 
@@ -171,15 +173,15 @@ public static double buttonReefPosition(){
 }
       
 public static int getLevel(){
-    if(buttonL1()) return 1;
-    if(buttonL1()) return 2;
-    if(buttonL1()) return 3;
-    if(buttonL1()) return 4;
+    if(buttonL2()) return 2;
+    if(buttonL3()) return 3;
+    if(buttonL4()) return 4;
     return 0;
 }
 
 public static void SwerveControlSet(boolean command){
     SwerveCommandControl = command;
+    SwerveInputPeriodic();
 }
 public static void SwerveInputPeriodic(){
     if (SwerveCommandControl){ // Command Mode
@@ -189,8 +191,8 @@ public static void SwerveInputPeriodic(){
     }
     else{ //Controller Mode
         SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(m_Controller1);
-        SwerveXPassthrough = RobotContainer.joystick_curve(m_Controller0.getLeftY());
-        SwerveYPassthrough = RobotContainer.joystick_curve(m_Controller0.getLeftX());
+        SwerveXPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftY());
+        SwerveYPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftX());
     }
 }
 

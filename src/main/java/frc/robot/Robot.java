@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-//import frc.robot.subsystems.AutoDriveTest;
+import frc.robot.subsystems.AutoDriveFinal;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Driver_Controller;
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   public Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
   String intakeState = "retract";
-  Boolean armButtonLastPressed = false, retractElevatorArm = true;
+  Boolean armButtonLastPressed = false, retractElevatorArm = true, autoDriveLastPressed = false;
 
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
     Driver_Controller.SwerveControlSet(true);
-    Driver_Controller.SwerveCommandEncoderValue=RobotContainer.robotOffset+RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
+    Driver_Controller.SwerveCommandEncoderValue=/*RobotContainer.robotOffset+*/RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
     Driver_Controller.SwerveCommandXValue = 0;
     Driver_Controller.SwerveCommandYValue = 0;
   }
@@ -101,13 +101,14 @@ public class Robot extends TimedRobot {
     Elevator.extendedOrRetracted = "retracted";
     Limelight.limelightInit();
     Driver_Controller.define_Controller();
+    Driver_Controller.SwerveControlSet(false);
     RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
     Intake.currentState = "none";
     Intake.intakeLastUsed = 'D';
     
     currentLevel = -1;
     Intake.timer = 0;
-    Driver_Controller.SwerveControlSet(false);
+    
   }
 
   @Override
@@ -122,42 +123,42 @@ public class Robot extends TimedRobot {
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
 
-  if (Driver_Controller.buttonResetElevator()) currentLevel = 0;
-  if (Driver_Controller.buttonL2()) currentLevel = 2;
-  if (Driver_Controller.buttonL3()) currentLevel = 3;
-  if (Driver_Controller.buttonL4()) currentLevel = 4;
-  //currentLevel = 0;
-  switch (currentLevel){
-    case (0):
-      if (elevatorPosition > 3 && Driver_Controller.buttonResetElevator()) Elevator.elevatorTo(-99999.0);
-      else if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround" && Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(-0.3);
-      else Elevator.elevatorMotor.set(0.0);
-      break;
-    case (2):
-      if (Elevator.elevatorTo(Elevator.l2Position)) currentLevel = -1;
-      break;
-    case (3):
-      if (Elevator.elevatorTo(Elevator.l3Position)) currentLevel = -1;
-      break;
-    case (4):
-      if (Elevator.elevatorTo(Elevator.l4Position)) currentLevel = -1;
-      break;
-  }
+    // setting elevator position
+    if (Driver_Controller.buttonResetElevator()) currentLevel = 0;
+    if (Driver_Controller.buttonL2()) currentLevel = 2;
+    if (Driver_Controller.buttonL3()) currentLevel = 3;
+    if (Driver_Controller.buttonL4()) currentLevel = 4;
+    switch (currentLevel){
+      case (0):
+        if (elevatorPosition > 3 && Driver_Controller.buttonResetElevator()) Elevator.elevatorTo(-99999.0);
+        else if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround" && Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(-0.3);
+        else Elevator.elevatorMotor.set(0.0);
+        break;
+      case (2):
+        if (Elevator.elevatorTo(Elevator.levelPosition[2])) currentLevel = -1;
+        break;
+      case (3):
+        if (Elevator.elevatorTo(Elevator.levelPosition[3])) currentLevel = -1;
+        break;
+      case (4):
+        if (Elevator.elevatorTo(Elevator.levelPosition[4])) currentLevel = -1;
+        break;
+    }
   
-  //System.out.println(Elevator.bottomPosition-Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)));
-  if (elevatorArmButton && armButtonLastPressed == false) retractElevatorArm = retractElevatorArm^true;
+    // dealing with elevator arm
+    if (elevatorArmButton && armButtonLastPressed == false) retractElevatorArm = retractElevatorArm^true;
+    if (!retractElevatorArm){
+      if (Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend");
+      else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, 0.025);
+      else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
+    }else{
+      if (Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
+      else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, -0.025);
+      else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
+    }
+    armButtonLastPressed = elevatorArmButton;
 
-  if (!retractElevatorArm){
-    if (Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend");
-    else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, 0.025);
-    else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
-  }else{
-    if (Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
-    else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, -0.025);
-    else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
-  }
-  armButtonLastPressed = elevatorArmButton;
-    
+    // dealing with transport and climb
     if (Driver_Controller.buttonTransportPivot()){
       Intake.currentState = "run belt";
       Intake.timer = 0;
@@ -165,6 +166,7 @@ public class Robot extends TimedRobot {
     Intake.moveCoral();
     Climb.letsClimb();
     
+    // dealing with intake
     intakeState = "retract";
     if (Driver_Controller.switchAlgaeIntake() == false){
       intakeState = "intake algae";
@@ -181,7 +183,7 @@ public class Robot extends TimedRobot {
     else if (Driver_Controller.buttonReverseCoral()) intakeState = "reset intake";
     else if (Driver_Controller.buttonCoralIntakeGround()) intakeState = "ground intake";
     else if (Driver_Controller.buttonCoralStationIntake()) intakeState = "station intake";
-    intakeState = "im jealous that justin is with lukas now and im really sad :(";
+    intakeState = "im jealous that justin is with lukas now and im really sad :("; // intake disabled
     switch(intakeState){
       case "reset intake": 
         if (Intake.outsideSwitch.isPressed()) Intake.intakePivot.set(0);
@@ -193,7 +195,33 @@ public class Robot extends TimedRobot {
       case "intake algae": Intake.intakeTo("intakeAlgae"); break;
       case "retract": Intake.retractIntake();
     } 
-    
+
+    // handling AutoDrive
+    if (Driver_Controller.buttonAutoDrive()){
+      Driver_Controller.SwerveControlSet(true);
+      RobotContainer.rotaryCalc(true);
+      RobotContainer.drivingOn = 0;
+      AutoDriveFinal.AutoDrive();/*
+      if (Driver_Controller.getLevel() != 0){
+        if (){
+          Elevator.elevatorTo((double) Driver_Controller.getLevel());
+
+        }
+      }
+      else {
+        Driver_Controller.SwerveCommandEncoderValue=RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
+        Driver_Controller.SwerveCommandXValue=0;
+        Driver_Controller.SwerveCommandYValue=0;
+      }*/
+    } 
+    else {
+      RobotContainer.drivingOn = 1;
+      Driver_Controller.SwerveControlSet(false);
+      if (autoDriveLastPressed){
+        RobotContainer.rotaryCalc(true);
+      }
+    } 
+    autoDriveLastPressed = Driver_Controller.buttonAutoDrive();
   }
 
   @Override

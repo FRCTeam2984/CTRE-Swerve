@@ -11,11 +11,11 @@ import frc.robot.drivetrain;
 public class Elevator{
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static TalonSRX armMotor = new TalonSRX(Constants.elevatorArmMotorID);
-  public static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0, l2Position = 70.5, l3Position = 117.8, l4Position = 188.25;
+  public static Double bottomPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10)), armTimer = 0.0;
   public static Boolean removeButtonLastPressed = false;
   public static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
   public static int recentLevel = 2;
-  public static Double[] removeAlgaeH = {20.0, 30.0};
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 0.0, 70.5, 117.8, 188.25};
   
   // function for keeping a variable between a lower and upper limit
   public static Double clamp(Double minimum, Double maximum, Double input){
