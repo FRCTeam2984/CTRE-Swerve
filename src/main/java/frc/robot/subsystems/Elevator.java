@@ -33,7 +33,7 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
     Double error = destination - position;
 		// convert destination from input units to encoder rotations
-    Double minPower = -0.25, maxPower = 0.25, power = 0.0;
+    Double minPower = -0.9, maxPower = 0.9, power = 0.0;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 			

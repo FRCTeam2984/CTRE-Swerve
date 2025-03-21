@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
   public static final RobotContainer m_robotContainer = new RobotContainer();
   String intakeState = "retract";
   Boolean armButtonLastPressed = false, retractElevatorArm = true, autoDriveLastPressed = false;
+  String state = "drive past line";
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));}
     // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     Driver_Controller.SwerveControlSet(true);
     // init controllers???
@@ -91,6 +93,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    int scoringPos = (int) Driver_Controller.buttonReefPosition();;
     //driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
     //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
@@ -115,57 +118,69 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
         // ADD go forward if we can't read where we are at the start
-        String state;
-        int sDSPL = 1;
+        /* int sDSPL = 1;
         int sAutoDrive = 2;
-        int sArm = 3;
-        state = "auto";
+        int sArm = 3; */
         System.out.println("works");
         switch(state){
-          // case 1:
-            // if(driveSouthPastLine())
-              // state = sAutoDrive;
-            // break;
+          case "drive past line":
+            if(driveSouthPastLine())
+              state = "auto";
+            break;
           case "auto":
-            // Driver_Controller.SwerveControlSet(true);
-            // RobotContainer.rotaryCalc(true);
-            // RobotContainer.drivingOn = 0;
+            Driver_Controller.SwerveControlSet(true);
+            RobotContainer.rotaryCalc(true);
+            RobotContainer.drivingOn = 0;
             System.out.println("case 2");
             if(AutoDriveFinal.AutoDrive())
               state = "outtake";
             break;
           case "outtake":
             System.out.println("case 3");
-            int scoringPos = (int) Driver_Controller.buttonReefPosition();
-            if((scoringPos == 1) || (scoringPos == 2) || (scoringPos == 5) || (scoringPos == 6) || (scoringPos == 9) || (scoringPos == 10)){
+            if((scoringPos == 2) ||  (scoringPos == 6) || (scoringPos == 10)){
               // not sure if this eleavtor code will work confirm with KEVIN. - siena
               if (Elevator.elevatorTo(Elevator.levelPosition[4])){
                 // System.out.println("elevator L4");
-                if (Elevator.extendedOrRetracted != "retracted"){
-                  if(Elevator.lastExtendOrRetract == "extend"){
+                if (Elevator.extendedOrRetracted != "extended"){
+                  if(Elevator.lastExtendOrRetract == "retract"){
                     Elevator.armTimer = 0.0;
                   }
-                  Elevator.moveElevatorArm("retract");
+                  Elevator.moveElevatorArm("extend");
+                }else{
+                  state = "move down";
                 }
               }
             }
             else{
               if (Elevator.elevatorTo(Elevator.levelPosition[3])){  // score at L3
                 // System.out.println("elevator L3");
-                if (Elevator.extendedOrRetracted != "retracted"){
-                  if(Elevator.lastExtendOrRetract == "extend"){
+                if (Elevator.extendedOrRetracted != "extended"){
+                  if(Elevator.lastExtendOrRetract == "retract"){
                     Elevator.armTimer = 0.0;
                   }
-                  Elevator.moveElevatorArm("retract");
+                  Elevator.moveElevatorArm("extend");
+                }else{
+                  state = "move down";
                 }
               }
             }
+            // state = "move down";  // for simulator
             break;
-        }
+          case "move down":
+            System.out.println("case 4");
+            if ((scoringPos%4 ==1)?Elevator.elevatorTo(Elevator.levelPosition[4]-50):Elevator.elevatorTo(Elevator.levelPosition[3]-50)){
+              System.out.println("backwards");
+              AutoDriveFinal.driveBackwards(scoringPos);
+            
+            break;
+          default:
+            System.out.println("default");
+          }
+        
         break;
       case kCustomAuto:
         AutoDriveFinal.AutoDrive();
-        AutoDriveFinal.AutoDriveSecond();
+        // AutoDriveFinal.AutoDriveSecond();
         
       break;
     }

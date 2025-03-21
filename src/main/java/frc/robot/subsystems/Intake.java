@@ -56,7 +56,7 @@ public class Intake {
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
 	public static Boolean retractIntake(){
-        Double maxPower = 0.5, minPower = -0.5, power, position = intakeEncoder.getPosition(), desiredPosition = inPosition;
+        Double maxPower = 0.5, minPower = -0.5, power, position = -inPosition + intakeEncoder.getPosition(), desiredPosition = inPosition;
         Boolean outside = true, hold = false;
         
         if (intakeLastUsed == 'C'){
