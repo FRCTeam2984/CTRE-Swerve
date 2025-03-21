@@ -39,6 +39,9 @@ public class Robot extends TimedRobot {
   public static final RobotContainer m_robotContainer = new RobotContainer();
   String intakeState = "retract";
   Boolean armButtonLastPressed = false, retractElevatorArm = true, autoDriveLastPressed = false;
+
+  String state = "drive past line";  // for setting autonomous state
+
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
@@ -111,31 +114,28 @@ public class Robot extends TimedRobot {
     else{
       Driver_Controller.SwerveControlSet(false);
     }
+    // m_autoSelected = kDefaultAuto;
     switch (m_autoSelected) {
       case kDefaultAuto:
-      default:
-        // ADD go forward if we can't read where we are at the start
-        String state;
-        int sDSPL = 1;
+        /* int sDSPL = 1;
         int sAutoDrive = 2;
-        int sArm = 3;
-        state = "auto";
+        int sArm = 3; */
         System.out.println("works");
         switch(state){
-          // case 1:
-            // if(driveSouthPastLine())
-              // state = sAutoDrive;
-            // break;
+          case "drive past line":
+            if(driveSouthPastLine())
+              state = "auto";
+            break;
           case "auto":
-            // Driver_Controller.SwerveControlSet(true);
-            // RobotContainer.rotaryCalc(true);
-            // RobotContainer.drivingOn = 0;
-            System.out.println("case 2");
+            Driver_Controller.SwerveControlSet(true);
+            RobotContainer.rotaryCalc(true);
+            RobotContainer.drivingOn = 0;
+            System.out.println("auto");
             if(AutoDriveFinal.AutoDrive())
               state = "outtake";
             break;
           case "outtake":
-            System.out.println("case 3");
+            System.out.println("outtake");
             int scoringPos = (int) Driver_Controller.buttonReefPosition();
             if((scoringPos == 1) || (scoringPos == 2) || (scoringPos == 5) || (scoringPos == 6) || (scoringPos == 9) || (scoringPos == 10)){
               // not sure if this eleavtor code will work confirm with KEVIN. - siena
@@ -161,13 +161,18 @@ public class Robot extends TimedRobot {
               }
             }
             break;
+            default:
+              System.out.println("default inside");
         }
+
         break;
       case kCustomAuto:
-        AutoDriveFinal.AutoDrive();
-        AutoDriveFinal.AutoDriveSecond();
+        // AutoDriveFinal.AutoDrive();
+        // AutoDriveFinal.AutoDriveSecond();
         
       break;
+      default:
+        System.out.println("default");
     }
   }
 
