@@ -31,8 +31,8 @@ public class Intake {
     public static SparkLimitSwitch insideTransportSwitch = transportPivot.getForwardLimitSwitch();
     public static SparkLimitSwitch outsideTransportSwitch = transportPivot.getReverseLimitSwitch();
 
-    public static SparkLimitSwitch insideSwitch = intakePivot.getForwardLimitSwitch();
-    public static SparkLimitSwitch outsideSwitch = intakePivot.getReverseLimitSwitch();
+    public static SparkLimitSwitch insideSwitch = intakePivot.getReverseLimitSwitch();
+    public static SparkLimitSwitch outsideSwitch = intakePivot.getForwardLimitSwitch();
     
     Intake(){
         transportEncoder.setPosition(0.0);
@@ -189,7 +189,6 @@ public class Intake {
         }
 	    Double minPower = -0.2, maxPower = 0.2;// error = transportEncoder.getPosition()-0.3;
         Double transportGravity = 0.0;//*Math.sin(Math.toRadians(error)) / Math.pow(transportPivot.getOutputCurrent(), 2) * 0.1;
-	    if (Elevator.elevatorTo(Elevator.bottomPosition)){
             switch (currentState){
 		        case ("start"): // start
 		    	    timer = 0;
@@ -208,13 +207,13 @@ public class Intake {
 			        if (insideTransportSwitch.isPressed()){
 				        maxPower = 0.0;
 			        }
-			        if (outsideTransportSwitch.isPressed() || timer > 50*1){
+			        if (/*outsideTransportSwitch.isPressed() || */timer > 50*1){
 				        transportPivot.set(0);
 				        currentState = "return transport arm";
                         break;
                     }
-                    if (retractIntake() == false){
-			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/30));
+                    if (retractIntake() == false && Elevator.elevatorTo(0.0)){
+			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/60));
                     }
                     break;
 		        case ("return transport arm"): // return transport arm
@@ -227,13 +226,13 @@ public class Intake {
 			        if (outsideTransportSwitch.isPressed()){
 				        minPower = 0.0;
 			        }
-			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/30+0.1));
+			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/60+0.1));
                     break;
                 case ("retract intake"):
                     if(retractIntake() == false) currentState = "none";
                     break;
 	        }
-        }/*else{
+        /*else{
             if (insideTransportSwitch.isPressed()){
                 maxPower = 0.0;
             }

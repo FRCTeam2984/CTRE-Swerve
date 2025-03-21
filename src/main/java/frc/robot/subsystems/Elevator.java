@@ -15,7 +15,7 @@ public class Elevator{
   public static Boolean removeButtonLastPressed = false;
   public static String state = "idle", extendedOrRetracted = "retracted", lastExtendOrRetract = "";
   public static int recentLevel = 2;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 0.0, 70.5, 117.8, 188.25};
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 70.5, 117.8, 188.25};
   
   // function for keeping a variable between a lower and upper limit
   public static Double clamp(Double minimum, Double maximum, Double input){
@@ -33,7 +33,7 @@ public class Elevator{
     Double position = Double.parseDouble(rawInput.substring(0, 10)) - bottomPosition;
     Double error = destination - position;
 		// convert destination from input units to encoder rotations
-    Double minPower = -0.6, maxPower = 0.6, power = 0.0;
+    Double minPower = -0.25, maxPower = 0.25, power = 0.0;
 		Integer maxError = 5; // change gravityComp
 		Boolean closeEnough = false;
 			
@@ -45,9 +45,6 @@ public class Elevator{
 	    power = 0.0;
 	    closeEnough = true;
     }
-    //System.out.println("elevator");
-    //System.out.println(destination-position);
-    //System.out.println(power);
     // Clamp power and use limit switches
     if (elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround")
       power = Elevator.clamp(0.0, maxPower, power);
@@ -56,6 +53,7 @@ public class Elevator{
     else
       power = Elevator.clamp(minPower, maxPower, power);
     // set motor power and return whether it is close enough
+    //System.out.println(100*power);
     elevatorMotor.set(power);
     return closeEnough;
   }

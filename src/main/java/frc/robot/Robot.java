@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AutoDriveFinal;
-import frc.robot.subsystems.Climb;
+//import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Driver_Controller;
 import frc.robot.subsystems.Elevator;
@@ -144,7 +144,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    
+    if (Driver_Controller.m_Controller1.getRawButton(9)){
+      Intake.beltDrive.set(ControlMode.PercentOutput, 0.25);
+    } else Intake.beltDrive.set(ControlMode.PercentOutput, 0.0);
     // NetworkTablesDesktopClient.getRobotPosition();
     Boolean elevatorArmButton = Driver_Controller.buttonL1();
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
@@ -162,20 +164,20 @@ public class Robot extends TimedRobot {
     switch (currentLevel){
       case (0):
         if (elevatorPosition > 3 && Driver_Controller.buttonResetElevator()) Elevator.elevatorTo(-99999.0);
-        else if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround" && Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(-0.3);
+        //else if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround" && Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(-0.3);
         else Elevator.elevatorMotor.set(0.0);
         break;
       case (2):
-        if (Elevator.elevatorTo(Elevator.levelPosition[2])) currentLevel = -1;
+        if (Elevator.elevatorTo(Elevator.levelPosition[2]));// currentLevel = -1;
         break;
       case (3):
-        if (Elevator.elevatorTo(Elevator.levelPosition[3])) currentLevel = -1;
+        if (Elevator.elevatorTo(Elevator.levelPosition[3]));// currentLevel = -1;
         break;
       case (4):
-        if (Elevator.elevatorTo(Elevator.levelPosition[4])) currentLevel = -1;
+        if (Elevator.elevatorTo(Elevator.levelPosition[4]));// currentLevel = -1;
         break;
     }
-  
+    //System.out.println(elevatorPosition);
     // dealing with elevator arm
     if (elevatorArmButton && armButtonLastPressed == false) retractElevatorArm = retractElevatorArm^true;
     if (!retractElevatorArm){
@@ -195,7 +197,7 @@ public class Robot extends TimedRobot {
       Intake.timer = 0;
     }
     Intake.moveCoral();
-    Climb.letsClimb();
+    //Climb.letsClimb();
     
     // dealing with intake
     intakeState = "retract";
@@ -214,7 +216,7 @@ public class Robot extends TimedRobot {
     else if (Driver_Controller.buttonReverseCoral()) intakeState = "reset intake";
     else if (Driver_Controller.buttonCoralIntakeGround()) intakeState = "ground intake";
     else if (Driver_Controller.buttonCoralStationIntake()) intakeState = "station intake";
-    intakeState = "im jealous that justin is with lukas now and im really sad :("; // intake disabled
+    //intakeState = "im jealous that justin is with lukas now and im really sad :("; // intake disabled
     switch(intakeState){
       case "reset intake": 
         if (Intake.outsideSwitch.isPressed()) Intake.intakePivot.set(0);
