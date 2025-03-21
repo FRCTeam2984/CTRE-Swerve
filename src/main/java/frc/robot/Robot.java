@@ -30,6 +30,7 @@ import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 
 public class Robot extends TimedRobot {
+  int scoringPos = (int) Driver_Controller.buttonReefPosition();
   public static int currentLevel = 0;
   private static final String kDefaultAuto = "score + de-algae 1x";
   private static final String kCustomAuto = "My Auto";
@@ -39,7 +40,9 @@ public class Robot extends TimedRobot {
   public static final RobotContainer m_robotContainer = new RobotContainer();
   String intakeState = "retract";
   Boolean armButtonLastPressed = false, retractElevatorArm = true, autoDriveLastPressed = false;
-  String state = "drive past line";
+
+  String state = "drive past line";  // for setting autonomous state
+
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
@@ -69,7 +72,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));}
     // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     Driver_Controller.SwerveControlSet(true);
     // init controllers???
@@ -88,12 +90,13 @@ public class Robot extends TimedRobot {
     
     m_autoSelected = m_chooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
+    state = "drive past line";
 
   }
 
   @Override
   public void autonomousPeriodic() {
-    int scoringPos = (int) Driver_Controller.buttonReefPosition();;
+    
     //driveSouthPastLine();
     Driver_Controller.SwerveInputPeriodic();
     //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
@@ -114,14 +117,14 @@ public class Robot extends TimedRobot {
     else{
       Driver_Controller.SwerveControlSet(false);
     }
+    // m_autoSelected = kDefaultAuto;
     switch (m_autoSelected) {
       case kDefaultAuto:
-      default:
-        // ADD go forward if we can't read where we are at the start
         /* int sDSPL = 1;
         int sAutoDrive = 2;
         int sArm = 3; */
-        System.out.println("works");
+        
+        // System.out.println("works");
         switch(state){
           case "drive past line":
             if(driveSouthPastLine())
@@ -130,59 +133,64 @@ public class Robot extends TimedRobot {
           case "auto":
             Driver_Controller.SwerveControlSet(true);
             RobotContainer.rotaryCalc(true);
-            RobotContainer.drivingOn = 0;
-            System.out.println("case 2");
+            // RobotContainer.drivingOn = 0;
+            System.out.println("auto");
             if(AutoDriveFinal.AutoDrive())
               state = "outtake";
             break;
           case "outtake":
-            System.out.println("case 3");
-            if((scoringPos == 2) ||  (scoringPos == 6) || (scoringPos == 10)){
+            System.out.println("outtake");
+            // RobotContainer.drivingOn = 0;
+            if((scoringPos == 2) || (scoringPos == 6) ||(scoringPos == 10)){
               // not sure if this eleavtor code will work confirm with KEVIN. - siena
               if (Elevator.elevatorTo(Elevator.levelPosition[4])){
+                state = "outtake 2";
                 // System.out.println("elevator L4");
-                if (Elevator.extendedOrRetracted != "extended"){
-                  if(Elevator.lastExtendOrRetract == "retract"){
-                    Elevator.armTimer = 0.0;
-                  }
-                  Elevator.moveElevatorArm("extend");
-                }else{
-                  state = "move down";
-                }
               }
             }
             else{
               if (Elevator.elevatorTo(Elevator.levelPosition[3])){  // score at L3
                 // System.out.println("elevator L3");
-                if (Elevator.extendedOrRetracted != "extended"){
-                  if(Elevator.lastExtendOrRetract == "retract"){
-                    Elevator.armTimer = 0.0;
-                  }
-                  Elevator.moveElevatorArm("extend");
-                }else{
-                  state = "move down";
-                }
+                state = "outtake 2";
               }
             }
-            // state = "move down";  // for simulator
+            state = "outtake 2";
             break;
-          case "move down":
-            System.out.println("case 4");
-            if ((scoringPos%4 ==1)?Elevator.elevatorTo(Elevator.levelPosition[4]-50):Elevator.elevatorTo(Elevator.levelPosition[3]-50)){
-              System.out.println("backwards");
-              AutoDriveFinal.driveBackwards(scoringPos);
-            
+          case "outtake 2":
+            System.out.println("outtake 2");
+            if (Elevator.extendedOrRetracted != "extended"){
+              if(Elevator.lastExtendOrRetract == "retract"){
+                Elevator.armTimer = 0.0;
+              }
+              Elevator.moveElevatorArm("extend");
+            }else{
+              state = "elevator down";
+            }
+            state = "elevator down";
             break;
+          case "elevator down":
+          System.out.println("elevator down");
+            // if (((scoringPos%4) == 1 || (scoringPos%4) == 2)?Elevator.elevatorTo(Elevator.levelPosition[3]+40):Elevator.elevatorTo(Elevator.levelPosition[2]+40)){
+              state = "drive back";
+            // }
+            break;
+          case "drive back":
+            scoringPos = (int) Driver_Controller.buttonReefPosition();
+            System.out.println("drive back");
+            AutoDriveFinal.driveBackwards(scoringPos);
+          break;
           default:
-            System.out.println("default");
-          }
-        
+            System.out.println("default inside");
+        }
+
         break;
       case kCustomAuto:
-        AutoDriveFinal.AutoDrive();
+        // AutoDriveFinal.AutoDrive();
         // AutoDriveFinal.AutoDriveSecond();
         
       break;
+      default:
+        System.out.println("default");
     }
   }
 
@@ -214,7 +222,9 @@ public class Robot extends TimedRobot {
     // NetworkTablesDesktopClient.getRobotPosition();
     Boolean elevatorArmButton = Driver_Controller.buttonL1();
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
-    Limelight.limelightOdometryUpdate();
+    if (Driver_Controller.driverSwitch()) {
+      Limelight.limelightOdometryUpdate();
+    }
     Driver_Controller.SwerveInputPeriodic();
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
@@ -232,13 +242,16 @@ public class Robot extends TimedRobot {
         else Elevator.elevatorMotor.set(0.0);
         break;
       case (2):
-        if (Elevator.elevatorTo(Elevator.levelPosition[2]));// currentLevel = -1;
+        //if (Elevator.elevatorTo(Elevator.levelPosition[2]));// currentLevel = -1;
+        System.out.println(Elevator.elevatorTo(Elevator.levelPosition[2]));
         break;
       case (3):
-        if (Elevator.elevatorTo(Elevator.levelPosition[3]));// currentLevel = -1;
+        //if (Elevator.elevatorTo(Elevator.levelPosition[3]));// currentLevel = -1;
+        System.out.println(Elevator.elevatorTo(Elevator.levelPosition[3]));
         break;
       case (4):
-        if (Elevator.elevatorTo(Elevator.levelPosition[4]));// currentLevel = -1;
+        //if (Elevator.elevatorTo(Elevator.levelPosition[4]));// currentLevel = -1;
+        System.out.println(Elevator.elevatorTo(Elevator.levelPosition[4]));
         break;
     }
     //System.out.println(elevatorPosition);
@@ -268,7 +281,7 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.switchAlgaeIntake() == false){
       intakeState = "intake algae";
       if (Driver_Controller.buttonScoreAlgae())
-        Intake.bottomIntake.set(0.5);
+        Intake.bottomIntake.set(0.3);
       else{
         if (Intake.bottomIntake.getOutputCurrent() < 5){
           Intake.bottomIntake.set(-0.5);

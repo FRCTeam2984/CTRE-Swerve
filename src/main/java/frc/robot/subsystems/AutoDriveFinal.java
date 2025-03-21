@@ -94,7 +94,7 @@ public class AutoDriveFinal{
         return drive(odox,odoy, scoringPos, alliance);
     } */
     public static Boolean drive(double odox, double odoy, int scoringPos, int alliance){
-        double speedMult = 3;  // change through testing
+        double speedMult = 2;  // change through testing
         if(alliance == 1){  // blue
             odoangle = Math.tan(((scoringPosBlue[scoringPos-1][0] - odox)/(scoringPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180));
             // odoangle = ((scoringPosBlue[scoringPos-1][0] - odox)/(scoringPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180);
@@ -131,7 +131,7 @@ public class AutoDriveFinal{
         if(DriverStation.getAlliance().toString().charAt(9) == 'R'){   
             alliance = 2;  // red
         }
-        double speedMult = 3;
+        double speedMult = 2;
         if(alliance == 1){  // blue
             odoangle = Math.tan(((backPosBlue[scoringPos-1][0] - odox)/(backPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180));
             // odoangle = ((scoringPosBlue[scoringPos-1][0] - odox)/(scoringPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180);

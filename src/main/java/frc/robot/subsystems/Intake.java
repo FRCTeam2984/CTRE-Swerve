@@ -95,8 +95,8 @@ public class Intake {
         if (outsideSwitch.isPressed() == false && intakeLastUsed != 'C' && inPosition-position < 5) power -= 0.2;
         
         intakePivot.set(Intake.clamp(minPower, maxPower, power));
-        if (outside = false && intakeLastUsed == 'C')
-            currentState = "start";
+        // if (outside = false && intakeLastUsed == 'C')
+        //     currentState = "start";
         return outside;
     }
 
@@ -108,7 +108,7 @@ public class Intake {
         movingCoral = true;
         if (destination == "intakeAlgae"){
             intakeLastUsed = 'A';
-            desiredPosition = inPosition + 17;
+            desiredPosition = inPosition + 22;
             // if (bottomIntake.getOutputCurrent() > 5){
             //     bottomIntake.set(-0.1);
             // }else{
@@ -212,9 +212,9 @@ public class Intake {
 				        currentState = "return transport arm";
                         break;
                     }
-                    if (retractIntake() == false && Elevator.elevatorTo(0.0)){
+                    //if (retractIntake() == false && Elevator.elevatorTo(0.0)){
 			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/200));
-                    }
+                    //}
                     break;
 		        case ("return transport arm"): // return transport arm
 			        if (insideTransportSwitch.isPressed()){

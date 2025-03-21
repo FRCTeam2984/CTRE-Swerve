@@ -29,7 +29,7 @@ public class Driver_Controller {
      */
     public static CommandXboxController m_Controller0 = new CommandXboxController(0); //Set Temp value to complete initialization of swervedrive
     public static Joystick m_Controller1;
-    public static XboxController m_Controller2;
+    public static XboxController m_Controller2 = new XboxController(0);
     public static XboxController m_Controller3;
     private static XboxController m_tempController;
     public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
