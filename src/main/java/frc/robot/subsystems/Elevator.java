@@ -79,7 +79,7 @@ public class Elevator{
   }
 
   // function to be constantly called and remove algae
-  /*public void removeAlgae(){
+  /* public void removeAlgae(){
     if (Driver_Controller.buttonL2()) recentLevel = 2;
     if (Driver_Controller.buttonL3()) recentLevel = 3;
     if (Driver_Controller.buttonRemoveAlgae()){
