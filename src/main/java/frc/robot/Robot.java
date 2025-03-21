@@ -115,26 +115,29 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
         // ADD go forward if we can't read where we are at the start
-        int state = 2;
+        String state;
         int sDSPL = 1;
         int sAutoDrive = 2;
         int sArm = 3;
-        state = sDSPL;
+        state = "auto";
+        System.out.println("works");
         switch(state){
           // case 1:
             // if(driveSouthPastLine())
               // state = sAutoDrive;
             // break;
-          case 2:
+          case "auto":
             // Driver_Controller.SwerveControlSet(true);
             // RobotContainer.rotaryCalc(true);
             // RobotContainer.drivingOn = 0;
+            System.out.println("case 2");
             if(AutoDriveFinal.AutoDrive())
-              state = sArm;
+              state = "outtake";
             break;
-          case 3:
+          case "outtake":
+            System.out.println("case 3");
             int scoringPos = (int) Driver_Controller.buttonReefPosition();
-            if((scoringPos == 1) && (scoringPos == 2) && (scoringPos == 5) && (scoringPos == 6) && (scoringPos == 9) && (scoringPos == 10)){
+            if((scoringPos == 1) || (scoringPos == 2) || (scoringPos == 5) || (scoringPos == 6) || (scoringPos == 9) || (scoringPos == 10)){
               // not sure if this eleavtor code will work confirm with KEVIN. - siena
               if (Elevator.elevatorTo(Elevator.levelPosition[4])){
                 // System.out.println("elevator L4");
