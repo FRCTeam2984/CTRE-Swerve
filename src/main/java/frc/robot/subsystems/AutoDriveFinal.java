@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutoDriveFinal{
     public int scoringPos;
     public static double odoangle;
+    public static int alliance;
     public static double scoringAngles[] = {0, 0, -60, -60, -120, -120, -180, -180, -240, -240, -300, -300};
     static double scoringPosRed[][] = { 
         {14.34772578, 4.393108052},
@@ -38,11 +39,24 @@ public class AutoDriveFinal{
         {3.879262344, 2.890777798},  
     };
     public static Boolean AutoDrive(){
-        int alliance = 1;
+        alliance = 1;
         Driver_Controller.SwerveControlSet(true);
         double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         double odox = RobotContainer.drivetrain.getState().Pose.getX();
         int scoringPos = (int) Driver_Controller.buttonReefPosition(); // find how to get rotary control value
+        if(DriverStation.getAlliance().toString().charAt(9) == 'B'){   
+            alliance = 1;  // blue
+        }
+        if(DriverStation.getAlliance().toString().charAt(9) == 'R'){   
+            alliance = 2;  // red
+        }
+        return drive(odox,odoy, scoringPos, alliance);
+    }
+    public static Boolean AutoDriveSecond(){  // created this method just for auto and to be able to change rotary values without actually moving the rotary
+        Driver_Controller.SwerveControlSet(true);
+        double odoy = RobotContainer.drivetrain.getState().Pose.getY();
+        double odox = RobotContainer.drivetrain.getState().Pose.getX();
+        int scoringPos = (int) Driver_Controller.buttonReefPosition() + 2; // find how to get rotary control value
         if(DriverStation.getAlliance().toString().charAt(9) == 'B'){   
             alliance = 1;  // blue
         }
