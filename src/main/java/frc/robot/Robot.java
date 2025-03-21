@@ -31,7 +31,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 
 public class Robot extends TimedRobot {
   public static int currentLevel = 0;
-  private static final String kDefaultAuto = "Default";
+  private static final String kDefaultAuto = "score + de-algae 1x";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
@@ -114,10 +114,56 @@ public class Robot extends TimedRobot {
     switch (m_autoSelected) {
       case kDefaultAuto:
       default:
-        System.out.println("default ran");
+        // ADD go forward if we can't read where we are at the start
+        int state = 2;
+        int sDSPL = 1;
+        int sAutoDrive = 2;
+        int sArm = 3;
+        state = sDSPL;
+        switch(state){
+          // case 1:
+            // if(driveSouthPastLine())
+              // state = sAutoDrive;
+            // break;
+          case 2:
+            // Driver_Controller.SwerveControlSet(true);
+            // RobotContainer.rotaryCalc(true);
+            // RobotContainer.drivingOn = 0;
+            if(AutoDriveFinal.AutoDrive())
+              state = sArm;
+            break;
+          case 3:
+            int scoringPos = (int) Driver_Controller.buttonReefPosition();
+            if((scoringPos == 1) && (scoringPos == 2) && (scoringPos == 5) && (scoringPos == 6) && (scoringPos == 9) && (scoringPos == 10)){
+              // not sure if this eleavtor code will work confirm with KEVIN. - siena
+              if (Elevator.elevatorTo(Elevator.levelPosition[4])){
+                // System.out.println("elevator L4");
+                if (Elevator.extendedOrRetracted != "retracted"){
+                  if(Elevator.lastExtendOrRetract == "extend"){
+                    Elevator.armTimer = 0.0;
+                  }
+                  Elevator.moveElevatorArm("retract");
+                }
+              }
+            }
+            else{
+              if (Elevator.elevatorTo(Elevator.levelPosition[3])){  // score at L3
+                // System.out.println("elevator L3");
+                if (Elevator.extendedOrRetracted != "retracted"){
+                  if(Elevator.lastExtendOrRetract == "extend"){
+                    Elevator.armTimer = 0.0;
+                  }
+                  Elevator.moveElevatorArm("retract");
+                }
+              }
+            }
+            break;
+        }
         break;
       case kCustomAuto:
-        System.out.println("custom ran");
+        AutoDriveFinal.AutoDrive();
+        AutoDriveFinal.AutoDriveSecond();
+        
       break;
     }
   }
@@ -275,7 +321,8 @@ public class Robot extends TimedRobot {
   public void simulationPeriodic() {
     
   }
-  public void driveSouthPastLine() {
+  public boolean driveSouthPastLine() {
+    boolean retval = true;
     Double desiredPosition = 6.5;
     String alliance = "none";
     if (DriverStation.getAlliance().toString().charAt(9) == 'B'){
@@ -293,13 +340,19 @@ public class Robot extends TimedRobot {
       Driver_Controller.SwerveCommandXValue=((alliance == "blue")?-0.5:-0.5);
       Driver_Controller.SwerveCommandYValue=0; // drive slowly towards the driver/operator stations
       System.out.println("Robot.java LimelightPose2d is > 5");
+      retval = false;
     } else {
         // don't move
       //Driver_Controller.SwerveCommandEncoderValue=RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
       Driver_Controller.SwerveCommandXValue=0;
       Driver_Controller.SwerveCommandYValue=0;
      System.out.println("Robot.java LimelightPose2d is < 5");
+      retval=true;
     }
     Driver_Controller.SwerveControlSet(true);
+    if(RobotContainer.drivetrain.getState().Pose.getX() < 1){
+      retval = false;
+    }
+    return(retval);
   }
 }

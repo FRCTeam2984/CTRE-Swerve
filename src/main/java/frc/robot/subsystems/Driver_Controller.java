@@ -119,10 +119,10 @@ public class Driver_Controller {
                     m_Controller3 = m_tempController;
                 }
         }
-        // m_Controller0 = new CommandXboxController(0);
-        // m_Controller1 = new Joystick(1);
-        // m_Controller2 = new XboxController(2);
-        // m_Controller3 = new XboxController(3);
+        m_Controller0 = new CommandXboxController(0);
+        m_Controller1 = new Joystick(1);
+        m_Controller2 = new XboxController(2);
+        m_Controller3 = new XboxController(3);
     }
     //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
