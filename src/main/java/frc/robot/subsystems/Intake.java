@@ -50,7 +50,7 @@ public class Intake {
 	// change the .1, define inPosition
     public static Double intakeGravity(){
         Double rotations = intakeEncoder.getPosition()-inPosition;
-        return Math.sin(360.0*(Math.PI/180.0)*(rotations-6/*stable position*/)/105) * -0.05;
+        return Math.sin(360.0*(Math.PI/180.0)*(rotations-6/*stable position*/)/105) * -0.04;
     }
 
     // function for retracting the intake for algae and coral
@@ -213,7 +213,7 @@ public class Intake {
                         break;
                     }
                     if (retractIntake() == false && Elevator.elevatorTo(0.0)){
-			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/60));
+			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/200));
                     }
                     break;
 		        case ("return transport arm"): // return transport arm
@@ -226,7 +226,7 @@ public class Intake {
 			        if (outsideTransportSwitch.isPressed()){
 				        minPower = 0.0;
 			        }
-			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/60+0.1));
+			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/200+0.05));
                     break;
                 case ("retract intake"):
                     if(retractIntake() == false) currentState = "none";
