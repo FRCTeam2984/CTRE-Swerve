@@ -84,19 +84,12 @@ public class Intake {
         if (outside == false && intakeLastUsed == 'C') hold = true;
         if (hold == false){
             power = intakeGravity()+(desiredPosition-position)/75; // pivot power based linearly on error + gravity comp
-            /*if (desiredPosition-position > 0){
-                power += 0.1;
-            }else{
-                power -= 0.1;
-            }*/
         }else{
             power = intakeGravity();
         }
         if (outsideSwitch.isPressed() == false && intakeLastUsed != 'C' && inPosition-position < 5) power -= 0.2;
         
         intakePivot.set(Intake.clamp(minPower, maxPower, power));
-        // if (outside = false && intakeLastUsed == 'C')
-        //     currentState = "start";
         return outside;
     }
 
@@ -109,11 +102,6 @@ public class Intake {
         if (destination == "intakeAlgae"){
             intakeLastUsed = 'A';
             desiredPosition = inPosition + 22;
-            // if (bottomIntake.getOutputCurrent() > 5){
-            //     bottomIntake.set(-0.1);
-            // }else{
-            //     bottomIntake.set(-0.5);
-            // }
         }if (destination == "stationIntakeCoral"){
             intakeLastUsed = 'C';
             desiredPosition = inPosition + 5;
@@ -213,7 +201,7 @@ public class Intake {
                         break;
                     }
                     //if (retractIntake() == false && Elevator.elevatorTo(0.0)){
-			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/200));
+			            transportPivot.set(clamp(minPower, maxPower, transportGravity-(transportEncoder.getPosition()-elevatorSideValue)/66-0.02));
                     //}
                     break;
 		        case ("return transport arm"): // return transport arm
@@ -226,7 +214,7 @@ public class Intake {
 			        if (outsideTransportSwitch.isPressed()){
 				        minPower = 0.0;
 			        }
-			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/200+0.05));
+			        transportPivot.set(clamp(minPower, maxPower, transportGravity+(transportInsidePosition-transportEncoder.getPosition())/66+0.05));
                     break;
                 case ("retract intake"):
                     if(retractIntake() == false) currentState = "none";

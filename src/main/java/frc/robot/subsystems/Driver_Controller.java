@@ -28,9 +28,9 @@ public class Driver_Controller {
      * m_Controller3           = Right Side Buttons
      */
     public static CommandXboxController m_Controller0 = new CommandXboxController(0); //Set Temp value to complete initialization of swervedrive
-    public static Joystick m_Controller1;
+    public static Joystick m_Controller1 = new Joystick(1);
     public static XboxController m_Controller2 = new XboxController(0);
-    public static XboxController m_Controller3;
+    public static XboxController m_Controller3 = new XboxController(3);
     private static XboxController m_tempController;
     public static int SwerveCommandXboxControllerPort; // Value of joystick for controlling swerve drive
     public static int SwerveRotaryEncoderPort;         // Value of rotary encoder for controlling swerve drive
@@ -191,8 +191,10 @@ public static void SwerveInputPeriodic(){
     }
     else{ //Controller Mode
         SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(m_Controller1);
-        SwerveXPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftY());
-        SwerveYPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftX());
+        SwerveXPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[0];
+        SwerveYPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[1];
+        //SwerveXPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftY());
+        //SwerveYPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftX());
     }
 }
 

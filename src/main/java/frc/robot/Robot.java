@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
     m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("JUST DRIVE OUT OF ZONE", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
   @Override
@@ -127,66 +127,79 @@ public class Robot extends TimedRobot {
         // System.out.println("works");
         switch(state){
           case "drive past line":
-            if(driveSouthPastLine())
-              state = "auto";
+          AutoDriveFinal.AutoDrive();
+            //if(driveSouthPastLine()){
+              System.out.println("auto");
+              //state = "auto";
+            //}
+            
             break;
           case "auto":
-            Driver_Controller.SwerveControlSet(true);
+          // AutoDriveFinal.AutoDrive();
+          Driver_Controller.SwerveControlSet(true);
             RobotContainer.rotaryCalc(true);
-            // RobotContainer.drivingOn = 0;
-            System.out.println("auto");
-            if(AutoDriveFinal.AutoDrive())
-              state = "outtake";
+            //RobotContainer.drivingOn = 0;
+            if(AutoDriveFinal.AutoDrive()){
+              state = "drive";
+              System.out.println("switch to outtake");
+            }
+            
+              
             break;
           case "outtake":
-            System.out.println("outtake");
             // RobotContainer.drivingOn = 0;
+
             if((scoringPos == 2) || (scoringPos == 6) ||(scoringPos == 10)){
-              // not sure if this eleavtor code will work confirm with KEVIN. - siena
               if (Elevator.elevatorTo(Elevator.levelPosition[4])){
                 state = "outtake 2";
-                // System.out.println("elevator L4");
+                System.out.println("outtake 2");
               }
             }
             else{
               if (Elevator.elevatorTo(Elevator.levelPosition[3])){  // score at L3
                 // System.out.println("elevator L3");
                 state = "outtake 2";
+                System.out.println("outtake 2");
               }
             }
-            state = "outtake 2";
+            // System.out.println("outtake");
+            // state = "outtake 2";
             break;
           case "outtake 2":
-            System.out.println("outtake 2");
             if (Elevator.extendedOrRetracted != "extended"){
               if(Elevator.lastExtendOrRetract == "retract"){
                 Elevator.armTimer = 0.0;
               }
               Elevator.moveElevatorArm("extend");
             }else{
-              state = "elevator down";
+                System.out.println("switch to elevator down");
+                state = "elevator down";
             }
-            state = "elevator down";
+            //state = "elevator down";
             break;
           case "elevator down":
-          System.out.println("elevator down");
-            // if (((scoringPos%4) == 1 || (scoringPos%4) == 2)?Elevator.elevatorTo(Elevator.levelPosition[3]+40):Elevator.elevatorTo(Elevator.levelPosition[2]+40)){
+            if (((scoringPos%4) == 1 || (scoringPos%4) == 2)?Elevator.elevatorTo(Elevator.levelPosition[3]+40):Elevator.elevatorTo(Elevator.levelPosition[2]+40)){
               state = "drive back";
-            // }
+              System.out.println("switch to drive back");
+            }
             break;
           case "drive back":
             scoringPos = (int) Driver_Controller.buttonReefPosition();
-            System.out.println("drive back");
-            AutoDriveFinal.driveBackwards(scoringPos);
-          break;
+            // System.out.println("drive back");
+            if(AutoDriveFinal.driveBackwards(scoringPos)){
+              System.out.println("break");
+            }
+            break;
+              
           default:
             System.out.println("default inside");
         }
 
         break;
       case kCustomAuto:
-        // AutoDriveFinal.AutoDrive();
-        // AutoDriveFinal.AutoDriveSecond();
+        if(driveSouthPastLine())
+          System.out.println("drive past line");
+
         
       break;
       default:
@@ -303,14 +316,14 @@ public class Robot extends TimedRobot {
       case "ground intake": Intake.intakeCoral(Driver_Controller.buttonResetIntake()); break;
       case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.35); break;
       case "intake algae": Intake.intakeTo("intakeAlgae"); break;
-      case "retract": Intake.retractIntake();
+      case "retract": Intake.retractIntake(); break;
     } 
 
     // handling AutoDrive
     if (Driver_Controller.buttonAutoDrive()){
       Driver_Controller.SwerveControlSet(true);
       RobotContainer.rotaryCalc(true);
-      RobotContainer.drivingOn = 0;
+      //RobotContainer.drivingOn = 0;
       AutoDriveFinal.AutoDrive();/*
       if (Driver_Controller.getLevel() != 0){
         if (){

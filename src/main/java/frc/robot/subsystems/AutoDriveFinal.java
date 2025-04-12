@@ -94,32 +94,36 @@ public class AutoDriveFinal{
         return drive(odox,odoy, scoringPos, alliance);
     } */
     public static Boolean drive(double odox, double odoy, int scoringPos, int alliance){
-        double speedMult = 2;  // change through testing
+        double speedMult = 1;  // change through testing
         if(alliance == 1){  // blue
             odoangle = Math.tan(((scoringPosBlue[scoringPos-1][0] - odox)/(scoringPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180));
+            System.out.println("angle");
             // odoangle = ((scoringPosBlue[scoringPos-1][0] - odox)/(scoringPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180);
             // Driver_Controller.SwerveCommandXValue = speedMult*(scoringPosBlue[scoringPos-1][0] - odox) *  Math.sin(Math.PI/2 - odoangle);//Math.cos(odoangle);
             // Driver_Controller.SwerveCommandYValue = speedMult*(scoringPosBlue[scoringPos-1][1] - odoy) * Math.cos(odoangle); //Math.sin((Math.PI)/2 - odoangle);
             Driver_Controller.SwerveCommandXValue = speedMult*(scoringPosBlue[scoringPos-1][0] - odox) * Math.cos(odoangle);
             Driver_Controller.SwerveCommandYValue = speedMult*(scoringPosBlue[scoringPos-1][1] - odoy) * Math.sin(((Math.PI)/2) - odoangle);
-            Driver_Controller.SwerveCommandEncoderValue = odoangle+scoringAngles[scoringPos-1];//odoangle * 180/Math.PI;
+            Driver_Controller.SwerveCommandEncoderValue = odoangle+scoringAngles[(scoringPos-1)];//odoangle * 180/Math.PI;
             //System.out.println("Driving at " + (scoringPosBlue[scoringPos-1][0] - odox) * Math.cos(odoangle) + ", " + (scoringPosBlue[scoringPos-1][1] - odoy) * Math.sin(odoangle) + ". With a rotation of " + odoangle);
             // return(true)
-            if((odox <= (scoringPosBlue[scoringPos -1][0] + .1)) && (odox >= (scoringPosBlue[scoringPos - 1][0]) - 0.1) && (odoy <= (scoringPosBlue[scoringPos - 1][1]) + .05) && (odoy >= (scoringPosBlue[scoringPos - 1][1] - .05)))
+            if((odox <= (scoringPosBlue[scoringPos -1][0] + .01)) && (odox >= (scoringPosBlue[scoringPos - 1][0]) - 0.01) && (odoy <= (scoringPosBlue[scoringPos - 1][1]) + .01) && (odoy >= (scoringPosBlue[scoringPos - 1][1] - .01))){
+                System.out.println("true");    
                 return(true);
+            }
+            
         }
         else{  // then its red
             odoangle = Math.tan(((scoringPosRed[scoringPos-1][0] - odox)/(scoringPosRed[scoringPos-1][1] - odoy)) * (Math.PI/180));
             // odoangle = ((scoringPosRed[scoringPos-1][0] - odox)/(scoringPosRed[scoringPos-1][1] - odoy));
             Driver_Controller.SwerveCommandXValue = -speedMult*(scoringPosRed[scoringPos-1][0] - odox) * Math.cos(odoangle);
             Driver_Controller.SwerveCommandYValue = -speedMult*(scoringPosRed[scoringPos-1][1] - odoy) *  Math.sin(((Math.PI/2)) - odoangle);
-            Driver_Controller.SwerveCommandEncoderValue = odoangle+scoringAngles[scoringPos-1]+180;
+            Driver_Controller.SwerveCommandEncoderValue = odoangle+scoringAngles[scoringPos-1] + 180 ;
             // return(true)
-            if((odox <= (scoringPosRed[scoringPos -1][0] + .1)) && (odox >= (scoringPosRed[scoringPos - 1][0]) - 0.1) && (odoy <= (scoringPosRed[scoringPos - 1][1]) + .1) && (odoy >= (scoringPosRed[scoringPos - 1][1] - .1)))
+            if((odox <= (scoringPosRed[scoringPos -1][0] + .01)) && (odox >= (scoringPosRed[scoringPos - 1][0]) - 0.01) && (odoy <= (scoringPosRed[scoringPos - 1][1]) + .01) && (odoy >= (scoringPosRed[scoringPos - 1][1] - .01)))
                 return(true);
         }
         // return(false);
-        return (Math.abs(Driver_Controller.SwerveCommandXValue) < 0.05 && Math.abs(Driver_Controller.SwerveCommandYValue) < 0.05);
+        return (Math.abs(Driver_Controller.SwerveCommandXValue) < 0.01 && Math.abs(Driver_Controller.SwerveCommandYValue) < 0.01);
     }
     public static Boolean driveBackwards(int scoringPos){
         Driver_Controller.SwerveControlSet(true);
@@ -131,7 +135,7 @@ public class AutoDriveFinal{
         if(DriverStation.getAlliance().toString().charAt(9) == 'R'){   
             alliance = 2;  // red
         }
-        double speedMult = 2;
+        double speedMult = 1;
         if(alliance == 1){  // blue
             odoangle = Math.tan(((backPosBlue[scoringPos-1][0] - odox)/(backPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180));
             // odoangle = ((scoringPosBlue[scoringPos-1][0] - odox)/(scoringPosBlue[scoringPos-1][1] - odoy)) * ((Math.PI)/180);
@@ -148,7 +152,7 @@ public class AutoDriveFinal{
             // odoangle = ((scoringPosRed[scoringPos-1][0] - odox)/(scoringPosRed[scoringPos-1][1] - odoy));
             Driver_Controller.SwerveCommandXValue = -speedMult*(backPosRed[scoringPos-1][0] - odox) * Math.cos(odoangle);
             Driver_Controller.SwerveCommandYValue = -speedMult*(backPosRed[scoringPos-1][1] - odoy) *  Math.sin(((Math.PI/2)) - odoangle);
-            Driver_Controller.SwerveCommandEncoderValue = odoangle+scoringAngles[scoringPos-1]+180;
+            Driver_Controller.SwerveCommandEncoderValue = odoangle+scoringAngles[scoringPos-1] + 180;
             // return(true);
         }
         return (Math.abs(Driver_Controller.SwerveCommandXValue) < 0.05 && Math.abs(Driver_Controller.SwerveCommandYValue) < 0.05);

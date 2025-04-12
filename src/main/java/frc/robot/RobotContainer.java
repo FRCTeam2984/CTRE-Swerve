@@ -39,7 +39,7 @@ public class RobotContainer {
     
         // Setting up bindings for necessary control of the swerve drive platform 
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-                .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
         private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -109,6 +109,13 @@ public class RobotContainer {
             }
         }
         return(0);
+    }
+    public static double[] betterJoystickCurve(double x, double y) {
+        double radius = Math.sqrt((x*x)+(y*y));
+        double angle = Math.atan2(y, x);
+        radius = joystick_curve(radius);
+        double[] returnValue = {Math.sin(angle)*radius, Math.cos(angle)*radius};
+        return returnValue;
     }
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
