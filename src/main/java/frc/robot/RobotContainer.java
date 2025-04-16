@@ -97,7 +97,7 @@ public class RobotContainer {
         // return autoChooser.getSelected();
         try {
           PathPlannerPath examplePath = PathPlannerPath.fromPathFile("Example Path");
-          return AutoBuilder.followPath(examplePath);
+          return AutoBuilder.buildAuto("New Auto");
         } catch (FileVersionException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
