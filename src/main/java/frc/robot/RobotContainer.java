@@ -66,14 +66,14 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
+        //drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(joystick.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
-                    .withVelocityY(joystick.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
-            )
-        );
+            //drivetrain.applyRequest(() ->
+                //drive.withVelocityX(joystick.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
+                //    .withVelocityY(joystick.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
+                //    .withRotationalRate(-joystick.getRightX() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
+            //)
+        //);
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain.applyRequest(() ->
@@ -96,17 +96,17 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // return autoChooser.getSelected();
         try {
-          PathPlannerPath examplePath = PathPlannerPath.fromPathFile("Example Path");
+          //PathPlannerPath examplePath = PathPlannerPath.fromPathFile("Example Path");
           return AutoBuilder.buildAuto("New Auto");
         } catch (FileVersionException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
-        } catch (IOException e) {
+        //} //catch (IOException e) {
           // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (ParseException e) {
+          //e.printStackTrace();
+        //} //catch (ParseException e) {
           // TODO Auto-generated catch block
-          e.printStackTrace();
+          //e.printStackTrace();
         }
         return Commands.print("No autonomous command configured");
     }
