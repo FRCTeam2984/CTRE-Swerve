@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Square"
+            "pathName": "8"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 10.0
+            "pathName": "9"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "10"
           }
         }
       ]
