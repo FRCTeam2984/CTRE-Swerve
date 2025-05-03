@@ -7,15 +7,6 @@
         {
           "type": "path",
           "data": {
-<<<<<<< Updated upstream:src/main/deploy/pathplanner/autos/New Auto.auto
-            "pathName": "Square"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 10.0
-=======
             "pathName": "5"
           }
         },
@@ -29,7 +20,6 @@
           "type": "path",
           "data": {
             "pathName": "7"
->>>>>>> Stashed changes:src/main/deploy/pathplanner/autos/Shark Attack B.auto
           }
         }
       ]

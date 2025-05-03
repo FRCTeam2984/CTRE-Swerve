@@ -49,7 +49,7 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     private final SendableChooser<Command> autoChooser;
 
@@ -110,4 +110,13 @@ public class RobotContainer {
         }
         return Commands.print("No autonomous command configured");
     }
+
+    public static Command startPathplannerMove(String move) {
+      try {
+        return AutoBuilder.buildAuto(move); 
+      } catch (FileVersionException e) {
+        e.printStackTrace();
+      }
+      return Commands.print("No autonomous command configured");
+  }
 }
