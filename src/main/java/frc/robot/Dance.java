@@ -6,12 +6,15 @@ import frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 public class Dance {
+    public static Command m_autonomousCommand;
     public static Double timer = 0.0;
     public static Boolean resetLastPressed = false, activated = false, retractElevatorArm = true;
     //public static final int instructionNumber = 4;
     public static Instruction moves[] = {
-        new Instruction(24.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "4 Light Flash"),
+        /*new Instruction(24.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "4 Light Flash"),
         new Instruction(25.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "blue waves"),
         new Instruction(40.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "green lines"),
         new Instruction(44.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "none"),
@@ -38,11 +41,11 @@ public class Dance {
         new Instruction(131.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "red"),
         new Instruction(132.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "flashing yellow"),
         new Instruction(133.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "blue"),
-        new Instruction(134.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "none"),
+        new Instruction(134.0, "run LED pattern", 0.0, 0.0, 0.0, 0.0, "none"),*/
 
 
 
-        /*new Instruction(0.0, "spin", 45.0, 50.0, 0.0, 0.0, ""), //left is positive
+        new Instruction(0.0, "spin", 45.0, 50.0, 0.0, 0.0, ""), //left is positive
         new Instruction(1.0, "spin", -90.0, 98.0, 0.0, 0.0, ""),
         new Instruction(2.96, "spin", 90.0, 96.0, 0.0, 0.0, ""),
         new Instruction(4.88, "spin", -90.0, 94.0, 0.0, 0.0, ""),
@@ -56,9 +59,9 @@ public class Dance {
         new Instruction(18.8, "spin", -90.0, 78.0, 0.0, 0.0, ""),
         new Instruction(20.36, "spin", 90.0, 76.0, 0.0, 0.0, ""),
         new Instruction(21.88, "spin", -90.0, 74.0, 0.0, 0.0, ""),
-        new Instruction(23.36, "spin", 45.0, 32.0, 0.0, 0.0, ""),*/
+        new Instruction(23.36, "spin", 45.0, 32.0, 0.0, 0.0, ""),
         
-        new Instruction(25.0, "run path", 0.0, 0.0, 0.0, 0.0, "1"),
+        new Instruction(25.0, "run path", 0.0, 0.0, 0.0, 0.0, "Shark Attack A"),
         
         /*new Instruction(25.0, "move", 0.0, 0.0, 0.5, 0.0, ""),
         new Instruction(25.5, "move", 0.0, 0.0, 0.0, 0.0, ""),
@@ -73,23 +76,24 @@ public class Dance {
         new Instruction(30.0, "circle", 0.9, 150.0, 0.0, 0.0, ""),
         new Instruction(33.0, "move", 0.0, 0.0, 0.0, 0.0, ""),*/
         new Instruction(33.0, "elevator", Elevator.levelPosition[2], 0.0, 0.0, 0.0, ""),
-        new Instruction(35.0, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(33.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(35.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         //new Instruction(35.5, "move", 0.0, 0.0, 2.0, 0.0, ""),
 
         new Instruction(38.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(38.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(38.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(39.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(39.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(39.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         //new Instruction(40.0, "set speed", 0.8, 0.0, -2.0, 0.0, ""),
         //new Instruction(40.0, "move", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(40.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(40.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(40.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(41.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(41.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(41.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(42.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(42.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(42.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(43.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(43.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(43.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         /*new Instruction(44.0, "set speed", 3.0, 0.0, 0.0, 0.0, ""),
         new Instruction(46.0, "spin", -45.0, 25.0, 0.0, 0.0, ""),
         new Instruction(46.25, "spin", 90.0, 50.0, 0.0, 0.0, ""),
@@ -101,28 +105,28 @@ public class Dance {
 
         new Instruction(49.0, "move", 0.0, 0.0, 2.0, 0.0, ""),*/
         new Instruction(49.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(49.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(49.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(50.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(50.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(50.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         //new Instruction(51.0, "move", 0.0, 0.0, -2.0, 0.0, ""),
         //new Instruction(54.0, "set speed", 3.0, 0.0, 0.0, 0.0, ""),
         //new Instruction(54.0, "move", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(54.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(54.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(54.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(55.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(55.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(55.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(56.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(56.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(56.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         
         //new Instruction(57.0, "spin", 180.0, 100.0, 0.0, 0.0, ""),
         //new Instruction(58.0, "move", 0.0, 0.0, -2.0, 0.0, ""),
         new Instruction(58.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(58.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(58.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(59.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(59.5, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(59.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
 
         new Instruction(60.5, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
-        new Instruction(61.0, "reset intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(61.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         
         new Instruction(62.0, "elevator", Elevator.levelPosition[3], 0.0, 0.0, 0.0, ""),
         new Instruction(63.26, "elevator", Elevator.levelPosition[2], 0.0, 0.0, 0.0, ""),
@@ -135,12 +139,12 @@ public class Dance {
     };
     public static Double currentX, currentY, desiredAngle = 0.0, currentElevator = 0.0, speed = 2.1;
     public static Double Xoffset = 0.0, Yoffset = 0.0, angleOffset = 0.0;
-    public static String intakeState = "reset intake";
+    public static String intakeState = "ground intake";
 
     public static void dance(){
-        //Double angle = ((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
+        Double angle = ((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
         if (resetLastPressed == false && Driver_Controller.buttonAutoDrive()){
-            timer = 30.0;
+            timer = 60.0;
             activated = true;
         }
         resetLastPressed = Driver_Controller.buttonAutoDrive();
@@ -153,7 +157,7 @@ public class Dance {
                         currentX = cur.x;
                         currentY = cur.y;
                     }
-                    break;
+                    break;*/
                 case "spin":
                     if (timer >= cur.time && timer <= (cur.time + 0.021)){
                         desiredAngle = angle - angleOffset;
@@ -165,7 +169,7 @@ public class Dance {
                         //System.out.println(desiredAngle);
                     }
                     break;
-                case "circle":
+                /*case "circle":
                     if (timer >= cur.time && timer <= (cur.time + (cur.amplifier2/50))){
                         Double driveAngle = Math.atan2(currentY - cur.y, currentX - cur.x);
                         driveAngle += (Math.PI*360.0/cur.amplifier2)/180;
@@ -178,7 +182,10 @@ public class Dance {
                     //if (timer-cur.time <= 0.01 && timer-cur.time > -0.01)LED.runLED(cur.amplifier3);
                     break;
                 case "run path":
-                    //if (Math.abs(timer-cur.time) <= 0.01 && Driver_Controller.buttonDanceMove())RobotContainer.startPathplannerMove(cur.amplifier3);
+                    if (Math.abs(timer-cur.time) <= 0.011 && Driver_Controller.buttonDanceMove()){
+                        m_autonomousCommand = RobotContainer.startPathplannerMove(cur.amplifier3);
+                        m_autonomousCommand.schedule();
+                    }
                     break;
                 case "set speed":
                     if (Math.abs(timer-cur.time) <= 0.01)speed = cur.amplifier1;
@@ -189,9 +196,11 @@ public class Dance {
                 case "reset intake":
                     if (Math.abs(timer-cur.time) <= 0.01)intakeState = "reset intake";
                     break;
+                case "retract":
+                    if (Math.abs(timer-cur.time) <= 0.01)intakeState = "retract";
+                    break;
                 case "ground intake":
                 if (Math.abs(timer-cur.time) <= 0.01){
-                    System.out.println("yes");
                     intakeState = "ground intake";
                 }
                     break;
@@ -200,7 +209,7 @@ public class Dance {
                     break;
             
             }
-        }}
+        }
         if (true){
         if (currentElevator > 0.0){
             Elevator.elevatorTo(currentElevator);
@@ -209,6 +218,7 @@ public class Dance {
             else Elevator.elevatorMotor.set(0.0);
         }
 
+        intakeState = "MY PRECIOUSSSSSSSSSSS";
         switch(intakeState){
             case "reset intake": 
             if (Intake.outsideSwitch.isPressed()) Intake.intakePivot.set(0);
@@ -220,6 +230,9 @@ public class Dance {
             case "intake algae": Intake.intakeTo("intakeAlgae"); break;
             case "retract": Intake.retractIntake(); break;
         } 
+        }
+        
+        
         
         if (!retractElevatorArm){
             if (Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend");
@@ -228,12 +241,20 @@ public class Dance {
             if (Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
             else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
         }
+        timer += 0.02;
+        }
+        else{
+            if (Driver_Controller.buttonResetElevator()){
+                //if (Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)) > 3)
+                Elevator.elevatorTo(-999999.0);
+            }else{
+                Elevator.elevatorMotor.set(0.0);
+            }
         }
         //System.out.println(desiredAngle);
         //System.out.println(currentX);
         //System.out.println(currentY);
         //if (Driver_Controller.buttonDanceMove() == false || timer > 35.0) AutoDriveFinal.driveToXYA(0.0, 0.0, angle, 0.0);
         //else AutoDriveFinal.driveToXYA(currentX - Xoffset, currentY - Yoffset, desiredAngle - angleOffset, speed/2);
-        timer += 0.02;
     }
 }
