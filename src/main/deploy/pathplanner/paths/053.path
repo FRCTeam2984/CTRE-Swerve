@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9919032862015025,
-        "y": 4.6999531721663
+        "x": 1.2495104476746062,
+        "y": 4.015637662907789
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 5.5
+        "x": 2.058518835616438,
+        "y": 3.2887414383561646
       },
       "prevControl": {
-        "x": 1.8000910332275128,
-        "y": 5.488711145697217
+        "x": 1.7129280821917805,
+        "y": 3.2887414383561646
       },
       "nextControl": {
-        "x": 3.1999089667724867,
-        "y": 5.511288854302782
+        "x": 2.4009790373051714,
+        "y": 3.2887414383561646
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9450342465753425,
+        "y": 4.641053082191781
+      },
+      "prevControl": {
+        "x": 2.509289383561644,
+        "y": 4.265410958904109
+      },
+      "nextControl": {
+        "x": 3.400073542080842,
+        "y": 5.033328336937902
       },
       "isLocked": false,
       "linkedName": null
@@ -36,40 +52,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 4.7
-      },
-      "nextControl": {
-        "x": 4.0,
-        "y": 3.3
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.5,
-        "y": 2.5
-      },
-      "prevControl": {
-        "x": 3.199520383636737,
-        "y": 2.5259081623569166
-      },
-      "nextControl": {
-        "x": 1.8004796163632628,
-        "y": 2.474091837643083
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.0,
-        "y": 4.0
-      },
-      "prevControl": {
-        "x": 1.032572908775356,
-        "y": 3.300758263821508
+        "x": 4.150745059091596,
+        "y": 3.800560968816354
       },
       "nextControl": null,
       "isLocked": false,
@@ -90,13 +74,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

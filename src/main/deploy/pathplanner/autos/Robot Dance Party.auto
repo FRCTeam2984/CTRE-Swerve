@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1"
+            "pathName": "027"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2"
+            "pathName": "031"
           }
         },
         {
@@ -31,61 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "8"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "9"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "10"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "11"
+            "pathName": "037"
           }
         },
         {
@@ -97,115 +43,193 @@
         {
           "type": "path",
           "data": {
-            "pathName": "12"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "7.5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 8"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 9"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "13"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "14"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "15"
+            "pathName": "042"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "16"
+            "pathName": "048"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "17 (1.52)"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "18"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "19"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "18"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Circle A"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Circle B"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Circle C"
+            "pathName": "051"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.45
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "053"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.27
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "056"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.36
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "059"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "104"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "109"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "114"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "117"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "120"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "123"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "124"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "131"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "141"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "143"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "147"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "152"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "157"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "159"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "202"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "204"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "207"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "210"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "214"
           }
         }
       ]

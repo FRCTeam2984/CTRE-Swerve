@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "059"
+            "pathName": "11"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "104"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "10"
+            "pathName": "12"
           }
         }
       ]
