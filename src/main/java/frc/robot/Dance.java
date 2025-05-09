@@ -61,7 +61,7 @@ public class Dance {
         new Instruction(21.88, "spin", -90.0, 74.0, 0.0, 0.0, ""),
         new Instruction(23.36, "spin", 45.0, 32.0, 0.0, 0.0, ""),
         
-        new Instruction(25.0, "run path", 0.0, 0.0, 0.0, 0.0, "Shark Attack A"),
+        new Instruction(0.0, "run path", 0.0, 0.0, 0.0, 0.0, "Robot Dance Party"),
         
         /*new Instruction(25.0, "move", 0.0, 0.0, 0.5, 0.0, ""),
         new Instruction(25.5, "move", 0.0, 0.0, 0.0, 0.0, ""),
@@ -144,7 +144,7 @@ public class Dance {
     public static void dance(){
         Double angle = ((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
         if (resetLastPressed == false && Driver_Controller.buttonAutoDrive()){
-            timer = 60.0;
+            timer = 0.0;
             activated = true;
         }
         resetLastPressed = Driver_Controller.buttonAutoDrive();
@@ -160,7 +160,7 @@ public class Dance {
                     break;*/
                 case "spin":
                     if (timer >= cur.time && timer <= (cur.time + 0.021)){
-                        desiredAngle = angle - angleOffset;
+                        //desiredAngle = angle - angleOffset;
                     }
                     if (timer >= cur.time && timer <= (cur.time + (cur.amplifier2/50))){
                         //desiredAngle += (cur.amplifier1-desiredAngle)/(50*(timer-(cur.time+(cur.amplifier2/50))));
