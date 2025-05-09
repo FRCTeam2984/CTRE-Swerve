@@ -49,15 +49,15 @@
     {
       "anchor": {
         "x": 5.5,
-        "y": 2.5
+        "y": 2.6
       },
       "prevControl": {
         "x": 6.2,
-        "y": 2.5
+        "y": 2.6
       },
       "nextControl": {
         "x": 4.8,
-        "y": 2.5
+        "y": 2.6
       },
       "isLocked": false,
       "linkedName": null
