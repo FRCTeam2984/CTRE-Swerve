@@ -27,11 +27,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Driver_Controller;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 public class RobotContainer {
+    public static Boolean needToReset = true;
+    public static int drivingOn = 1;
+    public static double robotOffset = 0;
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -62,18 +66,37 @@ public class RobotContainer {
         // Warmup PathPlanner to avoid Java pauses
         FollowPathCommand.warmupCommand().schedule();
     }
+    public static double rotaryCalc(Boolean resetToRobot){
+            double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();
+            if (Driver_Controller.SwerveCommandControl == false){
+                pigeonYaw += robotOffset;
+            }
+            double diff = pigeonYaw - (Dance.desiredAngle);
+            double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
+            if (resetToRobot){
+                needToReset = true;
+            }
+            if (needToReset && Driver_Controller.SwerveCommandControl == false){
+                robotOffset -= diffmod180;
+                needToReset = false;
+            }
+            double powerCurved = -diffmod180;
+            powerCurved = Math.max(-45,Math.min(45,powerCurved));
+            return powerCurved * 0.09;
+        
 
+    }
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        //drivetrain.setDefaultCommand(
+        drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
-            //drivetrain.applyRequest(() ->
-                //drive.withVelocityX(joystick.getLeftY() * MaxSpeed * SpeedModifier) // Drive forward with negative Y (forward)
-                //    .withVelocityY(joystick.getLeftX() * MaxSpeed * SpeedModifier) // Drive left with negative X (left)
-                //    .withRotationalRate(-joystick.getRightX() * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
-            //)
-        //);
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(0) // Drive forward with negative Y (forward)
+                    .withVelocityY(0) // Drive left with negative X (left)
+                    .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
+            )
+        );
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain.applyRequest(() ->
@@ -112,6 +135,7 @@ public class RobotContainer {
     }
 
     public static Command startPathplannerMove(String move) {
+      System.out.println(move);
       try {
         return AutoBuilder.buildAuto(move); 
       } catch (FileVersionException e) {

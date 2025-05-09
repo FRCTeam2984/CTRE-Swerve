@@ -62,7 +62,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    RobotContainer.rotaryCalc(true);
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -81,7 +82,7 @@ public class Robot extends TimedRobot {
     Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
-    else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
+    //else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
     Dance.dance();
   }
 
