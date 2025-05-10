@@ -61,7 +61,7 @@ public class Dance {
         new Instruction(21.88, "spin", -90.0, 74.0, 0.0, 0.0, ""),
         new Instruction(23.36, "spin", 45.0, 32.0, 0.0, 0.0, ""),
         
-        new Instruction(0.0, "run path", 0.0, 0.0, 0.0, 0.0, "Robot Dance Party"),
+        new Instruction(25.0, "run path", 0.0, 0.0, 0.0, 0.0, "Robot Dance Party"),
         
         /*new Instruction(25.0, "move", 0.0, 0.0, 0.5, 0.0, ""),
         new Instruction(25.5, "move", 0.0, 0.0, 0.0, 0.0, ""),
