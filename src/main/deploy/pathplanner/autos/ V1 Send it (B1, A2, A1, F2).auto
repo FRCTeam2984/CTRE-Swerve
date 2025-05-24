@@ -1,0 +1,103 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - POS 2 to SIDE B1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.39
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - Side B1 to HPS"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - HPS to Side A2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.39
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - Side A2 to HPS"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - HPS to Side A1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.39
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - A1 to HPS"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - HPS to F2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.39
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SEND IT - F2 to HPS"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

@@ -25,6 +25,7 @@ import frc.robot.subsystems.Driver_Controller;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LED;
 import networktablesdesktopclient.NetworkTablesDesktopClient;
 import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
@@ -242,6 +243,9 @@ public class Robot extends TimedRobot {
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
+
+    // Send Data to LED Arduino
+    LED.sendData();
 
     // setting elevator position
     if (Driver_Controller.buttonResetElevator()) currentLevel = 0;
