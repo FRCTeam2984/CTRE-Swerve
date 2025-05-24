@@ -7,43 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SEND IT - POS 2 to SIDE B1"
+            "pathName": "V2 - POS 2 to SIDE B1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.39
+            "waitTime": 0.4
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SEND IT - Side B1 to HPS"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SEND IT - HPS to Side A2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.39
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SEND IT - Side A2 to HPS"
+            "pathName": "V2 - Side B1 to HPS"
           }
         },
         {
@@ -55,19 +31,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SEND IT - HPS to Side A1"
+            "pathName": "V1 - HPS to Side A1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.39
+            "waitTime": 0.4
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SEND IT - A1 to HPS"
+            "pathName": "V1 - A1 to HPS"
           }
         },
         {
@@ -79,19 +55,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SEND IT - HPS to F2"
+            "pathName": "V1 - HPS to F2"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.39
+            "waitTime": 0.4
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SEND IT - F2 to HPS"
+            "pathName": "V1 - F2 to HPS"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "V1 - HPS to Side F1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "V1 - Side F1 to HPS"
           }
         }
       ]
