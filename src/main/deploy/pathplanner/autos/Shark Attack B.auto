@@ -7,37 +7,19 @@
         {
           "type": "path",
           "data": {
-<<<<<<< Updated upstream
-=======
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/autos/Shark Attack C.auto
-            "pathName": "8"
-========
->>>>>>> Stashed changes
             "pathName": "5"
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/autos/Shark Attack B.auto
           }
         },
         {
           "type": "path",
           "data": {
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/autos/Shark Attack C.auto
-            "pathName": "9"
-========
             "pathName": "6"
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/autos/Shark Attack B.auto
           }
         },
         {
           "type": "path",
           "data": {
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/autos/Shark Attack C.auto
-            "pathName": "10"
-========
             "pathName": "7"
-<<<<<<< Updated upstream
-=======
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/autos/Shark Attack B.auto
->>>>>>> Stashed changes
           }
         }
       ]

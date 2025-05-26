@@ -92,8 +92,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(0) // Drive forward with negative Y (forward)
-                    .withVelocityY(0) // Drive left with negative X (left)
+                drive.withVelocityX(-Driver_Controller.m_Controller0.getLeftY()*MaxSpeed*SpeedModifier) // Drive forward with negative Y (forward)
+                    .withVelocityY(-Driver_Controller.m_Controller0.getLeftX()*MaxSpeed*SpeedModifier) // Drive left with negative X (left)
                     .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier) // Drive counterclockwise with negative X (left)
             )
         );
@@ -135,7 +135,6 @@ public class RobotContainer {
     }
 
     public static Command startPathplannerMove(String move) {
-      System.out.println(move);
       try {
         return AutoBuilder.buildAuto(move); 
       } catch (FileVersionException e) {

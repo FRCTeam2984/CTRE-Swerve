@@ -134,6 +134,43 @@ public class Dance {
         new Instruction(65.76, "elevator", Elevator.levelPosition[2], 0.0, 0.0, 0.0, ""),
         
         new Instruction(70.0, "toggle elevator arm", 0.0, 0.0, 0.0, 0.0, ""),
+        
+        new Instruction(75.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(75.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(76.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(76.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(77.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(77.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+
+        new Instruction(81.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(81.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(82.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(82.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+
+        new Instruction(83.5, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(84.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(84.5, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(85.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+
+        new Instruction(86.5, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(87.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(87.5, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(88.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(88.5, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+
+        new Instruction(99.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(104.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+
+        new Instruction(115.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(115.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(116.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(116.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+
+        new Instruction(58.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(58.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(59.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
+        new Instruction(59.5, "retract", 0.0, 0.0, 0.0, 0.0, ""),
+
 
         new Instruction(-1.0, "stop", 0.0, 0.0, 0.0, 0.0, "")
     };
@@ -211,12 +248,12 @@ public class Dance {
             }
         }
         if (true){
-        if (currentElevator > 0.0){
+        /*if (currentElevator > 0.0){
             Elevator.elevatorTo(currentElevator);
         }else{
             if (Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10)) > 3 && Driver_Controller.buttonResetElevator()) Elevator.elevatorTo(-99999.0);
             else Elevator.elevatorMotor.set(0.0);
-        }
+        }*/
 
         intakeState = "MY PRECIOUSSSSSSSSSSS";
         switch(intakeState){
