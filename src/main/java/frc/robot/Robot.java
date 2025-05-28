@@ -32,15 +32,13 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 
 public class Robot extends TimedRobot {
   int scoringPos = (int) Driver_Controller.buttonReefPosition();
-  public static int currentLevel = 0;
   private static final String kDefaultAuto = "score + de-algae 1x";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
-  String intakeState = "retract";
-  Boolean armButtonLastPressed = false, retractElevatorArm = true, autoDriveLastPressed = false;
+  Boolean autoDriveLastPressed = false;
 
   String state = "drive past line";  // for setting autonomous state
 
@@ -124,7 +122,7 @@ public class Robot extends TimedRobot {
         /* int sDSPL = 1;
         int sAutoDrive = 2;
         int sArm = 3; */
-        
+        /*
         // System.out.println("works");
         switch(state){
           case "drive past line":
@@ -194,7 +192,7 @@ public class Robot extends TimedRobot {
               
           default:
             System.out.println("default inside");
-        }
+        }*/
 
         break;
       case kCustomAuto:
@@ -215,113 +213,51 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    Elevator.extendedOrRetracted = "retracted";
+    //Elevator.extendedOrRetracted = "retracted";
     Limelight.limelightInit();
     Driver_Controller.define_Controller();
     Driver_Controller.SwerveControlSet(false);
     RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
-    Intake.currentState = "none";
-    Intake.intakeLastUsed = 'D';
     
-    currentLevel = -1;
-    Intake.timer = 0;
-    
+    Elevator.currentLevel = -1;
   }
 
   @Override
   public void teleopPeriodic() {
-    if (Driver_Controller.m_Controller1.getRawButton(9)){
-      Intake.beltDrive.set(ControlMode.PercentOutput, 0.25);
-    } else Intake.beltDrive.set(ControlMode.PercentOutput, 0.0);
     // NetworkTablesDesktopClient.getRobotPosition();
-    Boolean elevatorArmButton = Driver_Controller.buttonL1();
-    Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     if (Driver_Controller.driverSwitch()) {
       Limelight.limelightOdometryUpdate();
     }
     Driver_Controller.SwerveInputPeriodic();
-    if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
-    if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
-    else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
 
     // Send Data to LED Arduino
     LED.sendData();
 
+    Boolean outtakeButton = Driver_Controller.buttonL1();
     // setting elevator position
-    if (Driver_Controller.buttonResetElevator()) currentLevel = 0;
-    if (Driver_Controller.buttonL2()) currentLevel = 2;
-    if (Driver_Controller.buttonL3()) currentLevel = 3;
-    if (Driver_Controller.buttonL4()) currentLevel = 4;
-    switch (currentLevel){
-      case (0):
-        if (elevatorPosition > 3 && Driver_Controller.buttonResetElevator()) Elevator.elevatorTo(-99999.0);
-        //else if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() != "ClosedToGround" && Driver_Controller.buttonResetElevator()) Elevator.elevatorMotor.set(-0.3);
-        else Elevator.elevatorMotor.set(0.0);
-        break;
-      case (2):
-        //if (Elevator.elevatorTo(Elevator.levelPosition[2]));// currentLevel = -1;
-        System.out.println(Elevator.elevatorTo(Elevator.levelPosition[2]));
-        break;
-      case (3):
-        //if (Elevator.elevatorTo(Elevator.levelPosition[3]));// currentLevel = -1;
-        System.out.println(Elevator.elevatorTo(Elevator.levelPosition[3]));
-        break;
-      case (4):
-        //if (Elevator.elevatorTo(Elevator.levelPosition[4]));// currentLevel = -1;
-        System.out.println(Elevator.elevatorTo(Elevator.levelPosition[4]));
-        break;
-    }
-    //System.out.println(elevatorPosition);
-    // dealing with elevator arm
-    if (elevatorArmButton && armButtonLastPressed == false) retractElevatorArm = retractElevatorArm^true;
-    if (!retractElevatorArm){
-      if (Elevator.extendedOrRetracted != "extended") Elevator.moveElevatorArm("extend");
-      else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, 0.025);
-      else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
-    }else{
-      if (Elevator.extendedOrRetracted != "retracted") Elevator.moveElevatorArm("retract");
-      else if (elevatorArmButton) Elevator.armMotor.set(ControlMode.PercentOutput, -0.025);
-      else Elevator.armMotor.set(ControlMode.PercentOutput, 0.0);
-    }
-    armButtonLastPressed = elevatorArmButton;
+    if (Driver_Controller.buttonResetElevator()) Elevator.currentLevel = 0;
+    if (Driver_Controller.buttonL2()) Elevator.currentLevel = 2;
+    if (Driver_Controller.buttonL3()) Elevator.currentLevel = 3;
+    if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
 
-    // dealing with transport and climb
-    if (Driver_Controller.buttonTransportPivot()){
-      Intake.currentState = "run belt";
-      Intake.timer = 0;
-    }
-    Intake.moveCoral();
+    // dealing with outtake
+    if (outtakeButton) Elevator.armMotor.set(0.5);
+
     //Climb.letsClimb();
     
     // dealing with intake
-    intakeState = "retract";
+    
     if (Driver_Controller.switchAlgaeIntake() == false){
-      intakeState = "intake algae";
-      if (Driver_Controller.buttonScoreAlgae())
-        Intake.bottomIntake.set(0.3);
-      else{
-        if (Intake.bottomIntake.getOutputCurrent() < 5){
-          Intake.bottomIntake.set(-0.5);
-        }else{
-          Intake.bottomIntake.set(-0.1);
-        }
-      }
+      Intake.intakeState = "intake";
+      if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(0.3);
+      else if (Intake.bottomIntake.getOutputCurrent() < 5) Intake.bottomIntake.set(-0.5);
+      else Intake.bottomIntake.set(-0.1);
+    }else{
+      Intake.bottomIntake.set(0.0);
+      if (Driver_Controller.buttonReverseCoral()){
+        Intake.intakeState = "reset";
+      }else Intake.intakeState = "retract";
     }
-    else if (Driver_Controller.buttonReverseCoral()) intakeState = "reset intake";
-    else if (Driver_Controller.buttonCoralIntakeGround()) intakeState = "ground intake";
-    else if (Driver_Controller.buttonCoralStationIntake()) intakeState = "station intake";
-    //intakeState = "im jealous that justin is with lukas now and im really sad :("; // intake disabled
-    switch(intakeState){
-      case "reset intake": 
-        if (Intake.outsideSwitch.isPressed()) Intake.intakePivot.set(0);
-        else Intake.intakePivot.set(-0.3);
-        Intake.intakeLastUsed = 'D';
-        break;
-      case "ground intake": Intake.intakeCoral(Driver_Controller.buttonResetIntake()); break;
-      case "station intake": Intake.intakeTo("stationIntakeCoral"); Intake.spinRollers(0.35); break;
-      case "intake algae": Intake.intakeTo("intakeAlgae"); break;
-      case "retract": Intake.retractIntake(); break;
-    } 
 
     // handling AutoDrive
     if (Driver_Controller.buttonAutoDrive()){
@@ -349,6 +285,10 @@ public class Robot extends TimedRobot {
       }
     } 
     autoDriveLastPressed = Driver_Controller.buttonAutoDrive();
+    Elevator.elevatorPeriodic();
+    Intake.intakePeriodic();
+    if (Driver_Controller.buttonCoralIntakeGround()) Elevator.elevatorMotor.set(-0.1);
+    System.out.println(Elevator.currentPosition);
   }
 
   @Override

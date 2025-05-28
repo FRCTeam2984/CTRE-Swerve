@@ -12,31 +12,36 @@ import com.revrobotics.spark.SparkMax;
 import frc.robot.Constants;
 
 public class Intake {
-    public static TalonSRX beltDrive = new TalonSRX(Constants.intakeBeltID);
-    public static SparkMax topIntake = new SparkMax(Constants.intakeTopMotorID, MotorType.kBrushless);
     public static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
-    public static SparkMax transportPivot = new SparkMax(Constants.intakeTransportPivotID, MotorType.kBrushless);
     public static SparkMax intakePivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
-    public static RelativeEncoder transportEncoder = transportPivot.getEncoder();
     public static RelativeEncoder intakeEncoder = intakePivot.getEncoder();
-    public static char intakeLastUsed;
-    public static String currentState = "none"; 
-    public static int timer;
-    public static Boolean retractNeeded = false, movingCoral = false;
-    // KEvin, inPosition being set to the initial getPposition is annoying and dangerous, and requires that the robot always start int he same config!
-    public static Double inPosition = 0.0, transportInsidePosition = transportEncoder.getPosition(), climbPosition = 1.0, depositCoralPosition = 0.5, elevatorSideValue = transportInsidePosition-27;
-
-    public static DigitalInput transportArmSensor = new DigitalInput(0);
-    
-    public static SparkLimitSwitch insideTransportSwitch = transportPivot.getForwardLimitSwitch();
-    public static SparkLimitSwitch outsideTransportSwitch = transportPivot.getReverseLimitSwitch();
-
     public static SparkLimitSwitch insideSwitch = intakePivot.getReverseLimitSwitch();
     public static SparkLimitSwitch outsideSwitch = intakePivot.getForwardLimitSwitch();
-    
-    Intake(){
-        transportEncoder.setPosition(0.0);
+
+    public static Boolean retractedSwitchPressed, extendedSwitchPressed;
+    public static String intakeState;
+    public static Double currentPosition, intakeGravity;
+
+    public static void intakePeriodic(){
+        retractedSwitchPressed = outsideSwitch.isPressed(); extendedSwitchPressed = insideSwitch.isPressed();
+        if (outsideSwitch.isPressed()){intakeEncoder.setPosition(0.0);}
+        else if (insideSwitch.isPressed()){intakeEncoder.setPosition(48.64);}
+        currentPosition = -intakeEncoder.getPosition();
+        intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-6)/105) * -0.04;
+        switch(intakeState){
+            case "reset":
+                if (outsideSwitch.isPressed()) intakePivot.set(0);
+                else intakePivot.set(-0.3);
+                break;
+            case "intake":
+                intakeAlgae();
+                break;
+            case "retract":
+                retract();
+                break;
+        }
     }
+    
     // clamp function (copy-pasted from elevator section)
     public static Double clamp(Double minimum, Double maximum, Double input){
         if (input < minimum)
@@ -46,92 +51,47 @@ public class Intake {
         return input;
     }
 
-    // calculate gravity comp for the intake
-	// change the .1, define inPosition
-    public static Double intakeGravity(){
-        Double rotations = intakeEncoder.getPosition()-inPosition;
-        return Math.sin(360.0*(Math.PI/180.0)*(rotations-6/*stable position*/)/105) * -0.04;
-    }
-
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
-	public static Boolean retractIntake(){
-        Double maxPower = 0.5, minPower = -0.5, power, position = -inPosition + intakeEncoder.getPosition(), desiredPosition = inPosition;
-        Boolean outside = true, hold = false;
-        
-        if (intakeLastUsed == 'C'){
-            desiredPosition = inPosition+9.5;
-        }
+	public static void retract(){
+        Double maxPower = 0.5, minPower = -0.5;
 
+        Double power = intakeGravity+currentPosition/75;
         // using limit switches
         if (insideSwitch.isPressed()){
             maxPower = 0.0;
         }
         if (outsideSwitch.isPressed()){
-            minPower = maxPower = 0.0;
-            outside = false;
-            movingCoral = true;
-        }if(Math.abs(position - desiredPosition) < 2 && intakeLastUsed == 'C'){
-            minPower = maxPower = intakeGravity();
-            outside = false;
-        }
-        // using or not using the bottom intake motor depending on after algae or coral
-        spinRollers(0.0);
-        if (intakeLastUsed == 'A' && !insideSwitch.isPressed()){
-            //bottomIntake.set(0.7);
+            power = 0.0;
+        }if(Math.abs(currentPosition) < 2){
+            power = intakeGravity;
         }
 
-        if (outside == false && intakeLastUsed == 'C') hold = true;
-        if (hold == false){
-            power = intakeGravity()+(desiredPosition-position)/75; // pivot power based linearly on error + gravity comp
-        }else{
-            power = intakeGravity();
-        }
-        if (outsideSwitch.isPressed() == false && intakeLastUsed != 'C' && inPosition-position < 5) power -= 0.2;
+        power = intakeGravity+currentPosition/75;
+        if (outsideSwitch.isPressed() == false && currentPosition < 5) power -= 0.2;
         
-        intakePivot.set(Intake.clamp(minPower, maxPower, power));
-        return outside;
+        intakePivot.set(clamp(minPower, maxPower, power));
     }
 
     //function to bring intake to a position
     //constants prob not right
-    public static void intakeTo(String destination){
+    public static void intakeAlgae(){
         // processing the input string to find the correct destination
-        Double desiredPosition = 0.0;
-        movingCoral = true;
-        if (destination == "intakeAlgae"){
-            intakeLastUsed = 'A';
-            desiredPosition = inPosition + 22;
-        }if (destination == "stationIntakeCoral"){
-            intakeLastUsed = 'C';
-            desiredPosition = inPosition + 5;
-        }if (destination == "climbPosition"){
-            intakeLastUsed = 'D';
-            desiredPosition = inPosition + climbPosition;
-        }if (destination == "l1Outtake"){
-            intakeLastUsed = 'C';
-            desiredPosition = inPosition + 0.085;
-        }
-        Double position, maxPower = 0.5, minPower = -0.5, power;
-        position = intakeEncoder.getPosition();
-        
+        Double desiredPosition = 22.0, error = desiredPosition+currentPosition;
+        Double maxPower = 0.5, minPower = -0.5;
+        Double power = (error)/10+intakeGravity;
+
         // using limit switches
         if (insideSwitch.isPressed())
             maxPower = 0.0;
         if (outsideSwitch.isPressed())
             minPower = 0.0;
             
-        // setting power of the pivot motor
-        power = (desiredPosition-position)/10+intakeGravity(); // pivot power based linearly on error + gravity comp
-        if (desiredPosition-position > 0){
-            power += 0.1;
-        }else{
-            power -= 0.1;
-        }
-        if (Math.abs(desiredPosition-position) < 1) power = intakeGravity();
+        //power += (error > 0?0.1:-0.1);
+        if (Math.abs(error) < 1) power = intakeGravity;
         intakePivot.set(clamp(minPower, maxPower, power));
     }
-
+    /*
     // function for intaking coral
     // change constants!!!!
     public static void intakeCoral(Boolean reversing){
@@ -195,7 +155,7 @@ public class Intake {
 			        if (insideTransportSwitch.isPressed()){
 				        maxPower = 0.0;
 			        }
-			        if (/*outsideTransportSwitch.isPressed() || */timer > 50*1){
+			        if (/*outsideTransportSwitch.isPressed() || timer > 50*1){
 				        transportPivot.set(0);
 				        currentState = "return transport arm";
                         break;
@@ -220,7 +180,7 @@ public class Intake {
                     if(retractIntake() == false) currentState = "none";
                     break;
 	        }
-        /*else{
+        else{
             if (insideTransportSwitch.isPressed()){
                 maxPower = 0.0;
             }
@@ -228,6 +188,6 @@ public class Intake {
                 minPower = 0.0;
             }
             transportPivot.set(clamp(minPower, maxPower, transportGravity+transportEncoder.getPosition()));
-        }*/
-    }
+        }
+    }*/
 }

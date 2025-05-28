@@ -21,10 +21,10 @@ public class Constants {
     public static final int intakeBeltID = 16;
     public static final int intakeTopMotorID = 22;
     public static final int intakeBottomMotorID = 21;
-    public static final int intakePivotMotorID = 14; // incorrect
-    public static final int intakeTransportPivotID = 15; // incorrect
-    public static final int elevatorMotorID = 18; // incorrect
-    public static final int elevatorArmMotorID = 19; // incorrect
+    public static final int intakePivotMotorID = 14; 
+    public static final int intakeTransportPivotID = 15; 
+    public static final int elevatorMotorID = 18; 
+    public static final int elevatorArmMotorID = 19;    
     static int ID_ROTARY_CONTROLLER = 1;
 
     static int ID_OPERATOR_CONTROLLER = 0;
