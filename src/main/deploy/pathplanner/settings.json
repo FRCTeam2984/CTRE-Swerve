@@ -3,10 +3,12 @@
   "robotLength": 0.927,
   "holonomicMode": true,
   "pathFolders": [
-    "V3",
+    "Blue Pos1 To...",
+    "Blue Pos2 To...",
     "OG",
     "V1",
-    "V2"
+    "V2",
+    "V3"
   ],
   "autoFolders": [],
   "defaultMaxVel": 1.0,
