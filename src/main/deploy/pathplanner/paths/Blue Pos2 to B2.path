@@ -56,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.191
+    "rotation": 59.99999999999999
   },
   "reversed": false,
   "folder": "Blue Pos2 To...",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 60.574
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": false
 }
