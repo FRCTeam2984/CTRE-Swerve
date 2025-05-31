@@ -20,7 +20,7 @@ public class Intake {
 
     public static Boolean retractedSwitchPressed, extendedSwitchPressed;
     public static String intakeState;
-    public static Double currentPosition, intakeGravity;
+    public static Double currentPosition, intakeGravity, desiredPosition;
 
     public static void intakePeriodic(){
         retractedSwitchPressed = outsideSwitch.isPressed(); extendedSwitchPressed = insideSwitch.isPressed();
@@ -29,12 +29,17 @@ public class Intake {
         currentPosition = -intakeEncoder.getPosition();
         intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-6)/105) * -0.04;
         switch(intakeState){
+            case "remove":
+                desiredPosition = 12.0;
+                moveIntake();
+                break;
             case "reset":
                 if (outsideSwitch.isPressed()) intakePivot.set(0);
                 else intakePivot.set(-0.3);
                 break;
             case "intake":
-                intakeAlgae();
+                desiredPosition = 22.0;
+                moveIntake();
                 break;
             case "retract":
                 retract();
@@ -75,9 +80,9 @@ public class Intake {
 
     //function to bring intake to a position
     //constants prob not right
-    public static void intakeAlgae(){
+    public static void moveIntake(){
         // processing the input string to find the correct destination
-        Double desiredPosition = 22.0, error = desiredPosition+currentPosition;
+        Double error = desiredPosition+currentPosition;
         Double maxPower = 0.5, minPower = -0.5;
         Double power = (error)/10+intakeGravity;
 

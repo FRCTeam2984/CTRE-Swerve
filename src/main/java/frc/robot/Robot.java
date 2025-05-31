@@ -253,10 +253,15 @@ public class Robot extends TimedRobot {
       else if (Intake.bottomIntake.getOutputCurrent() < 5) Intake.bottomIntake.set(-0.5);
       else Intake.bottomIntake.set(-0.1);
     }else{
-      Intake.bottomIntake.set(0.0);
-      if (Driver_Controller.buttonReverseCoral()){
-        Intake.intakeState = "reset";
-      }else Intake.intakeState = "retract";
+      if (Driver_Controller.buttonCoralStationIntake()){
+        Intake.intakeState = "remove";
+        Intake.bottomIntake.set(0.3);
+      } else{
+        Intake.bottomIntake.set(0.0);
+        if (Driver_Controller.buttonReverseCoral()){
+          Intake.intakeState = "reset";
+        }else Intake.intakeState = "retract";
+      }
     }
 
     // handling AutoDrive
@@ -288,7 +293,6 @@ public class Robot extends TimedRobot {
     Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
     if (Driver_Controller.buttonCoralIntakeGround()) Elevator.elevatorMotor.set(-0.1);
-    System.out.println(Elevator.currentPosition);
   }
 
   @Override
