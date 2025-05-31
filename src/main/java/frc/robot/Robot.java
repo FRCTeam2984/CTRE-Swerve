@@ -26,11 +26,12 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LED;
-import networktablesdesktopclient.NetworkTablesDesktopClient;
-import com.ctre.phoenix6.swerve.*;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
+// import networktablesdesktopclient.NetworkTablesDesktopClient;
+// import com.ctre.phoenix6.swerve.*;
+// import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 
 public class Robot extends TimedRobot {
+  Boolean schedule = false, lastPressed = false;
   int scoringPos = (int) Driver_Controller.buttonReefPosition();
   private static final String kDefaultAuto = "score + de-algae 1x";
   private static final String kCustomAuto = "My Auto";
@@ -239,6 +240,7 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.buttonL2()) Elevator.currentLevel = 2;
     if (Driver_Controller.buttonL3()) Elevator.currentLevel = 3;
     if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
+    Elevator.currentLevel = -1;
 
     // dealing with outtake
     if (outtakeButton) Elevator.armMotor.set(0.5);
@@ -290,9 +292,18 @@ public class Robot extends TimedRobot {
       }
     } 
     autoDriveLastPressed = Driver_Controller.buttonAutoDrive();
-    Elevator.elevatorPeriodic();
+    //Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
-    if (Driver_Controller.buttonCoralIntakeGround()) Elevator.elevatorMotor.set(-0.1);
+    //if (Driver_Controller.buttonCoralIntakeGround()) Elevator.elevatorMotor.set(-0.1);
+
+    if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
+      m_autonomousCommand = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+      lastPressed = true;
+      schedule = true;
+    } else
+      lastPressed = Driver_Controller.buttonResetElevator();
+    if (Driver_Controller.buttonL1()) schedule = false;
+    if (schedule) m_autonomousCommand.schedule();
   }
 
   @Override

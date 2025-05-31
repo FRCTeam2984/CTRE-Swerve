@@ -15,10 +15,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -53,12 +60,18 @@ public class RobotContainer {
     
         public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         
-        
+        private final SendableChooser<String> autoChooser = new SendableChooser<>();
         
         public RobotContainer() {
+            autoChooser.addOption("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+            //autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
+
+            SmartDashboard.putData("Auto Selection", autoChooser);
+            //SmartDashboard.putData("Auto Mode", autoChooser);
             //joystick = Driver_Controller.m_Controller0;
             //joystick2 = Driver_Controller.m_Controller1;
             configureBindings();
+            FollowPathCommand.warmupCommand().schedule();
         }
         public static double rotaryCalc(Boolean resetToRobot){
             //Driver_Controller.SwerveInputPeriodic();
@@ -146,9 +159,17 @@ public class RobotContainer {
         Driver_Controller.m_Controller0.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
-    }
+        }
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
     }
+    public static Command schedulePathplannerMove(String move) {
+        try {
+          return AutoBuilder.buildAuto(move);
+        } catch (FileVersionException e) {
+          e.printStackTrace();
+        }
+        return Commands.print("No autonomous command configured");
+    }   
 }
