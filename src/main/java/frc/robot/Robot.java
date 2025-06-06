@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
   String state = "drive past line";  // for setting autonomous state
 
   public Robot() {
+    //Elevator.sensorInit();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
     m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
@@ -219,7 +220,7 @@ public class Robot extends TimedRobot {
     Driver_Controller.define_Controller();
     Driver_Controller.SwerveControlSet(false);
     RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
-    
+    schedule = false;
     Elevator.currentLevel = -1;
   }
 
@@ -232,27 +233,25 @@ public class Robot extends TimedRobot {
     Driver_Controller.SwerveInputPeriodic();
 
     // Send Data to LED Arduino
-    LED.sendData();
+    //LED.sendData();
 
-    Boolean outtakeButton = Driver_Controller.buttonL1();
     // setting elevator position
+    Elevator.useLaserSensor = !Driver_Controller.switchExtraOnOff();
     if (Driver_Controller.buttonResetElevator()) Elevator.currentLevel = 0;
     if (Driver_Controller.buttonL2()) Elevator.currentLevel = 2;
     if (Driver_Controller.buttonL3()) Elevator.currentLevel = 3;
     if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
-    Elevator.currentLevel = -1;
 
     // dealing with outtake
-    if (outtakeButton) Elevator.armMotor.set(0.5);
-
-    //Climb.letsClimb();
+    if (Driver_Controller.buttonL1()) Elevator.armMotor.set(-0.5);
+    else if (Driver_Controller.buttonTransportPivot()) Elevator.armMotor.set(-0.1);
+    else Elevator.armMotor.set(0.0);
     
     // dealing with intake
-    
     if (Driver_Controller.switchAlgaeIntake() == false){
       Intake.intakeState = "intake";
       if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(0.3);
-      else if (Intake.bottomIntake.getOutputCurrent() < 5) Intake.bottomIntake.set(-0.5);
+      else if (Intake.bottomIntake.getOutputCurrent() < 10) Intake.bottomIntake.set(-0.5);
       else Intake.bottomIntake.set(-0.1);
     }else{
       if (Driver_Controller.buttonCoralStationIntake()){
@@ -292,18 +291,30 @@ public class Robot extends TimedRobot {
       }
     } 
     autoDriveLastPressed = Driver_Controller.buttonAutoDrive();
-    //Elevator.elevatorPeriodic();
+    Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
-    //if (Driver_Controller.buttonCoralIntakeGround()) Elevator.elevatorMotor.set(-0.1);
+    if (Driver_Controller.buttonExtendClimb()){
+      Elevator.elevatorMotor.set(0.1);
+      Elevator.currentLevel = -2;
+    }
+    if (Driver_Controller.buttonRetractClimb()){
+      Elevator.elevatorMotor.set(-0.1);
+      Elevator.currentLevel = -2;
+    }
 
-    if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
+    /*running a pathplanner path:
+      the first if statement is to start running a path. schedule has to be called multiple times. idk why.
+      */
+    /*if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
       m_autonomousCommand = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
       lastPressed = true;
       schedule = true;
     } else
       lastPressed = Driver_Controller.buttonResetElevator();
     if (Driver_Controller.buttonL1()) schedule = false;
-    if (schedule) m_autonomousCommand.schedule();
+    if (schedule) m_autonomousCommand.schedule();*/
+    //if (Driver_Controller.buttonExtendClimb()) LED.sendData("pattern 1");
+    //if (Driver_Controller.buttonRetractClimb()) LED.sendData("pattern 2");
   }
 
   @Override

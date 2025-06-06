@@ -1,35 +1,62 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
-import frc.robot.subsystems.Driver_Controller;
-import com.ctre.phoenix6.hardware.TalonFX;
+import au.grapplerobotics.ConfigurationFailedException;
+import au.grapplerobotics.LaserCan;
 import frc.robot.Constants;
-import frc.robot.drivetrain;
 
 public class Elevator{
+  //public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
+  //public static DigitalInput upperSensor = new DigitalInput(Constants.upperOuttakeSensorPort);
+  //public static DigitalInput lowerSensor = new DigitalInput(Constants.upperOuttakeSensorPort);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  public static RelativeEncoder outtakeEncoder = armMotor.getEncoder();
   public static Double currentPosition,
-                armTimer = 0.0;
-  public static Boolean bottomSwitchPressed;
+                armTimer = 0.0,
+                gravity = 0.0;
+  public static Boolean bottomSwitchPressed,
+                useLaserSensor = false,
+                moveCoral = false;
   public static int currentLevel = 0;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.0, 123.0, 188.25}; // change l4
-  
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.0, 123.0, 189.25}; // change l4
+
+  /*public static void sensorInit(){
+    try {
+      laserSensor.setRangingMode(LaserCan.RangingMode.LONG);
+      laserSensor.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+      laserSensor.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+    } catch (ConfigurationFailedException e) {}
+  }*/
+
   public static void elevatorPeriodic(){
     bottomSwitchPressed = elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround";
-    currentPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10));
+    //currentPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10));
+    currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
+      gravity = 0.0;
       if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
       else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
       else elevatorMotor.set(0.0);
-    }else if (currentLevel > 1)elevatorTo(levelPosition[currentLevel]);
+    }else if (currentLevel > 1){
+      gravity = 0.03;
+      elevatorTo(levelPosition[currentLevel]);
+    }else if (currentLevel == -2){
+      elevatorMotor.set(0.03);
+    }
     else elevatorMotor.set(0.0);
+    // resisting coral when intaked
+    /*if (upperSensor.get()) outtakeEncoder.setPosition(0.0);
+    if (outtakeEncoder.get() < 20.0){
+      outtakeEncoder.set(100.0);
+      armMotor.set(0.0);
+    }else armMotor.set(0.1);
+    */
   }
 
   // function for keeping a variable between a lower and upper limit
@@ -47,11 +74,17 @@ public class Elevator{
     Double error = destination - currentPosition;
     Double minPower = -0.9, maxPower = 0.9, power = 0.0;
 		Integer maxError = 5;
+
+    //use laserCan sensor to limit power going down when close
+    /*LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
+      minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
+    }*/
 			
 		// set motor power based on error or set it to keep position
     power = error/30;
     if (Math.abs(error) < maxError){
-	    elevatorMotor.set(0.0);
+	    elevatorMotor.set(gravity);
 	    return true;
     }
     // Clamp power and use limit switches
