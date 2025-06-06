@@ -55,7 +55,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    
+  }
 
   @Override
   public void autonomousExit() {}
@@ -69,21 +71,21 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }*/
     Driver_Controller.define_Controller();
-    Dance.timer = 0.0; Dance.currentX = 0.0; Dance.currentY = 0.0; Dance.desiredAngle = 0.0; Dance.currentElevator = 0.0; Dance.speed = 2.1;
+    /*Dance.timer = 0.0; Dance.currentX = 0.0; Dance.currentY = 0.0; Dance.desiredAngle = 0.0; Dance.currentElevator = 0.0; Dance.speed = 2.1;
     Dance.intakeState = "ground intake";
     Dance.activated = false;
-    Elevator.extendedOrRetracted = "retracted";
+    Elevator.extendedOrRetracted = "retracted"; */
     Limelight.limelightInit();
   }
 
   @Override
   public void teleopPeriodic() {
     Limelight.limelightOdometryUpdate();
-    Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
+    /*Double elevatorPosition = Double.parseDouble(Elevator.elevatorMotor.getRotorPosition().toString().substring(0, 10));
     if (Elevator.elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround"){Elevator.bottomPosition = elevatorPosition;}
     if (Intake.outsideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition();}
     //else if (Intake.insideSwitch.isPressed()){Intake.inPosition = Intake.intakeEncoder.getPosition() - 48.64;}
-    Dance.dance();
+    Dance.dance(); */
   }
 
   @Override

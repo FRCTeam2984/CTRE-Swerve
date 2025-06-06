@@ -75,7 +75,7 @@ public class Dance {
         new Instruction(29.0, "move", 0.0, 0.0, 0.9, 0.0, ""),
         new Instruction(30.0, "circle", 0.9, 150.0, 0.0, 0.0, ""),
         new Instruction(33.0, "move", 0.0, 0.0, 0.0, 0.0, ""),*/
-        new Instruction(33.0, "elevator", Elevator.levelPosition[2], 0.0, 0.0, 0.0, ""),
+        //new Instruction(33.0, "elevator", Elevator.levelPosition[2], 0.0, 0.0, 0.0, ""),
         new Instruction(33.0, "ground intake", 0.0, 0.0, 0.0, 0.0, ""),
         new Instruction(35.0, "retract", 0.0, 0.0, 0.0, 0.0, ""),
         //new Instruction(35.5, "move", 0.0, 0.0, 2.0, 0.0, ""),
