@@ -15,12 +15,15 @@ public class Intake {
     public static SparkMax bottomIntake = new SparkMax(Constants.intakeBottomMotorID, MotorType.kBrushless);
     public static SparkMax intakePivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
     public static RelativeEncoder intakeEncoder = intakePivot.getEncoder();
+    public static RelativeEncoder rollerEncoder = bottomIntake.getEncoder();
     public static SparkLimitSwitch insideSwitch = intakePivot.getReverseLimitSwitch();
     public static SparkLimitSwitch outsideSwitch = intakePivot.getForwardLimitSwitch();
 
+    public static Integer historyLength = 50;
+    public static Double[] rollerSpeed = new Double[historyLength], rollerCurrent = new Double[historyLength];
     public static Boolean retractedSwitchPressed, extendedSwitchPressed;
     public static String intakeState;
-    public static Double currentPosition, intakeGravity, desiredPosition;
+    public static Double currentPosition, intakeGravity, desiredPosition, powerFactor = 1.0;
 
     public static void intakePeriodic(){
         retractedSwitchPressed = outsideSwitch.isPressed(); extendedSwitchPressed = insideSwitch.isPressed();
@@ -45,6 +48,7 @@ public class Intake {
                 retract();
                 break;
         }
+        controlRoller();
     }
     
     // clamp function (copy-pasted from elevator section)
@@ -95,6 +99,37 @@ public class Intake {
         //power += (error > 0?0.1:-0.1);
         if (Math.abs(error) < 1) power = intakeGravity;
         intakePivot.set(clamp(minPower, maxPower, power));
+    }
+
+    public static void controlRoller(){
+        Double averageCurrent = 0.0, averageSpeed = 0.0;
+        for (int i = historyLength-2; i >= 0; --i){
+            rollerCurrent[i+1] = rollerCurrent[i];
+            rollerSpeed[i+1] = rollerSpeed[i];
+            if (rollerSpeed[i] < 0){
+                averageCurrent += rollerCurrent[i];
+            }
+            averageSpeed += rollerSpeed[i];
+        }
+        rollerCurrent[0] = bottomIntake.getOutputCurrent();
+        rollerSpeed[0] = -rollerEncoder.getVelocity();
+        averageCurrent += rollerCurrent[0];
+        averageSpeed += rollerSpeed[0];
+        averageCurrent /= (double) historyLength;
+        averageSpeed /= (double) historyLength;
+
+        averageCurrent = Math.abs(averageCurrent);
+        averageSpeed = Math.abs(averageSpeed);
+        Double maxRPM = 6000.0, maxCurrent = 20.0;
+        Double allowedCurrent = 2+(averageSpeed/maxRPM)*(maxCurrent-2);
+        powerFactor = clamp(0.1, 1.0, 2.0-(2.0*averageCurrent/allowedCurrent));
+        System.out.print("outputs ");
+        System.out.print(averageCurrent);
+        System.out.print(' ');
+        System.out.print((int)(1*averageSpeed));
+        System.out.print(' ');
+        //if (powerFactor < 0.99)
+        System.out.println((int) (100*powerFactor));
     }
     /*
     // function for intaking coral

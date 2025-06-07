@@ -50,6 +50,10 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
     m_chooser.addOption("JUST DRIVE OUT OF ZONE", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    for (int i = 0; i < Intake.historyLength; ++i){
+      Intake.rollerSpeed[i] = 0.0;
+      Intake.rollerCurrent[i] = 0.0;
+    }
   }
   @Override
   public void robotInit() {
@@ -251,8 +255,7 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.switchAlgaeIntake() == false){
       Intake.intakeState = "intake";
       if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(0.3);
-      else if (Intake.bottomIntake.getOutputCurrent() < 10) Intake.bottomIntake.set(-0.5);
-      else Intake.bottomIntake.set(-0.1);
+      else Intake.bottomIntake.set(-0.5*Intake.powerFactor);
     }else{
       if (Driver_Controller.buttonCoralStationIntake()){
         Intake.intakeState = "remove";
