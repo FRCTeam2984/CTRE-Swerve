@@ -16,12 +16,12 @@ public class Limelight {
     public static void limelightInit(){
         // Set camera offset from middle of robot
         LimelightHelpers.setCameraPose_RobotSpace("limelight", 
-        0.27,    // Forward offset (meters)
+        0.20,    // Forward offset (meters)
         0.04,    // Side offset (meters)
         0.37,    // Height offset (meters)
         0.0,    // Roll (degrees)
         0.0,   // Pitch (degrees)
-        0.0     // Yaw (degrees)
+        180.0     // Yaw (degrees)
         );
     }
                   
