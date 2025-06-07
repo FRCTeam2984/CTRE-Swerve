@@ -26,11 +26,13 @@ public class Intake {
     public static Double currentPosition, intakeGravity, desiredPosition, powerFactor = 1.0;
 
     public static void intakePeriodic(){
+        // updating values
         retractedSwitchPressed = outsideSwitch.isPressed(); extendedSwitchPressed = insideSwitch.isPressed();
         if (outsideSwitch.isPressed()){intakeEncoder.setPosition(0.0);}
         else if (insideSwitch.isPressed()){intakeEncoder.setPosition(48.64);}
         currentPosition = -intakeEncoder.getPosition();
         intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-6)/105) * -0.04;
+        // moving the arm based on inputs
         switch(intakeState){
             case "remove":
                 desiredPosition = 12.0;

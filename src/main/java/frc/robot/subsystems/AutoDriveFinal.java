@@ -72,7 +72,8 @@ public class AutoDriveFinal{
         if(DriverStation.getAlliance().toString().charAt(9) == 'B'){   
             alliance = "blue";  // blue
         }
-        Double odoAngle = ((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
+        Double odoAngle = ((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360) - 180;
+        //((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
         Double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         Double odox = RobotContainer.drivetrain.getState().Pose.getX();
         //Double speedMult = 10.0*((alliance == "red")?-1:1);
@@ -83,8 +84,8 @@ public class AutoDriveFinal{
             //Driver_Controller.SwerveCommandXValue = speedMult*(x - odox) * Math.cos(odoAngle);
             //Driver_Controller.SwerveCommandYValue = speedMult*(y - odoy) *  Math.sin(((Math.PI/2)) - odoAngle);
             Double driveAngle = Math.atan2(y - odoy, x - odox);
-            Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist+0.1)*-speed*Math.cos(driveAngle);
-            Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist+0.1)*-speed*Math.sin(driveAngle);
+            Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist*0.5+0.1)*-speed*Math.cos(driveAngle);
+            Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist*0.5+0.1)*-speed*Math.sin(driveAngle);
         }else{
             Driver_Controller.SwerveCommandXValue = 0.0;
             Driver_Controller.SwerveCommandYValue = 0.0;

@@ -76,6 +76,7 @@ public class RobotContainer {
         public static double rotaryCalc(Boolean resetToRobot){
             //Driver_Controller.SwerveInputPeriodic();
             double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
+            pigeonYaw = drivetrain.getState().Pose.getRotation().getDegrees();
             if (Driver_Controller.SwerveCommandControl == false){
                 pigeonYaw += robotOffset;
             }
@@ -103,10 +104,10 @@ public class RobotContainer {
                 //return 0;
             }
             //System.out.println(rotaryJoystickInput);
-            if (powerCurved < 7 && powerCurved > 1){
+            if (powerCurved < 7 && powerCurved > 2){
                 powerCurved = 7;
             }
-            if (powerCurved > -7 && powerCurved < -1){
+            if (powerCurved > -7 && powerCurved < -2){
                 powerCurved = -7;
             }
             return powerCurved * 0.09;

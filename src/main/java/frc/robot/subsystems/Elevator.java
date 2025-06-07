@@ -2,19 +2,21 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class Elevator{
   //public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
-  //public static DigitalInput upperSensor = new DigitalInput(Constants.upperOuttakeSensorPort);
-  //public static DigitalInput lowerSensor = new DigitalInput(Constants.upperOuttakeSensorPort);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  public static SparkLimitSwitch upperSensor = armMotor.getReverseLimitSwitch();
+  public static SparkLimitSwitch lowerSensor = armMotor.getForwardLimitSwitch();
   public static RelativeEncoder outtakeEncoder = armMotor.getEncoder();
   public static Double currentPosition,
                 armTimer = 0.0,
