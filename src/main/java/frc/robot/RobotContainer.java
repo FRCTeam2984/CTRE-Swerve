@@ -103,7 +103,12 @@ public class RobotContainer {
                 //return 0;
             }
             //System.out.println(rotaryJoystickInput);
-
+            if (powerCurved < 7 && powerCurved > 1){
+                powerCurved = 7;
+            }
+            if (powerCurved > -7 && powerCurved < -1){
+                powerCurved = -7;
+            }
             return powerCurved * 0.09;
         
 

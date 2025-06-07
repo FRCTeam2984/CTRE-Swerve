@@ -123,13 +123,13 @@ public class Intake {
         Double maxRPM = 6000.0, maxCurrent = 20.0;
         Double allowedCurrent = 2+(averageSpeed/maxRPM)*(maxCurrent-2);
         powerFactor = clamp(0.1, 1.0, 2.0-(2.0*averageCurrent/allowedCurrent));
-        System.out.print("outputs ");
+        /*System.out.print("outputs ");
         System.out.print(averageCurrent);
         System.out.print(' ');
         System.out.print((int)(1*averageSpeed));
         System.out.print(' ');
         //if (powerFactor < 0.99)
-        System.out.println((int) (100*powerFactor));
+        System.out.println((int) (100*powerFactor));*/
     }
     /*
     // function for intaking coral

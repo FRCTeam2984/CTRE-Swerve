@@ -129,8 +129,10 @@ public class Driver_Controller {
 
 public static Boolean driverSwitch(){
     return m_Controller1.getRawButton(5);}
-public static Boolean buttonAutoDrive(){
+public static Boolean buttonReefAlign(){
     return m_Controller1.getRawButton(1);}
+public static Boolean buttonRotateToReef(){
+    return m_Controller1.getRawButton(2);}
 public static Boolean buttonResetIntake(){
     return m_Controller1.getRawButton(7);}
 
@@ -166,7 +168,7 @@ public static Boolean buttonL1(){
 public static Boolean buttonResetElevator(){
     return m_Controller2.getRawButton(5);}
       
-public static double buttonReefPosition(){
+public static double ReefPosition(){
     if (m_Controller2.getRawButton(10))
         return (((2-m_Controller2.getRawAxis(0))%3 + Math.round(m_Controller2.getRawAxis(1))*3)+5)%12+1;
     return ((-m_Controller2.getRawAxis(0)+2)%3 + Math.round(m_Controller2.getRawAxis(1))*3+11)%12+1;

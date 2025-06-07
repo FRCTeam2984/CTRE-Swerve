@@ -38,40 +38,65 @@ public class AutoDriveFinal{
             {4.013318676, 2.466970177},
             {3.729262344, 2.630970177}
     };
-    static double scoringPosRed[][] = { 
-        {14.34772578, 4.393108052},
-        {14.34772578, 4.065108052},
-        {14.02107748, 3.093977798},
-        {13.73702114, 2.929977798},
-        {12.73278782, 2.726777798},
-        {12.44873148, 2.890777798},
-        {11.77013045, 3.658708052},
-        {11.77013045, 3.986708052},
-        {12.09677876, 4.957838306},
-        {12.38083509, 5.121838306},
-        {13.38506842, 5.325038306},
-        {13.66912475, 5.161038306},  
+    public static double scoringPosRed[][] = { 
+        {14.34772578, 4.034908052},
+        {14.34772578, 3.706908052},
+        {13.71086718, 2.914877798},
+        {13.42681085, 2.750877798},
+        {12.42257752, 2.905877798},
+        {12.13852118, 3.069877798},
+        {11.77013045, 4.016908052},
+        {11.77013045, 4.344908052},
+        {12.40698906, 5.136938306},
+        {12.69104539, 5.300938306},
+        {13.69527872, 5.145938306},
+        {13.97933505, 4.981938306},  
     };
-    static double scoringPosBlue[][] = { 
-        {3.200661316, 3.658708052},
-        {3.200661316, 3.986708052},
-        {3.52730962, 4.957838306},
-        {3.811365952, 5.121838306},
-        {4.815599282, 5.325038306},
-        {5.099655614, 5.161038306},
-        {5.778256642, 4.393108052},
-        {5.778256642, 4.065108052},
-        {5.451608338, 3.093977798},
-        {5.167552006, 2.929977798},
-        {4.163318676, 2.726777798},
-        {3.879262344, 2.890777798},  
+    public static double scoringPosBlue[][] = { 
+        {3.200661316, 4.016908052},
+        {3.200661316, 4.344908052},
+        {3.837519919, 5.136938306},
+        {4.121576252, 5.300938306},
+        {5.125809581, 5.145938306},
+        {5.409865914, 4.981938306},
+        {5.778256642, 4.034908052},
+        {5.778256642, 3.706908052},
+        {5.141398039, 2.914877798},
+        {4.857341706, 2.750877798},
+        {3.853108376, 2.905877798},
+        {3.569052044, 3.069877798},  
     };
+    public static void driveToXYA(Double x, Double y, Double angle, Double speed){
+        Driver_Controller.SwerveControlSet(true);
+        String alliance = "red";
+        if(DriverStation.getAlliance().toString().charAt(9) == 'B'){   
+            alliance = "blue";  // blue
+        }
+        Double odoAngle = ((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
+        Double odoy = RobotContainer.drivetrain.getState().Pose.getY();
+        Double odox = RobotContainer.drivetrain.getState().Pose.getX();
+        //Double speedMult = 10.0*((alliance == "red")?-1:1);
+        speed *= ((alliance == "red")?1:-1);
+        // use pythagorean theorum to calculate distance and if it is close enough
+        Double dist = Math.pow(Math.pow((odox-x), 2) + Math.pow((odoy-y), 2), 0.5); 
+        if (dist > 0.05){
+            //Driver_Controller.SwerveCommandXValue = speedMult*(x - odox) * Math.cos(odoAngle);
+            //Driver_Controller.SwerveCommandYValue = speedMult*(y - odoy) *  Math.sin(((Math.PI/2)) - odoAngle);
+            Double driveAngle = Math.atan2(y - odoy, x - odox);
+            Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist+0.1)*-speed*Math.cos(driveAngle);
+            Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist+0.1)*-speed*Math.sin(driveAngle);
+        }else{
+            Driver_Controller.SwerveCommandXValue = 0.0;
+            Driver_Controller.SwerveCommandYValue = 0.0;
+        }
+        Driver_Controller.SwerveCommandEncoderValue = odoAngle*0 + angle;// + ((alliance == "red")?180:0);
+    }
     public static Boolean AutoDrive(){
         // alliance = 1;
         Driver_Controller.SwerveControlSet(true);
         double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         double odox = RobotContainer.drivetrain.getState().Pose.getX();
-        int scoringPos = (int) Driver_Controller.buttonReefPosition(); // find how to get rotary control value
+        int scoringPos = (int) Driver_Controller.ReefPosition(); // find how to get rotary control value
         if(DriverStation.getAlliance().toString().charAt(9) == 'B'){   
             alliance = 1;  // blue
         }
