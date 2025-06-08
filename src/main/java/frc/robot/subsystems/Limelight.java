@@ -17,7 +17,7 @@ public class Limelight {
         // Set camera offset from middle of robot
         LimelightHelpers.setCameraPose_RobotSpace("limelight", 
         0.14,    // Forward offset (meters)
-        0.11,    // Side offset (meters)
+        0.08,    // Side offset (meters)
         0.37,    // Height offset (meters)
         0.0,    // Roll (degrees)
         0.0,   // Pitch (degrees)

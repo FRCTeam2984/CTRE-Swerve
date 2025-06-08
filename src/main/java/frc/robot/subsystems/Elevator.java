@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class Elevator{
-  //public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
+  public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static SparkMax outtakeMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
   public static SparkLimitSwitch lowerSensor = outtakeMotor.getReverseLimitSwitch();
@@ -20,21 +20,21 @@ public class Elevator{
   public static RelativeEncoder outtakeEncoder = outtakeMotor.getEncoder();
   public static Double currentPosition,
                 armTimer = 0.0,
-                gravity = 0.0;
+                gravity = 0.03;
   public static Boolean bottomSwitchPressed,
-                useLaserSensor = false,
+                useLaserSensor = true,
                 moveCoral = false,
                 enableOuttakeSensors;
   public static int currentLevel = 0;
   public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.0, 123.0, 189.25}; // change l4
 
-  /*public static void sensorInit(){
+  public static void sensorInit(){
     try {
       laserSensor.setRangingMode(LaserCan.RangingMode.LONG);
       laserSensor.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
       laserSensor.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {}
-  }*/
+  }
 
   public static void elevatorPeriodic(){
     bottomSwitchPressed = elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround";
@@ -42,12 +42,12 @@ public class Elevator{
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
-      gravity = 0.0;
       if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
       else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
       else elevatorMotor.set(0.0);
+    }else if (currentLevel == 1){
+      elevatorTo(15.0);
     }else if (currentLevel > 1){
-      gravity = 0.03;
       elevatorTo(levelPosition[currentLevel]);
     }else if (currentLevel == -2){
       elevatorMotor.set(0.03);
@@ -65,6 +65,11 @@ public class Elevator{
       moveCoral = false;
       outtakeMotor.set(0.0);
     }
+    }
+
+    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
+      System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
     }
   }
 

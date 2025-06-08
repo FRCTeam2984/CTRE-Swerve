@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
   String state = "drive past line";  // for setting autonomous state
 
   public Robot() {
-    //Elevator.sensorInit();
+    Elevator.sensorInit();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
     m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
@@ -232,11 +232,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    System.out.print((int)RobotContainer.robotOffset);
-    System.out.print(' ');
-    System.out.print((int)RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble());
-    System.out.print(' ');
-    System.out.println(RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
     if (Driver_Controller.driverSwitch()) {
       Limelight.limelightOdometryUpdate();
     }
@@ -289,13 +284,25 @@ public class Robot extends TimedRobot {
                                 RobotContainer.drivetrain.getState().Pose.getY()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1],
                                 AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
                                 3.0);
-    }else if (autoDriveLastPressed){
+    //if the nearby white button is pressed, align to the closest HPS station on the current alliance
+    } else if (Driver_Controller.buttonHPSalign()){
+      Elevator.currentLevel = 1;
+      if (alliance == "blue"){
+        if (RobotContainer.drivetrain.getState().Pose.getY() > 4.025908052)
+        AutoDriveFinal.driveToXYA(1.18, 6.95, 306.0+180, 1.0);
+        else AutoDriveFinal.driveToXYA(1.18, 1.11, 54.0+180, 1.0);
+      }else{
+        if (RobotContainer.drivetrain.getState().Pose.getY() > 4.025908052)
+        AutoDriveFinal.driveToXYA(16.37, 6.95, 234.0+180, 1.0);
+        else AutoDriveFinal.driveToXYA(16.35, 1.13, 126.0+180, 1.0);
+      }
+    } else if (autoDriveLastPressed){
       // when the buttons are no longer being pressed, reset the robot spinner to the current orientation
       Driver_Controller.SwerveCommandControl = false;
       Driver_Controller.SwerveInputPeriodic();
       RobotContainer.rotaryCalc(true);
     }
-    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef());
+    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign());
 
     Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
