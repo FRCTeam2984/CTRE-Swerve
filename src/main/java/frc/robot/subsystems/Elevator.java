@@ -14,16 +14,17 @@ import frc.robot.Constants;
 public class Elevator{
   //public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-  public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
-  public static SparkLimitSwitch upperSensor = armMotor.getReverseLimitSwitch();
-  public static SparkLimitSwitch lowerSensor = armMotor.getForwardLimitSwitch();
-  public static RelativeEncoder outtakeEncoder = armMotor.getEncoder();
+  public static SparkMax outtakeMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  public static SparkLimitSwitch lowerSensor = outtakeMotor.getReverseLimitSwitch();
+  public static SparkLimitSwitch upperSensor = outtakeMotor.getForwardLimitSwitch();
+  public static RelativeEncoder outtakeEncoder = outtakeMotor.getEncoder();
   public static Double currentPosition,
                 armTimer = 0.0,
                 gravity = 0.0;
   public static Boolean bottomSwitchPressed,
                 useLaserSensor = false,
-                moveCoral = false;
+                moveCoral = false,
+                enableOuttakeSensors;
   public static int currentLevel = 0;
   public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.0, 123.0, 189.25}; // change l4
 
@@ -52,13 +53,19 @@ public class Elevator{
       elevatorMotor.set(0.03);
     }
     else elevatorMotor.set(0.0);
-    // resisting coral when intaked
-    /*if (upperSensor.get()) outtakeEncoder.setPosition(0.0);
-    if (outtakeEncoder.get() < 20.0){
-      outtakeEncoder.set(100.0);
-      armMotor.set(0.0);
-    }else armMotor.set(0.1);
-    */
+
+    // moving coral when intaked
+    if (enableOuttakeSensors){
+    if (upperSensor.isPressed()){
+      System.out.println("upper sensor");
+      moveCoral = true;
+      outtakeMotor.set(-0.23);
+    }
+    if (lowerSensor.isPressed() && moveCoral){
+      moveCoral = false;
+      outtakeMotor.set(0.0);
+    }
+    }
   }
 
   // function for keeping a variable between a lower and upper limit
@@ -109,7 +116,7 @@ public class Elevator{
       armTimer = 0.0;
       if (extendOrRetract == "extend") extendedOrRetracted = "extended"; else extendedOrRetracted = "retracted";
     }else extendedOrRetracted = "moving";
-    armMotor.set(power);
+    outtakeMotor.set(power);
     lastExtendOrRetract = extendOrRetract;
     return done;
     
@@ -121,7 +128,7 @@ public class Elevator{
       done = true;
       extendedOrRetracted = (extendOrRetract == "extend"?"extended":"retracted");
     }else extendedOrRetracted = "moving";
-    armMotor.set(power);
+    outtakeMotor.set(power);
     return done;
   }*/
 

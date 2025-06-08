@@ -31,7 +31,9 @@ public class Limelight {
         seconds = Utils.getCurrentTimeSeconds();
         
         if (hasTarget){
+            Boolean resetNeeded = (Math.abs(LimelightGeneratedPose2d.getRotation().getDegrees()-RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()) > 5.0); 
             RobotContainer.drivetrain.addVisionMeasurement(LimelightGeneratedPose2d, seconds);
+            if (resetNeeded) RobotContainer.rotaryCalc(true);
             System.out.println(LimelightGeneratedPose2d);
         }
     }

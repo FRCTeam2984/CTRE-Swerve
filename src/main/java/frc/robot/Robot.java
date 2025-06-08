@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
       Intake.rollerSpeed[i] = 0.0;
       Intake.rollerCurrent[i] = 0.0;
     }
+    Elevator.enableOuttakeSensors = true;
   }
   @Override
   public void robotInit() {
@@ -231,7 +232,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
+    System.out.print((int)RobotContainer.robotOffset);
+    System.out.print(' ');
+    System.out.print((int)RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble());
+    System.out.print(' ');
+    System.out.println(RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
     if (Driver_Controller.driverSwitch()) {
       Limelight.limelightOdometryUpdate();
     }
@@ -248,10 +253,10 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
 
     // dealing with outtake
-    if (Driver_Controller.buttonL1()) Elevator.armMotor.set(-0.5);
-    else if (Driver_Controller.buttonTransportPivot()) Elevator.armMotor.set(-0.1);
-    else if (Driver_Controller.buttonRemoveAlgae()) Elevator.armMotor.set(0.1);
-    else Elevator.armMotor.set(0.0);
+    if (Driver_Controller.buttonL1()) Elevator.outtakeMotor.set(-0.5);
+    else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
+    else if (Driver_Controller.buttonRemoveAlgae()) Elevator.outtakeMotor.set(0.2);
+    else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
     
     // dealing with intake
     if (Driver_Controller.switchAlgaeIntake() == false){
