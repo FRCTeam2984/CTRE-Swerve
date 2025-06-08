@@ -38,6 +38,8 @@ public class AutoDriveFinal{
             {4.013318676, 2.466970177},
             {3.729262344, 2.630970177}
     };
+
+    //use these arrays
     public static double scoringPosRed[][] = { 
         {14.34772578, 4.034908052},
         {14.34772578, 3.706908052},
