@@ -18,7 +18,10 @@
     "                        V2",
     "                                   V3"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Old paths",
+    "Paths past June 9"
+  ],
   "defaultMaxVel": 1.0,
   "defaultMaxAccel": 1.0,
   "defaultMaxAngVel": 540.0,

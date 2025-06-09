@@ -68,6 +68,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Old paths",
   "choreoAuto": false
 }
