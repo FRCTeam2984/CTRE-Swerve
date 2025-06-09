@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.435998376623377,
-        "y": 5.193100649350649
+        "x": 14.0429180375528,
+        "y": 4.990274710181192
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.520181787897235,
-        "y": 5.677156306006865
+        "x": 14.2145532489717,
+        "y": 5.172047519482225
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 16.03501494334527,
-        "y": 7.245836555974608
+        "x": 15.926055194806924,
+        "y": 7.329870129869517
       },
       "prevControl": {
-        "x": 15.823076709009834,
-        "y": 7.113238724820485
+        "x": 15.45596590908741,
+        "y": 7.0235998376608
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,10 +32,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7982779827798285,
+      "minWaypointRelativePos": 0.8487084870848706,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.51,
+        "maxVelocity": 1.25,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -62,7 +62,7 @@
   "folder": "RED REEF TO HPS",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }
