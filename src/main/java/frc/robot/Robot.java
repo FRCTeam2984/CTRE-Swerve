@@ -277,43 +277,48 @@ public class Robot extends TimedRobot {
       AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.scoringPosBlue[scoringPos][0]:AutoDriveFinal.scoringPosRed[scoringPos][0],
                                 (alliance == "blue")?AutoDriveFinal.scoringPosBlue[scoringPos][1]:AutoDriveFinal.scoringPosRed[scoringPos][1],
                                 AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
-                                3.0);
+                                2.0);
     // if the yellow button by the joystick is pressed, automatically orients to the position designated by the rotary controller on the operator panel
     } else if (Driver_Controller.buttonRotateToReef()){
       AutoDriveFinal.driveToXYA(RobotContainer.drivetrain.getState().Pose.getX()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0],
                                 RobotContainer.drivetrain.getState().Pose.getY()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1],
                                 AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
-                                3.0);
+                                2.0);
     //if the nearby white button is pressed, align to the closest HPS station on the current alliance
     } else if (Driver_Controller.buttonHPSalign()){
       Elevator.currentLevel = 1;
       if (alliance == "blue"){
         if (RobotContainer.drivetrain.getState().Pose.getY() > 4.025908052)
-        AutoDriveFinal.driveToXYA(1.18, 6.95, 306.0+180, 1.0);
-        else AutoDriveFinal.driveToXYA(1.18, 1.11, 54.0+180, 1.0);
+        AutoDriveFinal.driveToXYA(1.18, 6.95, 306.0+180, 2.0);
+        else AutoDriveFinal.driveToXYA(1.18, 1.11, 54.0+180, 2.0);
       }else{
         if (RobotContainer.drivetrain.getState().Pose.getY() > 4.025908052)
-        AutoDriveFinal.driveToXYA(16.37, 6.95, 234.0+180, 1.0);
-        else AutoDriveFinal.driveToXYA(16.35, 1.13, 126.0+180, 1.0);
+        AutoDriveFinal.driveToXYA(16.37, 6.95, 234.0+180, 2.0);
+        else AutoDriveFinal.driveToXYA(16.35, 1.13, 126.0+180, 2.0);
       }
-    } else if (autoDriveLastPressed){
+    } else if (Driver_Controller.buttonRemoveAlign()){
+      AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[(scoringPos-1)/2][0]:AutoDriveFinal.algaeRemoveRed[(scoringPos-1)/2][0],
+                                (alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[(scoringPos-1)/2][1]:AutoDriveFinal.algaeRemoveRed[(scoringPos-1)/2][1],
+                                AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
+                                2.0);
+    }else if (autoDriveLastPressed){
       // when the buttons are no longer being pressed, reset the robot spinner to the current orientation
       Driver_Controller.SwerveCommandControl = false;
       Driver_Controller.SwerveInputPeriodic();
       RobotContainer.rotaryCalc(true);
     }
-    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign());
+    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign());
 
     Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
 
     //fine adjustment for elevator
     if (Driver_Controller.buttonExtendClimb()){
-      Elevator.elevatorMotor.set(0.1);
+      Elevator.elevatorMotor.set(0.15);
       Elevator.currentLevel = -2;
     }
     if (Driver_Controller.buttonRetractClimb()){
-      Elevator.elevatorMotor.set(-0.1);
+      Elevator.elevatorMotor.set(-0.15);
       Elevator.currentLevel = -2;
     }
 

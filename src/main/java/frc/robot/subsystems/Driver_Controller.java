@@ -137,6 +137,9 @@ public static Boolean buttonResetIntake(){
     return m_Controller1.getRawButton(7);}
 public static Boolean buttonHPSalign(){
     return m_Controller1.getRawButton(3);}
+public static Boolean buttonRemoveAlign(){
+    return m_Controller1.getRawButton(4);}
+    
 
 public static Boolean buttonExtendClimb(){
     return m_Controller3.getRawButton(1);}
