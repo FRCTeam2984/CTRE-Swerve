@@ -41,32 +41,48 @@ public class AutoDriveFinal{
 
     //use these arrays
     public static double scoringPosRed[][] = { 
-        {14.34772578, 4.034908052},
-        {14.34772578, 3.706908052},
-        {13.71086718, 2.914877798},
-        {13.42681085, 2.750877798},
-        {12.42257752, 2.905877798},
-        {12.13852118, 3.069877798},
-        {11.77013045, 4.016908052},
-        {11.77013045, 4.294908052},
-        {12.40698906, 5.136938306},
-        {12.69104539, 5.300938306},
-        {13.69527872, 5.145938306},
-        {13.93170366, 5.009438306},  
+        {14.32552578, 3.941908052},
+        {14.32552578, 3.611908052},
+        {13.61922682, 2.887603562},
+        {13.33343843, 2.722603562},
+        {12.35313715, 2.971603562},
+        {12.06734877, 3.136603562},
+        {11.79233045, 4.109908052},
+        {11.79233045, 4.439908052},
+        {12.49862942, 5.164212542},
+        {12.78441780, 5.329212542},
+        {13.76471908, 5.080212542},
+        {14.05050747, 4.915212542},  
     };
     public static double scoringPosBlue[][] = { 
-        {3.200661316, 4.016908052},
-        {3.200661316, 4.344908052},
-        {3.837519919, 5.136938306},
-        {4.121576252, 5.300938306},
-        {5.125809581, 5.145938306},
-        {5.409865914, 4.981938306},
-        {5.778256642, 4.034908052},
-        {5.778256642, 3.706908052},
-        {5.141398039, 2.914877798},
-        {4.857341706, 2.750877798},
-        {3.853108376, 2.905877798},
-        {3.569052044, 3.069877798},  
+        {3.222861316, 3.911908052},
+        {3.222861316, 4.439908052},
+        {3.929160282, 5.164212542},
+        {4.214948665, 5.329212542},
+        {5.195249944, 5.080212542},
+        {5.481038327, 4.915212542},
+        {5.756056642, 3.941908052},
+        {5.756056642, 3.611908052},
+        {5.049757676, 2.887603562},
+        {4.763969293, 2.722603562},
+        {3.783668014, 2.971603562},
+        {3.497879631, 3.136603562},  
+    };
+    public static double algaeRemoveRed[][] = { 
+        {14.32552578, 3.725908052},
+        {13.43216533, 2.779603562},
+        {12.16607567, 3.079603562},
+        {11.79233045, 4.325908052},
+        {12.68569091, 5.272212542},
+        {13.95178057, 4.972212542},  
+    };
+    public static double algaeRemoveBlue[][] = { 
+        {3.222861316, 4.325908052},
+        {4.116221769, 5.272212542},
+        {5.382311431, 4.972212542},
+        {5.756056642, 3.725908052},
+        {4.862696189, 2.779603562},
+        {3.596606527, 3.079603562},  
     };
     public static void driveToXYA(Double x, Double y, Double angle, Double speed){
         Driver_Controller.SwerveControlSet(true);
@@ -86,8 +102,8 @@ public class AutoDriveFinal{
             //Driver_Controller.SwerveCommandXValue = speedMult*(x - odox) * Math.cos(odoAngle);
             //Driver_Controller.SwerveCommandYValue = speedMult*(y - odoy) *  Math.sin(((Math.PI/2)) - odoAngle);
             Double driveAngle = Math.atan2(y - odoy, x - odox);
-            Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist*0.5+0.1)*-speed*Math.cos(driveAngle);
-            Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist*0.5+0.1)*-speed*Math.sin(driveAngle);
+            Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.cos(driveAngle);
+            Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.sin(driveAngle);
         }else{
             Driver_Controller.SwerveCommandXValue = 0.0;
             Driver_Controller.SwerveCommandYValue = 0.0;
