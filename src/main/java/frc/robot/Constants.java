@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.config.RobotConfig;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -27,5 +29,13 @@ public class Constants {
     public static final int elevatorArmMotorID = 19;    
     static int ID_ROTARY_CONTROLLER = 1;
 
+    /* From PathPlanner */
     static int ID_OPERATOR_CONTROLLER = 0;
+
+    // auto's
+    public static final String kPassTheLine = "Pass the Line";
+    public static final String kV1Auto = "V1";
+    public static final String kV2Auto = "V2";
+    public static final String kV3Auto = "V3";
+    public static final String kSoftAndSlowAuto = "SoftAndSlow";
 }
