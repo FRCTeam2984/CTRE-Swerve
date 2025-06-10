@@ -73,6 +73,7 @@ public class RobotContainer {
         PathPlannerAuto V3 = new PathPlannerAuto("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
         PathPlannerAuto SafeAndSlow = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
 
+        public static Command ScheduleTestingPath = RobotContainer.schedulePathplannerMove("Testing path");
         public static Command ScheduleV1 = RobotContainer.schedulePathplannerMove("15sec -- V1 (A2, A1, F2, F1)");
         public static Command ScheduleV2 = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
         public static Command ScheduleV3 = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
@@ -82,6 +83,7 @@ public class RobotContainer {
 
                 public RobotContainer() {
                     autoChooser.setDefaultOption("Pass the Line", Constants.kPassTheLine);
+                    autoChooser.addOption("Testing Path", Constants.kTestingPathAuto);
                     autoChooser.addOption("V1", Constants.kV1Auto);
                     autoChooser.addOption("V2", Constants.kV2Auto);
                     autoChooser.addOption("V3", Constants.kV3Auto);
@@ -126,7 +128,12 @@ public class RobotContainer {
                         //return 0;
                     }
                     //System.out.println(rotaryJoystickInput);
-        
+                    if (powerCurved < 7 && powerCurved > 2){
+                        powerCurved = 7;
+                    }
+                    if (powerCurved > -7 && powerCurved < -2){
+                        powerCurved = -7;
+                    }
                     return powerCurved * 0.09;
             }
         
@@ -163,14 +170,6 @@ public class RobotContainer {
                             .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
                     )
                 );
-            //System.out.println(rotaryJoystickInput);
-            if (powerCurved < 7 && powerCurved > 2){
-                powerCurved = 7;
-            }
-            if (powerCurved > -7 && powerCurved < -2){
-                powerCurved = -7;
-            }
-            return powerCurved * 0.09;
         
                 Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
                 Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->

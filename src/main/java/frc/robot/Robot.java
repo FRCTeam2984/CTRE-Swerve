@@ -36,7 +36,7 @@ import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   Boolean schedule = false, lastPressed = false;
-  int scoringPos = (int) Driver_Controller.buttonReefPosition();
+  int scoringPos = (int) Driver_Controller.ReefPosition();
   // private static final String kDefaultAuto = "score + de-algae 1x";
   // private static final String kCustomAuto = "My Auto";
   // private String m_autoSelected;
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   public static final RobotContainer m_robotContainer = new RobotContainer();
   Boolean autoDriveLastPressed = false;
 
-  String m_autoSelected;
+  String m_autoSelected, alliance;
 
   // String state = "drive past line";  // for setting autonomous state
 
@@ -135,6 +135,9 @@ public class Robot extends TimedRobot {
     switch (m_autoSelected) {
       case Constants.kPassTheLine:
         driveSouthPastLine();
+        break;
+      case Constants.kTestingPathAuto:
+        RobotContainer.ScheduleTestingPath.schedule();
         break;
       case Constants.kV1Auto:
         RobotContainer.ScheduleV1.schedule();
