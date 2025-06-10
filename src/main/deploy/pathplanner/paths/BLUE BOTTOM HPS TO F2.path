@@ -47,8 +47,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "SCORE",
-      "waypointRelativePos": 1.0,
+      "name": "Finish",
+      "waypointRelativePos": 0.9827798277982781,
       "endWaypointRelativePos": null,
       "command": null
     }
