@@ -63,7 +63,7 @@ public class RobotContainer {
         private final SendableChooser<String> autoChooser = new SendableChooser<>();
         
         public RobotContainer() {
-            autoChooser.addOption("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+            autoChooser.addOption("Testing path", "Testing path");
             //autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
 
             SmartDashboard.putData("Auto Selection", autoChooser);
