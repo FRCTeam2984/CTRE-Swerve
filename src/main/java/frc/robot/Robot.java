@@ -110,7 +110,7 @@ public class Robot extends TimedRobot {
 
     //PathPlanner.loadPath("");
     //driveSouthPastLine();
-    /*
+    
     Driver_Controller.SwerveInputPeriodic();
     switch(state){
       case "reef align 1":
@@ -242,7 +242,7 @@ public class Robot extends TimedRobot {
         }
         break;
       
-    }*/
+    }
     Intake.intakePeriodic();
     Elevator.elevatorPeriodic();
     if (schedule) m_autonomousCommand.schedule();
