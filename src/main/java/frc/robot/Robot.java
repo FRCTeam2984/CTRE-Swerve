@@ -8,11 +8,15 @@ import java.util.Optional;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPLTVController;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,23 +37,25 @@ import frc.robot.subsystems.LED;
 public class Robot extends TimedRobot {
   Boolean schedule = false, lastPressed = false;
   int scoringPos = (int) Driver_Controller.buttonReefPosition();
-  private static final String kDefaultAuto = "score + de-algae 1x";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  // private static final String kDefaultAuto = "score + de-algae 1x";
+  // private static final String kCustomAuto = "My Auto";
+  // private String m_autoSelected;
+  // private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
   Boolean autoDriveLastPressed = false;
 
-  String state = "drive past line";  // for setting autonomous state
+  String m_autoSelected;
+
+  // String state = "drive past line";  // for setting autonomous state
 
   public Robot() {
     //Elevator.sensorInit();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
-    m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
-    m_chooser.addOption("JUST DRIVE OUT OF ZONE", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    // m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
+    // m_chooser.addOption("JUST DRIVE OUT OF ZONE", kCustomAuto);
+    // SmartDashboard.putData("Auto choices", m_chooser);
     for (int i = 0; i < Intake.historyLength; ++i){
       Intake.rollerSpeed[i] = 0.0;
       Intake.rollerCurrent[i] = 0.0;
@@ -57,8 +63,6 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {
-    
-
   }
 
   @Override
@@ -93,9 +97,12 @@ public class Robot extends TimedRobot {
     Driver_Controller.SwerveCommandXValue = 0;
     Driver_Controller.SwerveCommandYValue = 0;
     
-    m_autoSelected = m_chooser.getSelected();
+    // m_autoSelected = m_chooser.getSelected();
+    // System.out.println("Auto selected: " + m_autoSelected);
+    // state = "drive past line";
+
+    m_autoSelected = RobotContainer.autoChooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
-    state = "drive past line";
 
   }
 
@@ -123,92 +130,23 @@ public class Robot extends TimedRobot {
       Driver_Controller.SwerveControlSet(false);
     }
     // m_autoSelected = kDefaultAuto;
+
     switch (m_autoSelected) {
-      case kDefaultAuto:
-        /* int sDSPL = 1;
-        int sAutoDrive = 2;
-        int sArm = 3; */
-        /*
-        // System.out.println("works");
-        switch(state){
-          case "drive past line":
-          AutoDriveFinal.AutoDrive();
-            //if(driveSouthPastLine()){
-              System.out.println("auto");
-              //state = "auto";
-            //}
-            
-            break;
-          case "auto":
-          // AutoDriveFinal.AutoDrive();
-          Driver_Controller.SwerveControlSet(true);
-            RobotContainer.rotaryCalc(true);
-            //RobotContainer.drivingOn = 0;
-            if(AutoDriveFinal.AutoDrive()){
-              state = "drive";
-              System.out.println("switch to outtake");
-            }
-            
-              
-            break;
-          case "outtake":
-            // RobotContainer.drivingOn = 0;
-
-            if((scoringPos == 2) || (scoringPos == 6) ||(scoringPos == 10)){
-              if (Elevator.elevatorTo(Elevator.levelPosition[4])){
-                state = "outtake 2";
-                System.out.println("outtake 2");
-              }
-            }
-            else{
-              if (Elevator.elevatorTo(Elevator.levelPosition[3])){  // score at L3
-                // System.out.println("elevator L3");
-                state = "outtake 2";
-                System.out.println("outtake 2");
-              }
-            }
-            // System.out.println("outtake");
-            // state = "outtake 2";
-            break;
-          case "outtake 2":
-            if (Elevator.extendedOrRetracted != "extended"){
-              if(Elevator.lastExtendOrRetract == "retract"){
-                Elevator.armTimer = 0.0;
-              }
-              Elevator.moveElevatorArm("extend");
-            }else{
-                System.out.println("switch to elevator down");
-                state = "elevator down";
-            }
-            //state = "elevator down";
-            break;
-          case "elevator down":
-            if (((scoringPos%4) == 1 || (scoringPos%4) == 2)?Elevator.elevatorTo(Elevator.levelPosition[3]+40):Elevator.elevatorTo(Elevator.levelPosition[2]+40)){
-              state = "drive back";
-              System.out.println("switch to drive back");
-            }
-            break;
-          case "drive back":
-            scoringPos = (int) Driver_Controller.buttonReefPosition();
-            // System.out.println("drive back");
-            if(AutoDriveFinal.driveBackwards(scoringPos)){
-              System.out.println("break");
-            }
-            break;
-              
-          default:
-            System.out.println("default inside");
-        }*/
-
+      case Constants.kPassTheLine:
+        driveSouthPastLine();
         break;
-      case kCustomAuto:
-        if(driveSouthPastLine())
-          System.out.println("drive past line");
-
-        
-      break;
-      default:
-        System.out.println("default");
+      case Constants.kV1Auto:
+        RobotContainer.ScheduleV1.schedule();
+        break;
+      case Constants.kV2Auto:
+        RobotContainer.ScheduleV2.schedule();
+        break;
+      case Constants.kV3Auto:
+        RobotContainer.ScheduleV3.schedule();
+        break;
+      case Constants.kSoftAndSlowAuto:
+        RobotContainer.ScheduleSafeAndSlow.schedule();
+        break;
     }
   }
 
@@ -305,17 +243,21 @@ public class Robot extends TimedRobot {
       Elevator.currentLevel = -2;
     }
 
-    /*running a pathplanner path:
-      the first if statement is to start running a path. schedule has to be called multiple times. idk why.
-      */
-    /*if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
-      m_autonomousCommand = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+    /* running a pathplanner path: */
+      // the first if statement is to start running a path. schedule has to be called multiple times. idk why.
+    if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
+      // m_autonomousCommand = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+      RobotContainer.getAutonomousCommand();
+      m_autonomousCommand = RobotContainer.schedulePathplannerMove("path");
+      
       lastPressed = true;
       schedule = true;
     } else
       lastPressed = Driver_Controller.buttonResetElevator();
     if (Driver_Controller.buttonL1()) schedule = false;
-    if (schedule) m_autonomousCommand.schedule();*/
+    if (schedule) m_autonomousCommand.schedule();
+    /**/
+
     //if (Driver_Controller.buttonExtendClimb()) LED.sendData("pattern 1");
     //if (Driver_Controller.buttonRetractClimb()) LED.sendData("pattern 2");
   }
