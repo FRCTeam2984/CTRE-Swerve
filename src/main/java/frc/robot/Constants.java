@@ -34,6 +34,7 @@ public class Constants {
 
     // auto's
     public static final String kPassTheLine = "Pass the Line";
+    public static final String kTestingPathAuto = "Testing Path";
     public static final String kV1Auto = "V1";
     public static final String kV2Auto = "V2";
     public static final String kV3Auto = "V3";
