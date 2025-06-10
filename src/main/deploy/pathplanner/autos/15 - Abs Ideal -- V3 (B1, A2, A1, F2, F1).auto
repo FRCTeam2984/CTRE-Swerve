@@ -81,41 +81,11 @@
           "data": {
             "pathName": "V1 - HPS to F2"
           }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "V1 - F2 to HPS"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "V1 - HPS to Side F1"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Old paths",
   "choreoAuto": false
 }

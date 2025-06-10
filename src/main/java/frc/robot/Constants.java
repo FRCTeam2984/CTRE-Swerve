@@ -18,8 +18,6 @@ public class Constants {
         public static final int kDriverControllerPort3 = 2;
         public static final int kDriverControllerPort4 = 3;
     }
-    public static final int upperOuttakeSensorPort = 0;
-    public static final int lowerOuttakeSensorPort = 1;
 
     public static final int climbID = 17;
     public static final int intakeBeltID = 16;

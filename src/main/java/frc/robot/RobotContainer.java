@@ -54,7 +54,7 @@ public class RobotContainer {
     
         // Setting up bindings for necessary control of the swerve drive platform 
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-                .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
         private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -128,8 +128,6 @@ public class RobotContainer {
                     //System.out.println(rotaryJoystickInput);
         
                     return powerCurved * 0.09;
-                
-        
             }
         
             final static double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
@@ -165,6 +163,14 @@ public class RobotContainer {
                             .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
                     )
                 );
+            //System.out.println(rotaryJoystickInput);
+            if (powerCurved < 7 && powerCurved > 2){
+                powerCurved = 7;
+            }
+            if (powerCurved > -7 && powerCurved < -2){
+                powerCurved = -7;
+            }
+            return powerCurved * 0.09;
         
                 Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
                 Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->

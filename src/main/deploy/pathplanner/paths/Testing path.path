@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.468546009609271,
-        "y": 4.994356566700702
+        "x": 2.7564326298701296,
+        "y": 1.297057629870129
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.021408279220779,
-        "y": 6.076298701298701
+        "x": 2.90501868171815,
+        "y": 1.4981103224564691
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.5812094155844156,
-        "y": 7.251521915584415
+        "x": 3.7891576019061803,
+        "y": 2.896032335484074
       },
       "prevControl": {
-        "x": 1.5076639610389608,
-        "y": 6.758425324675323
+        "x": 3.333360389610389,
+        "y": 2.094784902597403
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,10 +32,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8,
+      "minWaypointRelativePos": 0.8487084870848708,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -45,7 +45,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "L4 SCORE",
+      "waypointRelativePos": 0.8991389913899147,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 1.0,
@@ -56,13 +63,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "BLUE REEF TO HPS",
+  "folder": null,
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 59.99999999999999
+    "velocity": 0.0,
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
   // String state = "drive past line";  // for setting autonomous state
 
   public Robot() {
-    //Elevator.sensorInit();
+    Elevator.sensorInit();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
     // m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
       Intake.rollerSpeed[i] = 0.0;
       Intake.rollerCurrent[i] = 0.0;
     }
+    Elevator.enableOuttakeSensors = true;
   }
   @Override
   public void robotInit() {
@@ -164,11 +165,11 @@ public class Robot extends TimedRobot {
     RobotContainer.rotaryCalc(true); // reset rotary joystick to robot angle
     schedule = false;
     Elevator.currentLevel = -1;
+    alliance = (DriverStation.getAlliance().toString().charAt(9) == 'B')?"blue":"red"; // finds the alliance
   }
 
   @Override
   public void teleopPeriodic() {
-    // NetworkTablesDesktopClient.getRobotPosition();
     if (Driver_Controller.driverSwitch()) {
       Limelight.limelightOdometryUpdate();
     }
@@ -177,7 +178,7 @@ public class Robot extends TimedRobot {
     // Send Data to LED Arduino
     //LED.sendData();
 
-    // setting elevator position
+    // setting elevator position from controller inputs
     Elevator.useLaserSensor = !Driver_Controller.switchExtraOnOff();
     if (Driver_Controller.buttonResetElevator()) Elevator.currentLevel = 0;
     if (Driver_Controller.buttonL2()) Elevator.currentLevel = 2;
@@ -185,9 +186,10 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
 
     // dealing with outtake
-    if (Driver_Controller.buttonL1()) Elevator.armMotor.set(-0.5);
-    else if (Driver_Controller.buttonTransportPivot()) Elevator.armMotor.set(-0.1);
-    else Elevator.armMotor.set(0.0);
+    if (Driver_Controller.buttonL1()) Elevator.outtakeMotor.set(-0.5);
+    else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
+    else if (Driver_Controller.buttonRemoveAlgae()) Elevator.outtakeMotor.set(0.2);
+    else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
     
     // dealing with intake
     if (Driver_Controller.switchAlgaeIntake() == false){
@@ -206,58 +208,74 @@ public class Robot extends TimedRobot {
       }
     }
 
-    // handling AutoDrive
-    if (Driver_Controller.buttonAutoDrive()){
-      Driver_Controller.SwerveControlSet(true);
+    // handling auto align
+    scoringPos = (int)Driver_Controller.ReefPosition()-1;
+    // if the red button by the joystick is pressed, automatically drives to the position designated by the rotary controller on the operator panel
+    if (Driver_Controller.buttonReefAlign()){
+      AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.scoringPosBlue[scoringPos][0]:AutoDriveFinal.scoringPosRed[scoringPos][0],
+                                (alliance == "blue")?AutoDriveFinal.scoringPosBlue[scoringPos][1]:AutoDriveFinal.scoringPosRed[scoringPos][1],
+                                AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
+                                2.0);
+    // if the yellow button by the joystick is pressed, automatically orients to the position designated by the rotary controller on the operator panel
+    } else if (Driver_Controller.buttonRotateToReef()){
+      AutoDriveFinal.driveToXYA(RobotContainer.drivetrain.getState().Pose.getX()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0],
+                                RobotContainer.drivetrain.getState().Pose.getY()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1],
+                                AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
+                                2.0);
+    //if the nearby white button is pressed, align to the closest HPS station on the current alliance
+    } else if (Driver_Controller.buttonHPSalign()){
+      Elevator.currentLevel = 1;
+      if (alliance == "blue"){
+        if (RobotContainer.drivetrain.getState().Pose.getY() > 4.025908052)
+        AutoDriveFinal.driveToXYA(1.18, 6.95, 306.0+180, 2.0);
+        else AutoDriveFinal.driveToXYA(1.18, 1.11, 54.0+180, 2.0);
+      }else{
+        if (RobotContainer.drivetrain.getState().Pose.getY() > 4.025908052)
+        AutoDriveFinal.driveToXYA(16.37, 6.95, 234.0+180, 2.0);
+        else AutoDriveFinal.driveToXYA(16.35, 1.13, 126.0+180, 2.0);
+      }
+    } else if (Driver_Controller.buttonRemoveAlign()){
+      AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[(scoringPos-1)/2][0]:AutoDriveFinal.algaeRemoveRed[(scoringPos-1)/2][0],
+                                (alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[(scoringPos-1)/2][1]:AutoDriveFinal.algaeRemoveRed[(scoringPos-1)/2][1],
+                                AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
+                                2.0);
+    }else if (autoDriveLastPressed){
+      // when the buttons are no longer being pressed, reset the robot spinner to the current orientation
+      Driver_Controller.SwerveCommandControl = false;
+      Driver_Controller.SwerveInputPeriodic();
       RobotContainer.rotaryCalc(true);
-      //RobotContainer.drivingOn = 0;
-      AutoDriveFinal.AutoDrive();/*
-      if (Driver_Controller.getLevel() != 0){
-        if (){
-          Elevator.elevatorTo((double) Driver_Controller.getLevel());
+    }
+    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign());
 
-        }
-      }
-      else {
-        Driver_Controller.SwerveCommandEncoderValue=RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
-        Driver_Controller.SwerveCommandXValue=0;
-        Driver_Controller.SwerveCommandYValue=0;
-      }*/
-    } 
-    else {
-      RobotContainer.drivingOn = 1;
-      Driver_Controller.SwerveControlSet(false);
-      if (autoDriveLastPressed){
-        RobotContainer.rotaryCalc(true);
-      }
-    } 
-    autoDriveLastPressed = Driver_Controller.buttonAutoDrive();
     Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
+
+    //fine adjustment for elevator
     if (Driver_Controller.buttonExtendClimb()){
-      Elevator.elevatorMotor.set(0.1);
+      Elevator.elevatorMotor.set(0.15);
       Elevator.currentLevel = -2;
     }
     if (Driver_Controller.buttonRetractClimb()){
-      Elevator.elevatorMotor.set(-0.1);
+      Elevator.elevatorMotor.set(-0.15);
       Elevator.currentLevel = -2;
     }
 
-    /* running a pathplanner path: */
-      // the first if statement is to start running a path. schedule has to be called multiple times. idk why.
-    if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
-      // m_autonomousCommand = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-      RobotContainer.getAutonomousCommand();
-      m_autonomousCommand = RobotContainer.schedulePathplannerMove("path");
-      
+    /*running a pathplanner path:
+      the first if statement is to start running a path. schedule has to be called multiple times. idk why.
+      the method schedulePathplannerMove() takes a string input, the name of an auto, and returns a command to schedule.
+      the variable schedule has to be set to false eventually, otherwise it will infinitely repeat.
+      to interrupt, run schedulePathplannerMove() but IMMEDIATELY set schedule to false.
+      */
+    /*if (Driver_Controller.buttonResetElevator() && (!lastPressed)){
+      m_autonomousCommand = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
       lastPressed = true;
       schedule = true;
     } else
       lastPressed = Driver_Controller.buttonResetElevator();
     if (Driver_Controller.buttonL1()) schedule = false;
-    if (schedule) m_autonomousCommand.schedule();
-    /**/
+    if (schedule) m_autonomousCommand.schedule();*/
 
+    //if these buttons are pressed, tell LED to activate
     //if (Driver_Controller.buttonExtendClimb()) LED.sendData("pattern 1");
     //if (Driver_Controller.buttonRetractClimb()) LED.sendData("pattern 2");
   }

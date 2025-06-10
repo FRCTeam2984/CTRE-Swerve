@@ -2,36 +2,39 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class Elevator{
-  //public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
-  //public static DigitalInput upperSensor = new DigitalInput(Constants.upperOuttakeSensorPort);
-  //public static DigitalInput lowerSensor = new DigitalInput(Constants.upperOuttakeSensorPort);
+  public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-  public static SparkMax armMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
-  public static RelativeEncoder outtakeEncoder = armMotor.getEncoder();
+  public static SparkMax outtakeMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  public static SparkLimitSwitch lowerSensor = outtakeMotor.getReverseLimitSwitch();
+  public static SparkLimitSwitch upperSensor = outtakeMotor.getForwardLimitSwitch();
+  public static RelativeEncoder outtakeEncoder = outtakeMotor.getEncoder();
   public static Double currentPosition,
                 armTimer = 0.0,
-                gravity = 0.0;
+                gravity = 0.03;
   public static Boolean bottomSwitchPressed,
-                useLaserSensor = false,
-                moveCoral = false;
+                useLaserSensor = true,
+                moveCoral = false,
+                enableOuttakeSensors;
   public static int currentLevel = 0;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.0, 123.0, 189.25}; // change l4
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.5, 123.5, 189.25}; // change l4
 
-  /*public static void sensorInit(){
+  public static void sensorInit(){
     try {
       laserSensor.setRangingMode(LaserCan.RangingMode.LONG);
       laserSensor.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
       laserSensor.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {}
-  }*/
+  }
 
   public static void elevatorPeriodic(){
     bottomSwitchPressed = elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround";
@@ -39,24 +42,35 @@ public class Elevator{
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
-      gravity = 0.0;
       if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
       else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
       else elevatorMotor.set(0.0);
+    }else if (currentLevel == 1){
+      elevatorTo(15.0);
     }else if (currentLevel > 1){
-      gravity = 0.03;
       elevatorTo(levelPosition[currentLevel]);
     }else if (currentLevel == -2){
       elevatorMotor.set(0.03);
     }
     else elevatorMotor.set(0.0);
-    // resisting coral when intaked
-    /*if (upperSensor.get()) outtakeEncoder.setPosition(0.0);
-    if (outtakeEncoder.get() < 20.0){
-      outtakeEncoder.set(100.0);
-      armMotor.set(0.0);
-    }else armMotor.set(0.1);
-    */
+
+    // moving coral when intaked
+    if (enableOuttakeSensors){
+    if (upperSensor.isPressed()){
+      System.out.println("upper sensor");
+      moveCoral = true;
+      outtakeMotor.set(-0.23);
+    }
+    if (lowerSensor.isPressed() && moveCoral){
+      moveCoral = false;
+      outtakeMotor.set(0.0);
+    }
+    }
+
+    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
+      System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
+    }
   }
 
   // function for keeping a variable between a lower and upper limit
@@ -107,7 +121,7 @@ public class Elevator{
       armTimer = 0.0;
       if (extendOrRetract == "extend") extendedOrRetracted = "extended"; else extendedOrRetracted = "retracted";
     }else extendedOrRetracted = "moving";
-    armMotor.set(power);
+    outtakeMotor.set(power);
     lastExtendOrRetract = extendOrRetract;
     return done;
     
@@ -119,7 +133,7 @@ public class Elevator{
       done = true;
       extendedOrRetracted = (extendOrRetract == "extend"?"extended":"retracted");
     }else extendedOrRetracted = "moving";
-    armMotor.set(power);
+    outtakeMotor.set(power);
     return done;
   }*/
 

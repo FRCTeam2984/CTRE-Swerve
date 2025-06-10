@@ -26,11 +26,13 @@ public class Intake {
     public static Double currentPosition, intakeGravity, desiredPosition, powerFactor = 1.0;
 
     public static void intakePeriodic(){
+        // updating values
         retractedSwitchPressed = outsideSwitch.isPressed(); extendedSwitchPressed = insideSwitch.isPressed();
         if (outsideSwitch.isPressed()){intakeEncoder.setPosition(0.0);}
         else if (insideSwitch.isPressed()){intakeEncoder.setPosition(48.64);}
         currentPosition = -intakeEncoder.getPosition();
         intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-6)/105) * -0.04;
+        // moving the arm based on inputs
         switch(intakeState){
             case "remove":
                 desiredPosition = 12.0;
@@ -123,13 +125,13 @@ public class Intake {
         Double maxRPM = 6000.0, maxCurrent = 20.0;
         Double allowedCurrent = 2+(averageSpeed/maxRPM)*(maxCurrent-2);
         powerFactor = clamp(0.1, 1.0, 2.0-(2.0*averageCurrent/allowedCurrent));
-        System.out.print("outputs ");
+        /*System.out.print("outputs ");
         System.out.print(averageCurrent);
         System.out.print(' ');
         System.out.print((int)(1*averageSpeed));
         System.out.print(' ');
         //if (powerFactor < 0.99)
-        System.out.println((int) (100*powerFactor));
+        System.out.println((int) (100*powerFactor));*/
     }
     /*
     // function for intaking coral

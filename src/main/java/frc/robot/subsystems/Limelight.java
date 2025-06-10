@@ -16,12 +16,12 @@ public class Limelight {
     public static void limelightInit(){
         // Set camera offset from middle of robot
         LimelightHelpers.setCameraPose_RobotSpace("limelight", 
-        0.27,    // Forward offset (meters)
-        0.04,    // Side offset (meters)
-        0.37,    // Height offset (meters)
+        -0.25,    // Forward offset (meters)
+        0.03,    // Side offset (meters)
+        0.365,    // Height offset (meters)
         0.0,    // Roll (degrees)
         0.0,   // Pitch (degrees)
-        0.0     // Yaw (degrees)
+        180.0     // Yaw (degrees)
         );
     }
                   
@@ -31,7 +31,9 @@ public class Limelight {
         seconds = Utils.getCurrentTimeSeconds();
         
         if (hasTarget){
+            Boolean resetNeeded = (Math.abs(LimelightGeneratedPose2d.getRotation().getDegrees()-RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()) > 5.0); 
             RobotContainer.drivetrain.addVisionMeasurement(LimelightGeneratedPose2d, seconds);
+            if (resetNeeded) RobotContainer.rotaryCalc(true);
             System.out.println(LimelightGeneratedPose2d);
         }
     }
