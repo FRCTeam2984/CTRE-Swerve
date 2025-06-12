@@ -89,6 +89,8 @@ public class RobotContainer {
 <<<<<<< HEAD
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+        
+
         PathPlannerAuto V1 = new PathPlannerAuto("15sec -- V1 (A2, A1, F2, F1)");
         PathPlannerAuto V2 = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
         PathPlannerAuto V3 = new PathPlannerAuto("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
@@ -193,6 +195,11 @@ public class RobotContainer {
 
 
             private void configureBindings() {
+                
+
+
+
+
                 // Note that X is defined as forward according to WPILib convention,
                 // and Y is defined as to the left according to WPILib convention.
                 boolean drive_enable=true;
