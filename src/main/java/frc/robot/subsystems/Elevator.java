@@ -24,10 +24,9 @@ public class Elevator{
   public static Boolean bottomSwitchPressed,
                 useLaserSensor = true,
                 moveCoral = false,
-                enableOuttakeSensors,
-                atPosition = false;
+                enableOuttakeSensors;
   public static int currentLevel = 0;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 72.0, 119.0, 189.25}; // change l4
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 77.5, 123.5, 189.25}; // change l4
 
   public static void sensorInit(){
     try {
@@ -43,16 +42,13 @@ public class Elevator{
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
-      if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) atPosition = elevatorTo(-99999.0);
+      if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
       else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
-      else{
-        atPosition = true;
-        elevatorMotor.set(0.0);
-      }
+      else elevatorMotor.set(0.0);
     }else if (currentLevel == 1){
-      atPosition = elevatorTo(15.0);
+      elevatorTo(15.0);
     }else if (currentLevel > 1){
-      atPosition = elevatorTo(levelPosition[currentLevel]);
+      elevatorTo(levelPosition[currentLevel]);
     }else if (currentLevel == -2){
       elevatorMotor.set(0.03);
     }

@@ -86,7 +86,17 @@ public class RobotContainer {
         
         //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
     
+<<<<<<< HEAD
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+=======
+        public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        
+        private final SendableChooser<String> autoChooser = new SendableChooser<>();
+        
+        public RobotContainer() {
+            autoChooser.addOption("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+            //autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
+>>>>>>> parent of c685e2e (added auto remove and autonomous)
 
         
 

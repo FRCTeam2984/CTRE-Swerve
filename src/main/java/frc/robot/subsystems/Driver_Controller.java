@@ -139,8 +139,6 @@ public static Boolean buttonHPSalign(){
     return m_Controller1.getRawButton(3);}
 public static Boolean buttonRemoveAlign(){
     return m_Controller1.getRawButton(4);}
-public static Boolean buttonAutoRemove(){
-    return m_Controller1.getRawButton(8);}
     
 
 public static Boolean buttonExtendClimb(){
