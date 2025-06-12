@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -34,14 +35,33 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FileVersionException;
 
+import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Rotary_Controller;
+/* Import Subsystems */
+// import frc.robot.subsystems.Climb;
+// import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Driver_Controller;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Limelight;
-import frc.robot.Constants;
+import frc.robot.subsystems.Rotary_Controller;
+
 
 public class RobotContainer {
+    // The robot's subsystems and commands are defined here...
+    // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+    // private final CommandSwerveDrivetrain m_commandSwerveDrivetrain = new CommandSwerveDrivetrain();
+    private final Driver_Controller m_driverController = new Driver_Controller();
+    private final Elevator m_elevator = new Elevator();
+    private final Intake m_intake = new Intake();
+    private final LED m_LED = new LED();
+    private final Limelight m_limelight = new Limelight();
+    private final Rotary_Controller m_rotaryController = new Rotary_Controller();
+
+
+    
     public static Boolean needToReset = true;
     public static int drivingOn = 1;
     public static double robotOffset = 0;
@@ -66,7 +86,19 @@ public class RobotContainer {
         
         //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
     
+<<<<<<< HEAD
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+=======
+        public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        
+        private final SendableChooser<String> autoChooser = new SendableChooser<>();
+        
+        public RobotContainer() {
+            autoChooser.addOption("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+            //autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
+>>>>>>> parent of c685e2e (added auto remove and autonomous)
+
+        
 
         PathPlannerAuto V1 = new PathPlannerAuto("15sec -- V1 (A2, A1, F2, F1)");
         PathPlannerAuto V2 = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
@@ -82,6 +114,11 @@ public class RobotContainer {
         public static final SendableChooser<String> autoChooser = new SendableChooser<>();
 
                 public RobotContainer() {
+                    // Configure the trigger bindings
+                    configureBindings();
+
+
+
                     autoChooser.setDefaultOption("Pass the Line", Constants.kPassTheLine);
                     autoChooser.addOption("Testing Path", Constants.kTestingPathAuto);
                     autoChooser.addOption("V1", Constants.kV1Auto);
@@ -95,9 +132,12 @@ public class RobotContainer {
                     //SmartDashboard.putData("Auto Mode", autoChooser);
                     //joystick = Driver_Controller.m_Controller0;
                     //joystick2 = Driver_Controller.m_Controller1;
-                    configureBindings();
+                    // configureBindings();
                     FollowPathCommand.warmupCommand().schedule();
                 }
+
+
+
                 public static double rotaryCalc(Boolean resetToRobot){
                     //Driver_Controller.SwerveInputPeriodic();
                     double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
@@ -137,8 +177,10 @@ public class RobotContainer {
                     return powerCurved * 0.09;
             }
         
+
             final static double pos[] = {-1.0,-0.75,-0.5,-0.1 ,-0.03, 0,0.03, 0.1, 0.5, 0.75,1};
             final static double pwr[] = {-1  , -0.3,-0.1,-0.02,    0, 0,   0,0.02, 0.1,   .3,1};
+
             public static double joystick_curve(double joy) {
                 int i;
                 if (joy<=-1) joy=-1;
@@ -151,6 +193,7 @@ public class RobotContainer {
                 }
                 return(0);
             }
+
             public static double[] betterJoystickCurve(double x, double y) {
                 double radius = Math.sqrt((x*x)+(y*y));
                 double angle = Math.atan2(y, x);
@@ -158,7 +201,14 @@ public class RobotContainer {
                 double[] returnValue = {Math.sin(angle)*radius, Math.cos(angle)*radius};
                 return returnValue;
             }
+
+
             private void configureBindings() {
+
+
+
+
+
                 // Note that X is defined as forward according to WPILib convention,
                 // and Y is defined as to the left according to WPILib convention.
                 boolean drive_enable=true;
