@@ -80,6 +80,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+
+
+
+
     // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     Driver_Controller.SwerveControlSet(true);
     // init controllers???
