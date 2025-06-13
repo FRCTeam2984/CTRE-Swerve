@@ -1,4 +1,3 @@
-@ -1,336 +1,339 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -9,10 +8,7 @@ import java.util.Optional;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.SignalLogger;
-import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPLTVController;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -37,18 +33,15 @@ import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   Boolean schedule = false, lastPressed = false;
-  int scoringPos = (int) Driver_Controller.buttonReefPosition();
   int scoringPos = (int) Driver_Controller.ReefPosition();
-  // private static final String kDefaultAuto = "score + de-algae 1x";
-  // private static final String kCustomAuto = "My Auto";
-  // private String m_autoSelected;
-  // private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static final String kDefaultAuto = "score + de-algae 1x";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected, alliance;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public Command m_autonomousCommand;
   public static final RobotContainer m_robotContainer = new RobotContainer();
   Boolean autoDriveLastPressed = false;
-
-  String m_autoSelected;
-  String m_autoSelected, alliance;
+  public static Double autoTimer = 0.0;
 
   // String state = "drive past line";  // for setting autonomous state
 
@@ -85,6 +78,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+
+
+
+
     // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     Driver_Controller.SwerveControlSet(true);
     // init controllers???
@@ -107,6 +110,7 @@ public class Robot extends TimedRobot {
 
     m_autoSelected = RobotContainer.autoChooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
+    state = "drive past line";
 
   }
 
@@ -114,47 +118,142 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     
     //driveSouthPastLine();
+    /*
     Driver_Controller.SwerveInputPeriodic();
-    //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
-    //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
-    // AutoDriveTest.AutoDrive(0, 0, 0);
-    //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
-
-    //Driver_Controller.SwerveCommandXValue = -0.5;
-    //Driver_Controller.SwerveCommandEncoderValue = 300;
-    // todo: drive 1m south (towards driver/operators)
-    // todo: reset rotary_joystick
-    // 4.07, 3.25
-    if (Driver_Controller.m_Controller2.getRawButton(4)){
-      System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
-      Driver_Controller.SwerveControlSet(true);
-      Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
-    }
-    else{
-      Driver_Controller.SwerveControlSet(false);
-    }
-    // m_autoSelected = kDefaultAuto;
-
-    switch (m_autoSelected) {
-      case Constants.kPassTheLine:
-        driveSouthPastLine();
+    switch(state){
+      case "reef align 1":
+        Elevator.currentLevel = 2;
+        if (event marker){
+          schedule = false;
+          Elevator.atPosition = false;
+          Elevator.currentLevel = 4;
+          state = "score 1";
+          m_autonomousCommand = RobotContainer.schedulePathplannerMove("PLS CHANGE go to hps");
+        }
         break;
-      case Constants.kTestingPathAuto:
-        RobotContainer.ScheduleTestingPath.schedule();
+      case "score 1":
+        if (Elevator.atPosition && Elevator.currentLevel == 4){
+          autoTimer += 0.02;
+        }
+        if (autoTimer >= 0.5){
+          Elevator.outtakeMotor.set(0.0);
+          Elevator.currentLevel = 2;
+          Elevator.atPosition = false;
+        }else{
+          Elevator.outtakeMotor.set(-0.5);
+        }
+        if (Elevator.atPosition && Elevator.currentLevel == 2){
+          Elevator.currentLevel = 1;
+          schedule = true;
+          autoTimer = 0.0;
+          state = "hps 1";
+        }
         break;
-      case Constants.kV1Auto:
-        RobotContainer.ScheduleV1.schedule();
+      case "hps 1":
+        if (event marker){
+          schedule = false;
+          Elevator.atPosition = false;
+          state = "intake 1";
+          m_autonomousCommand = RobotContainer.schedulePathplannerMove("PLS CHANGE go to reef");
+        }
         break;
-      case Constants.kV2Auto:
-        RobotContainer.ScheduleV2.schedule();
+      case "intake 1":
+        if (Elevator.upperSensor.isPressed()){
+          state = "reef align 2";
+          schedule = true;
+          Elevator.currentLevel = 2;
+        }
         break;
-      case Constants.kV3Auto:
-        RobotContainer.ScheduleV3.schedule();
+      case "reef align 2":
+        if (event marker){
+          schedule = false;
+          Elevator.atPosition = false;
+          Elevator.currentLevel = 4;
+          state = "score 2";
+          m_autonomousCommand = RobotContainer.schedulePathplannerMove("PLS CHANGE go to hps");
+        }
         break;
-      case Constants.kSoftAndSlowAuto:
-        RobotContainer.ScheduleSafeAndSlow.schedule();
+      case "score 2":
+        if (Elevator.atPosition && Elevator.currentLevel == 4){
+          autoTimer += 0.02;
+        }
+        if (autoTimer >= 0.5){
+          Elevator.outtakeMotor.set(0.0);
+          Elevator.currentLevel = 2;
+          Elevator.atPosition = false;
+        }else{
+          Elevator.outtakeMotor.set(-0.5);
+        }
+        if (Elevator.atPosition && Elevator.currentLevel == 2){
+          Elevator.currentLevel = 1;
+          schedule = true;
+          autoTimer = 0.0;
+          state = "hps 2";
+        }
         break;
-    }
+      case "hps 2":
+        if (event marker){
+          schedule = false;
+          Elevator.atPosition = false;
+          state = "intake 2";
+          m_autonomousCommand = RobotContainer.schedulePathplannerMove("PLS CHANGE go to reef");
+        }
+        break;
+      case "intake 2":
+        if (Elevator.upperSensor.isPressed()){
+          state = "reef align 3";
+          schedule = true;
+          Elevator.currentLevel = 2;
+        }
+        break;
+      case "reef align 3":
+        Elevator.currentLevel = 2;
+        if (event marker){
+          schedule = false;
+          Elevator.atPosition = false;
+          state = "score 3";
+          m_autonomousCommand = RobotContainer.schedulePathplannerMove("PLS CHANGE go to hps");
+        }
+        break;
+      case "score 3":
+        Elevator.currentLevel = 4;
+        if (Elevator.atPosition && Elevator.currentLevel == 4){
+          autoTimer += 0.02;
+        }
+        if (autoTimer >= 0.5){
+          Elevator.outtakeMotor.set(0.0);
+          Elevator.currentLevel = 2;
+          Elevator.atPosition = false;
+        }else{
+          Elevator.outtakeMotor.set(-0.5);
+        }
+        if (Elevator.atPosition && Elevator.currentLevel == 2){
+          Elevator.currentLevel = 1;
+          schedule = true;
+          autoTimer = 0.0;
+          state = "hps 3";
+        }
+        break;
+      case "hps 3":
+        if (event marker){
+          schedule = false;
+          Elevator.atPosition = false;
+          state = "intake 3";
+          m_autonomousCommand = RobotContainer.schedulePathplannerMove("PLS CHANGE go to reef");
+        }
+        break;
+      case "intake 3":
+        if (Elevator.upperSensor.isPressed()){
+          state = "end";
+          //schedule = true;
+          Elevator.currentLevel = 2;
+        }
+        break;
+      
+    }*/
+    Intake.intakePeriodic();
+    Elevator.elevatorPeriodic();
+    if (schedule) m_autonomousCommand.schedule();
   }
 
   @Override
