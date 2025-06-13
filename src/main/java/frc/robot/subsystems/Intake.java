@@ -43,11 +43,14 @@ public class Intake {
                 else intakePivot.set(-0.3);
                 break;
             case "intake":
-                desiredPosition = 22.0;
+                // 22;
+                desiredPosition = 22.2;
                 moveIntake();
                 break;
             case "retract":
                 retract();
+                // might cause issues;
+                desiredPosition = 22.0;
                 break;
         }
         controlRoller();

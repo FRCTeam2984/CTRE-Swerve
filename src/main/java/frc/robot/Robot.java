@@ -299,7 +299,8 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.switchAlgaeIntake() == false){
       Intake.intakeState = "intake";
       if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(0.3);
-      else Intake.bottomIntake.set(-0.5*Intake.powerFactor);
+      // -0.5
+      else Intake.bottomIntake.set(-0.6*Intake.powerFactor);
     }else{
       if (Driver_Controller.buttonCoralStationIntake()){
         Intake.intakeState = "remove";
