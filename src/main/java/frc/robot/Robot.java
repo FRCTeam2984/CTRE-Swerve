@@ -110,7 +110,6 @@ public class Robot extends TimedRobot {
 
     m_autoSelected = RobotContainer.autoChooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
-    state = "drive past line";
 
   }
 
