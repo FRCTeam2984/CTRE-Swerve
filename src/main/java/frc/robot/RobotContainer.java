@@ -86,7 +86,6 @@ public class RobotContainer {
         
         //private final XboxController joystick2 = new XboxController(Driver_Controller.SwerveRotaryEncoderPort);// = new Joystick(1);
     
-<<<<<<< HEAD
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
         
