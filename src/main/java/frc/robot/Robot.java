@@ -290,7 +290,7 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
 
     // dealing with outtake
-    if (Driver_Controller.buttonL1()) Elevator.outtakeMotor.set(-0.5);
+    if (Driver_Controller.buttonL1()) Elevator.outtakeMotor.set(-0.6);
     else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
     else if (Driver_Controller.buttonRemoveAlgae()) Elevator.outtakeMotor.set(0.2);
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
