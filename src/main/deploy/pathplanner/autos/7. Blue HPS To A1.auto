@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "BLUE HPS TO A1"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Paths past June 9",
+  "folder": "USE - 4 piece, BLUE Sides A and B",
   "choreoAuto": false
 }

@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing path"
+            "pathName": "Blue Pos3 to C1"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Don't use - Old paths",
+  "folder": "USE - 1 piece, BLUE Side C1 and Stop",
   "choreoAuto": false
 }

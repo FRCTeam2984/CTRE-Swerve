@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing path"
+            "pathName": "Red Pos3 To F1"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Don't use - Old paths",
+  "folder": "USE - 1 piece, RED Side F1 and Stop",
   "choreoAuto": false
 }

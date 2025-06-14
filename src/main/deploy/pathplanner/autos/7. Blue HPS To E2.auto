@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing path"
+            "pathName": "BLUE HPS TO E2 FROM BOTTOM"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Don't use - Old paths",
+  "folder": "USE - 4 piece, BLUE Sides D and E",
   "choreoAuto": false
 }

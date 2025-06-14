@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing path"
+            "pathName": "RED D2 TO HPS"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Don't use - Old paths",
+  "folder": "USE - 4 piece, RED, Sides E and D",
   "choreoAuto": false
 }
