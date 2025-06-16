@@ -87,29 +87,9 @@ public class RobotContainer {
     
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-        PathPlannerAuto V1 = new PathPlannerAuto("15sec -- V1 (A2, A1, F2, F1)");
-        PathPlannerAuto V2 = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
-        PathPlannerAuto V3 = new PathPlannerAuto("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-        PathPlannerAuto SafeAndSlow = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
-
-        // public static Command ScheduleTestingPath = RobotContainer.schedulePathplannerMove("Testing path");
-        // public static Command ScheduleV1 = RobotContainer.schedulePathplannerMove("15sec -- V1 (A2, A1, F2, F1)");
-        // public static Command ScheduleV2 = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
-        // public static Command ScheduleV3 = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-        // public static Command ScheduleSafeAndSlow = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
-
         public static SendableChooser<Command> autoChooser;
 
                 public RobotContainer() {
-                    // autoChooser.setDefaultOption("Pass the Line", Constants.kPassTheLine);
-                    // autoChooser.addOption("Testing Path", Constants.kTestingPathAuto);
-                    // autoChooser.addOption("V1", Constants.kV1Auto);
-                    // autoChooser.addOption("V2", Constants.kV2Auto);
-                    // autoChooser.addOption("V3", Constants.kV3Auto);
-                    // autoChooser.addOption("SoftAndSlow", Constants.kSoftAndSlowAuto);
-                    // autoChooser.addOption("V3", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-                    // autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
-
 
                     // Build an auto chooser. This will use Commands.none() as the default option.
                     autoChooser = AutoBuilder.buildAutoChooser();

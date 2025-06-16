@@ -37,17 +37,12 @@ import frc.robot.subsystems.LED;
 public class Robot extends TimedRobot {
   Boolean schedule = false, lastPressed = false;
   int scoringPos = (int) Driver_Controller.ReefPosition();
-  // private static final String kDefaultAuto = "score + de-algae 1x";
-  // private static final String kCustomAuto = "My Auto";
-  // private String m_autoSelected;
-  // private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  // public static final RobotContainer m_robotContainer = new RobotContainer();
   Boolean autoDriveLastPressed = false;
 
   String m_autoSelected, alliance;
 
-  // String state = "drive past line";  // for setting autonomous state
+  
 
   private Command m_autonomousCommand;
 
@@ -56,11 +51,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     Elevator.sensorInit();
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
-    // double[] value = table.getEntry("robotPose")
-    // m_chooser.setDefaultOption("score + de-algae 1x", kDefaultAuto);
-    // m_chooser.addOption("JUST DRIVE OUT OF ZONE", kCustomAuto);
-    // SmartDashboard.putData("Auto choices", m_chooser);
+
     for (int i = 0; i < Intake.historyLength; ++i){
       Intake.rollerSpeed[i] = 0.0;
       Intake.rollerCurrent[i] = 0.0;
@@ -124,51 +115,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {
-    
-    // //driveSouthPastLine();
-    // Driver_Controller.SwerveInputPeriodic();
-    // //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
-    // //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
-    // // AutoDriveTest.AutoDrive(0, 0, 0);
-    // //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
-
-    // //Driver_Controller.SwerveCommandXValue = -0.5;
-    // //Driver_Controller.SwerveCommandEncoderValue = 300;
-    // // todo: drive 1m south (towards driver/operators)
-    // // todo: reset rotary_joystick
-    // // 4.07, 3.25
-    // if (Driver_Controller.m_Controller2.getRawButton(4)){
-    //   System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
-    //   Driver_Controller.SwerveControlSet(true);
-    //   Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
-    // }
-    // else{
-    //   Driver_Controller.SwerveControlSet(false);
-    // }
-    // // m_autoSelected = kDefaultAuto;
-
-    // switch (m_autoSelected) {
-    //   case Constants.kPassTheLine:
-    //     driveSouthPastLine();
-    //     break;
-    //   case Constants.kTestingPathAuto:
-    //     RobotContainer.ScheduleTestingPath.schedule();
-    //     break;
-    //   case Constants.kV1Auto:
-    //     RobotContainer.ScheduleV1.schedule();
-    //     break;
-    //   case Constants.kV2Auto:
-    //     RobotContainer.ScheduleV2.schedule();
-    //     break;
-    //   case Constants.kV3Auto:
-    //     RobotContainer.ScheduleV3.schedule();
-    //     break;
-    //   case Constants.kSoftAndSlowAuto:
-    //     RobotContainer.ScheduleSafeAndSlow.schedule();
-    //     break;
-    // }
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void autonomousExit() {
