@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Red Pos1 to E2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED E2 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED HPS TO E1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED E1 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED HPS TO D2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED D2 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED HPS TO D1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Don't use - compiled paths",
+  "choreoAuto": false
+}
