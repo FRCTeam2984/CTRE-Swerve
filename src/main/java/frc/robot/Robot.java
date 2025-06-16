@@ -41,13 +41,18 @@ public class Robot extends TimedRobot {
   // private static final String kCustomAuto = "My Auto";
   // private String m_autoSelected;
   // private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  public Command m_autonomousCommand;
-  public static final RobotContainer m_robotContainer = new RobotContainer();
+
+  // public static final RobotContainer m_robotContainer = new RobotContainer();
   Boolean autoDriveLastPressed = false;
 
   String m_autoSelected, alliance;
 
   // String state = "drive past line";  // for setting autonomous state
+
+  private Command m_autonomousCommand;
+
+  private RobotContainer m_robotContainer;
+
 
   public Robot() {
     Elevator.sensorInit();
@@ -64,11 +69,15 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
+    CommandScheduler.getInstance().run();
+
   }
 
   @Override
@@ -98,60 +107,67 @@ public class Robot extends TimedRobot {
     Driver_Controller.SwerveCommandXValue = 0;
     Driver_Controller.SwerveCommandYValue = 0;
     
-    // m_autoSelected = m_chooser.getSelected();
-    // System.out.println("Auto selected: " + m_autoSelected);
-    // state = "drive past line";
+    // // m_autoSelected = m_chooser.getSelected();
+    // // System.out.println("Auto selected: " + m_autoSelected);
+    // // state = "drive past line";
 
-    m_autoSelected = RobotContainer.autoChooser.getSelected();
-    System.out.println("Auto selected: " + m_autoSelected);
+    // // m_autoSelected = RobotContainer.autoChooser.getSelected();
+    // System.out.println("Auto selected: " + m_autoSelected);
+
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
 
   }
 
   @Override
   public void autonomousPeriodic() {
     
-    //driveSouthPastLine();
-    Driver_Controller.SwerveInputPeriodic();
-    //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
-    //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
-    // AutoDriveTest.AutoDrive(0, 0, 0);
-    //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
+    // //driveSouthPastLine();
+    // Driver_Controller.SwerveInputPeriodic();
+    // //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
+    // //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
+    // // AutoDriveTest.AutoDrive(0, 0, 0);
+    // //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
 
-    //Driver_Controller.SwerveCommandXValue = -0.5;
-    //Driver_Controller.SwerveCommandEncoderValue = 300;
-    // todo: drive 1m south (towards driver/operators)
-    // todo: reset rotary_joystick
-    // 4.07, 3.25
-    if (Driver_Controller.m_Controller2.getRawButton(4)){
-      System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
-      Driver_Controller.SwerveControlSet(true);
-      Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
-    }
-    else{
-      Driver_Controller.SwerveControlSet(false);
-    }
-    // m_autoSelected = kDefaultAuto;
+    // //Driver_Controller.SwerveCommandXValue = -0.5;
+    // //Driver_Controller.SwerveCommandEncoderValue = 300;
+    // // todo: drive 1m south (towards driver/operators)
+    // // todo: reset rotary_joystick
+    // // 4.07, 3.25
+    // if (Driver_Controller.m_Controller2.getRawButton(4)){
+    //   System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
+    //   Driver_Controller.SwerveControlSet(true);
+    //   Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
+    // }
+    // else{
+    //   Driver_Controller.SwerveControlSet(false);
+    // }
+    // // m_autoSelected = kDefaultAuto;
 
-    switch (m_autoSelected) {
-      case Constants.kPassTheLine:
-        driveSouthPastLine();
-        break;
-      case Constants.kTestingPathAuto:
-        RobotContainer.ScheduleTestingPath.schedule();
-        break;
-      case Constants.kV1Auto:
-        RobotContainer.ScheduleV1.schedule();
-        break;
-      case Constants.kV2Auto:
-        RobotContainer.ScheduleV2.schedule();
-        break;
-      case Constants.kV3Auto:
-        RobotContainer.ScheduleV3.schedule();
-        break;
-      case Constants.kSoftAndSlowAuto:
-        RobotContainer.ScheduleSafeAndSlow.schedule();
-        break;
-    }
+    // switch (m_autoSelected) {
+    //   case Constants.kPassTheLine:
+    //     driveSouthPastLine();
+    //     break;
+    //   case Constants.kTestingPathAuto:
+    //     RobotContainer.ScheduleTestingPath.schedule();
+    //     break;
+    //   case Constants.kV1Auto:
+    //     RobotContainer.ScheduleV1.schedule();
+    //     break;
+    //   case Constants.kV2Auto:
+    //     RobotContainer.ScheduleV2.schedule();
+    //     break;
+    //   case Constants.kV3Auto:
+    //     RobotContainer.ScheduleV3.schedule();
+    //     break;
+    //   case Constants.kSoftAndSlowAuto:
+    //     RobotContainer.ScheduleSafeAndSlow.schedule();
+    //     break;
+    // }
   }
 
   @Override
@@ -161,6 +177,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+
+
+
     //Elevator.extendedOrRetracted = "retracted";
     Limelight.limelightInit();
     Driver_Controller.define_Controller();
@@ -288,6 +314,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 

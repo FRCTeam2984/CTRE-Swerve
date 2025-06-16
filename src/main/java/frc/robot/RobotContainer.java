@@ -92,23 +92,27 @@ public class RobotContainer {
         PathPlannerAuto V3 = new PathPlannerAuto("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
         PathPlannerAuto SafeAndSlow = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
 
-        public static Command ScheduleTestingPath = RobotContainer.schedulePathplannerMove("Testing path");
-        public static Command ScheduleV1 = RobotContainer.schedulePathplannerMove("15sec -- V1 (A2, A1, F2, F1)");
-        public static Command ScheduleV2 = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
-        public static Command ScheduleV3 = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-        public static Command ScheduleSafeAndSlow = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
+        // public static Command ScheduleTestingPath = RobotContainer.schedulePathplannerMove("Testing path");
+        // public static Command ScheduleV1 = RobotContainer.schedulePathplannerMove("15sec -- V1 (A2, A1, F2, F1)");
+        // public static Command ScheduleV2 = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
+        // public static Command ScheduleV3 = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+        // public static Command ScheduleSafeAndSlow = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
 
-        public static final SendableChooser<String> autoChooser = new SendableChooser<>();
+        public static SendableChooser<Command> autoChooser;
 
                 public RobotContainer() {
-                    autoChooser.setDefaultOption("Pass the Line", Constants.kPassTheLine);
-                    autoChooser.addOption("Testing Path", Constants.kTestingPathAuto);
-                    autoChooser.addOption("V1", Constants.kV1Auto);
-                    autoChooser.addOption("V2", Constants.kV2Auto);
-                    autoChooser.addOption("V3", Constants.kV3Auto);
-                    autoChooser.addOption("SoftAndSlow", Constants.kSoftAndSlowAuto);
+                    // autoChooser.setDefaultOption("Pass the Line", Constants.kPassTheLine);
+                    // autoChooser.addOption("Testing Path", Constants.kTestingPathAuto);
+                    // autoChooser.addOption("V1", Constants.kV1Auto);
+                    // autoChooser.addOption("V2", Constants.kV2Auto);
+                    // autoChooser.addOption("V3", Constants.kV3Auto);
+                    // autoChooser.addOption("SoftAndSlow", Constants.kSoftAndSlowAuto);
                     // autoChooser.addOption("V3", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
                     // autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
+
+
+                    // Build an auto chooser. This will use Commands.none() as the default option.
+                    autoChooser = AutoBuilder.buildAutoChooser();
         
                     SmartDashboard.putData("Auto Chooser", autoChooser);
                     //SmartDashboard.putData("Auto Mode", autoChooser);
@@ -208,42 +212,10 @@ public class RobotContainer {
                 drivetrain.registerTelemetry(logger::telemeterize);
             }
         
-            public static Command getAutonomousCommand() {
-        // // return autoChooser.getSelected();
-        // try {
-        //     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        //             new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)),
-        //             new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
-        //             new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
-        //     );
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
 
-        //     PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
-        //     // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
-
-        //     // Create the path using the waypoints created above
-        //     PathPlannerPath path = new PathPlannerPath(
-        //             waypoints,
-        //             constraints,
-        //             null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-        //             new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        //     );
-
-        //     // Prevent the path from being flipped if the coordinates are already correct
-        //     path.preventFlipping = true;
-        //     return AutoBuilder.followPath(path);
-        //   //PathPlannerPath examplePath = PathPlannerPath.fromPathFile("Example Path");
-        //   //return AutoBuilder.buildAuto("New Auto");
-        // } catch (FileVersionException e) {
-        //   // TODO Auto-generated catch block
-        //   e.printStackTrace();
-        // //} //catch (IOException e) {
-        //   // TODO Auto-generated catch block
-        //   //e.printStackTrace();
-        // //} //catch (ParseException e) {
-        //   // TODO Auto-generated catch block
-        //   //e.printStackTrace();
-        // }
-        return Commands.print("No autonomous command configured");
+        // return Commands.print("No autonomous command configured");
     }
 
     public static Command schedulePathplannerMove(String move) {
@@ -253,5 +225,5 @@ public class RobotContainer {
           e.printStackTrace();
         }
         return Commands.print("No autonomous command configured");
-    }   
+    }
 }
