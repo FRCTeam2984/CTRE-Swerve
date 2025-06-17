@@ -86,6 +86,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Don't use - Old paths",
+  "folder": "Old paths",
   "choreoAuto": false
 }

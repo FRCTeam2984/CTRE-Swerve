@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.482,
-        "y": 0.8172499999999991
+        "x": 1.431635551948052,
+        "y": 0.8697037337662334
       },
       "prevControl": {
-        "x": 1.638392093151733,
-        "y": 1.0122923369415444
+        "x": 1.588027645099785,
+        "y": 1.0647460707077796
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,14 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "HPS",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 1.0,
