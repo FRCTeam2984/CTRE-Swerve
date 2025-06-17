@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.235125811688311,
-        "y": 0.6132913961038957
+        "x": 10.296,
+        "y": 7.25225
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.484926051368758,
-        "y": 0.6032993865166775
+        "x": 11.295999999999998,
+        "y": 7.25225
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 10.683847402597403,
-        "y": 0.6132913961038957
+        "x": 11.202750000000002,
+        "y": 7.25225
       },
       "prevControl": {
-        "x": 10.434032108939574,
-        "y": 0.6036831155785943
+        "x": 10.202750000000002,
+        "y": 7.25225
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Leave Zone Autos",
+  "folder": "Leave zone",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
