@@ -3,7 +3,6 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<< HEAD
         "x": 1.6066108375451063,
         "y": 7.313422246019644
       },
@@ -11,36 +10,18 @@
       "nextControl": {
         "x": 1.7835555828208822,
         "y": 6.781468091785906
-=======
-        "x": 10.296,
-        "y": 7.25225
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 11.295999999999998,
-        "y": 7.25225
->>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<< HEAD
         "x": 3.1608456408415786,
         "y": 4.3898564018512864
       },
       "prevControl": {
         "x": 2.257853084416714,
         "y": 4.338392857143383
-=======
-        "x": 11.202750000000002,
-        "y": 7.25225
-      },
-      "prevControl": {
-        "x": 10.202750000000002,
-        "y": 7.25225
->>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +29,6 @@
     }
   ],
   "rotationTargets": [],
-<<<<<<< HEAD
   "constraintZones": [
     {
       "name": "Constraints Zone",
@@ -64,9 +44,6 @@
       }
     }
   ],
-=======
-  "constraintZones": [],
->>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -75,7 +52,6 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-<<<<<<< HEAD
     "unlimited": true
   },
   "goalEndState": {
@@ -87,19 +63,6 @@
   "idealStartingState": {
     "velocity": 0,
     "rotation": 126.0
-=======
-    "unlimited": false
-  },
-  "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
-  },
-  "reversed": false,
-  "folder": "Leave zone",
-  "idealStartingState": {
-    "velocity": 0,
-    "rotation": 0.0
->>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
   },
   "useDefaultConstraints": true
 }
