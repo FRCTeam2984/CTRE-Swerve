@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -262,7 +263,19 @@ public class Robot extends TimedRobot {
       Elevator.elevatorMotor.set(-0.15);
       Elevator.currentLevel = -2;
     }
+    if (Driver_Controller.buttonTest()){
+      try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Testing path");
 
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        AutoBuilder.followPath(path);
+    } catch (Exception e) {
+        DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+        
+    }
+    RobotContainer.ScheduleTestingPath.schedule();
+    }
     /*running a pathplanner path:
       the first if statement is to start running a path. schedule has to be called multiple times. idk why.
       the method schedulePathplannerMove() takes a string input, the name of an auto, and returns a command to schedule.
