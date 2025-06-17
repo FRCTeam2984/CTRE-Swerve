@@ -3,6 +3,7 @@
   "waypoints": [
     {
       "anchor": {
+<<<<<<< HEAD
         "x": 3.858575770537619,
         "y": 5.195124121958506
       },
@@ -10,18 +11,36 @@
       "nextControl": {
         "x": 4.0822628168665736,
         "y": 4.929176933390734
+=======
+        "x": 7.195499999999999,
+        "y": 7.369249999999999
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.945499999999999,
+        "y": 7.369249999999999
+>>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
+<<<<<<< HEAD
         "x": 1.6249075098480084,
         "y": 7.327192855278429
       },
       "prevControl": {
         "x": 1.8169880975793071,
         "y": 7.159117475968611
+=======
+        "x": 6.376500000000001,
+        "y": 7.369249999999999
+      },
+      "prevControl": {
+        "x": 6.626154457333128,
+        "y": 7.356110291719309
+>>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,6 +48,7 @@
     }
   ],
   "rotationTargets": [],
+<<<<<<< HEAD
   "constraintZones": [
     {
       "name": "Constraints Zone",
@@ -44,6 +64,9 @@
       }
     }
   ],
+=======
+  "constraintZones": [],
+>>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -52,6 +75,7 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
+<<<<<<< HEAD
     "unlimited": true
   },
   "goalEndState": {
@@ -63,6 +87,19 @@
   "idealStartingState": {
     "velocity": 0,
     "rotation": 119.99999999999999
+=======
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Leave zone",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+>>>>>>> parent of ecd0b79 (Updated PathPlanner Files from Main)
   },
   "useDefaultConstraints": true
 }
