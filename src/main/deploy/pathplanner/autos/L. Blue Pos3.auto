@@ -13,7 +13,7 @@
       ]
     }
   },
-  "resetOdom": true,
-  "folder": "USE - 0 piece, Leave Zone Auto",
+  "resetOdom": false,
+  "folder": "USE - 0 piece, Leave zone autos",
   "choreoAuto": false
 }

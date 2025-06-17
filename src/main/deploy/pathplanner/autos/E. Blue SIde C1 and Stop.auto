@@ -13,7 +13,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "USE - 1 piece, BLUE Side C1 and Stop",
   "choreoAuto": false
 }
