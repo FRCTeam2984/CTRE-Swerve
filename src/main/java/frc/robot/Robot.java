@@ -90,9 +90,7 @@ public class Robot extends TimedRobot {
     Limelight.limelightInit();
     // reset robot orientation
     RobotContainer.rotaryCalc(true);
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    
     Driver_Controller.SwerveControlSet(true);
     Driver_Controller.SwerveCommandEncoderValue=/*RobotContainer.robotOffset+*/RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
     Driver_Controller.SwerveCommandXValue = 0;
