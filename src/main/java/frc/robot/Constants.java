@@ -39,4 +39,8 @@ public class Constants {
     public static final String kV2Auto = "V2";
     public static final String kV3Auto = "V3";
     public static final String kSoftAndSlowAuto = "SoftAndSlow";
+
+    // Elevator Positions
+    public static final Double[] ScorePositions = {0.0, 15.0, 72.0, 118.0, 188.0};
+    public static final Double[] removeAlgaeH = {20.0, 30.0};
 }

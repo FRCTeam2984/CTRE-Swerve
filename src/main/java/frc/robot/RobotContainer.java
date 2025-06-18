@@ -28,6 +28,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.events.PointTowardsZoneTrigger;
+import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -89,12 +92,23 @@ public class RobotContainer {
 
         public static SendableChooser<Command> autoChooser;
 
+        public static SendableChooser<String> scoreChooser = new SendableChooser<>();
+
                 public RobotContainer() {
+                    scoreChooser.addOption("1", Constants.ScorePositions[1].toString());
+                    scoreChooser.addOption("2", Constants.ScorePositions[2].toString());
+                    scoreChooser.addOption("3", Constants.ScorePositions[3].toString());
+                    scoreChooser.setDefaultOption("4", Constants.ScorePositions[4].toString());
+                    
+                    new EventTrigger("SCORE").whileTrue(m_elevator.autoElevatorCommand());
+                    // Change to proper Command
+                    new EventTrigger("HPS").whileTrue(Commands.print("Run HPS Commands"));
 
                     // Build an auto chooser. This will use Commands.none() as the default option.
                     autoChooser = AutoBuilder.buildAutoChooser();
         
                     SmartDashboard.putData("Auto Chooser", autoChooser);
+                    SmartDashboard.putData("Auto Score Level Chooser", scoreChooser);
                     //SmartDashboard.putData("Auto Mode", autoChooser);
                     //joystick = Driver_Controller.m_Controller0;
                     //joystick2 = Driver_Controller.m_Controller1;

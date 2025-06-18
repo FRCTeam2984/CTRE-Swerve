@@ -9,9 +9,13 @@ import com.revrobotics.spark.SparkMax;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+// import frc.robot.RobotContainer;
+import frc.robot.RobotContainer;
 
-public class Elevator{
+public class Elevator extends SubsystemBase{
   public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
   public static SparkMax outtakeMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
@@ -26,7 +30,8 @@ public class Elevator{
                 moveCoral = false,
                 enableOuttakeSensors;
   public static int currentLevel = 0;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 72.0, 118.0, 188.0}; // change l4 
+  // moved to Constants.java
+  // public static Double[] removeAlgaeH = {20.0, 30.0}, Constants.ScorePositions = {0.0, 15.0, 72.0, 118.0, 188.0}; // change l4  // changed Constants.ScorePositions[1] to 15.0
 
   public static void sensorInit(){
     try {
@@ -39,76 +44,110 @@ public class Elevator{
   public static void elevatorPeriodic(){
     bottomSwitchPressed = elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround";
     //currentPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10));
-    currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
-    if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
-    if (currentLevel == 0){
-      if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
-      else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
-      else elevatorMotor.set(0.0);
-    }else if (currentLevel == 1){
-      elevatorTo(15.0);
-    }else if (currentLevel > 1){
-      elevatorTo(levelPosition[currentLevel]);
-    }else if (currentLevel == -2){
-      elevatorMotor.set(0.03);
-    }
-    else elevatorMotor.set(0.0);
+    // currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
+    currentPosition = getCurrentPosition();
+    
+        if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
+        if (currentLevel == 0){
+          if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
+          else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
+          else elevatorMotor.set(0.0);
+        }else if (currentLevel == 1){
+          elevatorTo(15.0);
+        }else if (currentLevel > 1){
+          elevatorTo(Constants.ScorePositions[currentLevel]);
+        }else if (currentLevel == -2){
+          elevatorMotor.set(0.03);
+        }
+        else elevatorMotor.set(0.0);
+    
+        // moving coral when intaked
+        if (enableOuttakeSensors){
+        if (upperSensor.isPressed()){
+          System.out.println("upper sensor");
+          moveCoral = true;
+          outtakeMotor.set(-0.23);
+        }
+        if (lowerSensor.isPressed() && moveCoral){
+          moveCoral = false;
+          outtakeMotor.set(0.0);
+        }
+        }
+    
+        LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+        if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
+          System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
+        }
+      }
+    
+      // function for keeping a variable between a lower and upper limit
+      public static Double clamp(Double minimum, Double maximum, Double input){
+        if (input < minimum)
+          return minimum;
+        if (input > maximum)
+          return maximum;
+        return input;
+      }
+      
+      // function for moving elevator (you can change function name, i don’t care)
+      // change the math for the units of distance, power at different positions, gravity compensation
+      public static Boolean elevatorTo(Double destination){
+        System.out.println("Running Elevator Position");
+        
+        Double error = destination - currentPosition;
+        Double minPower = -0.9, maxPower = 0.9, power = 0.0;
+        Integer maxError = 5;
+    
+        //use laserCan sensor to limit power going down when close
+        /*LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+        if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
+          minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
+        }*/
+    
+        System.out.println("Moved Elevator Position");
+    
+        // set motor power based on error or set it to keep position
+        power = error/30;
+        if (Math.abs(error) < maxError){
+          elevatorMotor.set(gravity);
+          return true;
+        }
+        // Clamp power and use limit switches
+        if (bottomSwitchPressed) minPower = 0.0;
+        power = clamp(minPower, maxPower, power);
+        elevatorMotor.set(power);
+        return false;
+      }
 
-    // moving coral when intaked
-    if (enableOuttakeSensors){
-    if (upperSensor.isPressed()){
-      System.out.println("upper sensor");
-      moveCoral = true;
-      outtakeMotor.set(-0.23);
-    }
-    if (lowerSensor.isPressed() && moveCoral){
-      moveCoral = false;
-      outtakeMotor.set(0.0);
-    }
-    }
-
-    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
-    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
-      System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
-    }
+  // i don't feel like optimizing this
+  public static Double getCurrentPosition() {
+    return elevatorMotor.getRotorPosition().getValueAsDouble();
   }
 
-  // function for keeping a variable between a lower and upper limit
-  public static Double clamp(Double minimum, Double maximum, Double input){
-    if (input < minimum)
-      return minimum;
-    if (input > maximum)
-      return maximum;
-    return input;
+  // Moves the elevator to the specifed level position
+  public Command toPositionCommand(int position) {
+    System.out.println("\n Running toLevelCommand to Position " + position + "\n");
+    currentPosition = getCurrentPosition();
+
+    return this.runOnce(
+      () -> elevatorTo(Constants.ScorePositions[position])
+    );
   }
   
-  // function for moving elevator (you can change function name, i don’t care)
-  // change the math for the units of distance, power at different positions, gravity compensation
-  public static Boolean elevatorTo(Double destination){
-    Double error = destination - currentPosition;
-    Double minPower = -0.9, maxPower = 0.9, power = 0.0;
-		Integer maxError = 5;
-
-    //use laserCan sensor to limit power going down when close
-    /*LaserCan.Measurement laserDist = laserSensor.getMeasurement();
-    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
-      minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
-    }*/
-			
-		// set motor power based on error or set it to keep position
-    power = error/30;
-    if (Math.abs(error) < maxError){
-	    elevatorMotor.set(gravity);
-	    return true;
+    /* Auto Command for Moving the Elevator to it's proper position */
+    public Command autoElevatorCommand() {
+      System.out.println("Running autoElevatorCommand");
+      return this.runOnce(
+      // run toLevelCommand at the level selected by scoreChooser in Shuffleboard
+      // Must be converted into an int, as ComboBox values from Shuffleboard must be of type String
+      // Must be converted into a double firstm as ComboBox is formatted like a double
+      () -> toPositionCommand((int) Double.parseDouble(RobotContainer.scoreChooser.getSelected()))
+      );
     }
-    // Clamp power and use limit switches
-    if (bottomSwitchPressed) minPower = 0.0;
-    power = clamp(minPower, maxPower, power);
-    elevatorMotor.set(power);
-    return false;
-  }
 
-  // extend or retract the small arm on the elevator
+
+
+      // extend or retract the small arm on the elevator
   /*public static Boolean moveElevatorArm(String extendOrRetract){
     Boolean done = false;
     Double power;
