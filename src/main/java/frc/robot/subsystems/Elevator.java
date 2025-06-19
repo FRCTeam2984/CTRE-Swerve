@@ -26,7 +26,7 @@ public class Elevator{
                 moveCoral = false,
                 enableOuttakeSensors;
   public static int currentLevel = 0;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 72.0, 118.0, 188.0}; // change l4
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 0.0, 72.0, 118.0, 188.0};. // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
 
   public static void sensorInit(){
     try {
