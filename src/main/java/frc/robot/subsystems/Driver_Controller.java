@@ -198,8 +198,8 @@ public static void SwerveInputPeriodic(){
     }
     else{ //Controller Mode
         SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(m_Controller1);
-        SwerveXPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[0];
-        SwerveYPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[1];
+        SwerveXPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[0]/4;
+        SwerveYPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[1]/4;
         //SwerveXPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftY());
         //SwerveYPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftX());
     }

@@ -58,6 +58,8 @@ public class RobotContainer {
     private final Intake m_intake = new Intake();
     //private final LED m_LED = new LED();
     private final Limelight m_limelight = new Limelight();
+    private static boolean wasCommandAngle = false;
+    private static double rotaryOffset = 0;
     private final Rotary_Controller m_rotaryController = new Rotary_Controller();
 
 
@@ -129,42 +131,46 @@ public class RobotContainer {
 
 
                 public static double rotaryCalc(Boolean resetToRobot){
-                    //Driver_Controller.SwerveInputPeriodic();
-                    double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble() /* (180/3.1415) */;                 // Grab the yaw value from the swerve drive IMU as a double
-                    if (Driver_Controller.SwerveCommandControl == false){
-                        pigeonYaw += robotOffset;
+                    double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();    //Read from the pigeon (Gyro angle as a double)             // Grab the yaw value from the swerve drive IMU as a double
+                    double rotaryJoystickInput;    //Define the variable rotaryJoystickInput as a double
+                    
+                    // Determine if Command control is enabled
+                    if (Driver_Controller.SwerveCommandControl){
+                        rotaryJoystickInput = Driver_Controller.SwerveEncoderPassthrough;
+                        wasCommandAngle = true;
                     }
-                    double rotaryJoystickInput = Driver_Controller.SwerveEncoderPassthrough;               // Get input from the rotary controller (ID from joystick2)
-                    //System.out.println(pigeonYaw);
-                    //System.out.println(rotaryJoystickInput);
-                    //double joystickClamped = Math.max(Math.min(45, (((((pigeonYaw - (rotaryJoystickInput - 180))+ (360*1000) + 180) % 360) - 180))), -45);    // Get a clamped value of the joystick input
-                    //System.out.println(joystickClamped);
+                    else{
+                        rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from m_controller1)
+                        if (wasCommandAngle){
+                            rotaryOffset = (pigeonYaw + (360 * 1000))% 360;
+                            wasCommandAngle = false;
+                            rotaryOffset = (rotaryOffset - rotaryJoystickInput);
+                        }
+                        
+                        rotaryJoystickInput = rotaryJoystickInput + rotaryOffset;
+                    }
+                    //Math to calculate the maximum turn speed
                     double diff = pigeonYaw - (rotaryJoystickInput);
                     double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
-                    if (resetToRobot){
-                        needToReset = true;
-                    }
-                    if (needToReset && Driver_Controller.SwerveCommandControl == false){
-                        robotOffset -= diffmod180;
-                        needToReset = false;
-                    }
-                    //System.out.println(rotaryJoystickInput);
-                    //System.out.println(pigeonYaw);
-                    //System.out.println(diffmod180);
                     double powerCurved = -diffmod180;
                     powerCurved = Math.max(-45,Math.min(45,powerCurved));
-                    //double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
-                    if((diffmod180 <= 1) && (diffmod180 >= -1)){
-                        //return 0;
+                    double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
+                    
+                    // Stop turing if within a degree of target
+                    if((angleDiff <= 0.5) && (angleDiff >= -0.5)){
+                        return 0;
                     }
-                    //System.out.println(rotaryJoystickInput);
-                    if (powerCurved < 7 && powerCurved > 2){
-                        powerCurved = 7;
-                    }
-                    if (powerCurved > -7 && powerCurved < -2){
-                        powerCurved = -7;
-                    }
-                    return powerCurved * 0.09;
+
+                    //Limit the power to a max of 7
+                                        
+                                        if (powerCurved < 8 && powerCurved > 2){
+                                            powerCurved = 8;// * ((powerCurved + 3)/ 10);
+                                        }
+                                        if (powerCurved > -8 && powerCurved < -2){
+                                            powerCurved = -8;// * ((Math.abs(powerCurved) + 3)/ 10);
+                                        }
+                    // Return a slightly lowered powercurved value (i.e. Slightly lowered turn speed)
+                    return powerCurved * 0.1;
             }
         
 
@@ -207,7 +213,7 @@ public class RobotContainer {
                     drivetrain.applyRequest(() ->
                         drive.withVelocityX(Driver_Controller.SwerveXPassthrough) // Drive forward with negative Y (forward)
                             .withVelocityY(Driver_Controller.SwerveYPassthrough) // Drive left with negative X (left)
-                            .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
+                            .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn * ((Driver_Controller.SwerveCommandControl == false)?0.45:1)) // Drive counterclockwise with negative X (left)
                     )
                 );
         

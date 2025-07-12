@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.Optional;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathPlannerPath;
@@ -35,7 +36,7 @@ import frc.robot.subsystems.LED;
 // import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 // {0.0, 15.0, 62.0, 116.0, 186.0};
 public class Robot extends TimedRobot {
-  Boolean schedule = false, lastPressed = false;
+  Boolean schedule = false, lastPressed = false, lastSwitch = false;
   int scoringPos = (int) Driver_Controller.ReefPosition();
   // private static final String kDefaultAuto = "score + de-algae 1x";
   // private static final String kCustomAuto = "My Auto";
@@ -193,23 +194,25 @@ public class Robot extends TimedRobot {
     else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
     else if (Driver_Controller.buttonRemoveAlgae()) Elevator.outtakeMotor.set(0.2);
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
-    
+
     // dealing with intake
+    if (Driver_Controller.switchAlgaeIntake() && !lastSwitch) Intake.powerFactor = 0.3;
     if (Driver_Controller.switchAlgaeIntake() == false){
       Intake.intakeState = "intake";
-      if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(0.3);
-      else Intake.bottomIntake.set(-0.5*Intake.powerFactor);
+      if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.5);
+      else Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, -Intake.powerFactor);
     }else{
       if (Driver_Controller.buttonCoralStationIntake()){
         Intake.intakeState = "remove";
-        Intake.bottomIntake.set(0.3);
+        Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, -0.3);
       } else{
-        Intake.bottomIntake.set(0.0);
+        Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, -0.0);
         if (Driver_Controller.buttonReverseCoral()){
           Intake.intakeState = "reset";
         }else Intake.intakeState = "retract";
       }
     }
+    lastSwitch = Driver_Controller.switchAlgaeIntake();
 
     // handling auto align
     scoringPos = (int)Driver_Controller.ReefPosition()-1;
@@ -224,7 +227,7 @@ public class Robot extends TimedRobot {
       AutoDriveFinal.driveToXYA(RobotContainer.drivetrain.getState().Pose.getX()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0],
                                 RobotContainer.drivetrain.getState().Pose.getY()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1],
                                 AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
-                                2.0);
+                                1.5);
     //if the nearby white button is pressed, align to the closest HPS station on the current alliance
     } else if (Driver_Controller.buttonHPSalign()){
       Elevator.currentLevel = 1;

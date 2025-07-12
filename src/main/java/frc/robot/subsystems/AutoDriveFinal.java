@@ -9,7 +9,7 @@ public class AutoDriveFinal{
     public int scoringPos;
     public static double odoangle;
     public static int alliance;
-    public static double scoringAngles[] = {0, 0, -60, -60, -120, -120, -180, -180, -240, -240, -300, -300};
+    public static double scoringAngles[] = {8, 8, -52, -52, -112, -120, -180, -180, -240, -240, -300, -300};
     public static double backPosRed[][] = {
         {14.64772578, 4.393108052},
         {14.64772578, 4.065108052},
