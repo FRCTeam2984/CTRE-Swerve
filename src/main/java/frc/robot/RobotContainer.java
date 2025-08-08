@@ -213,7 +213,7 @@ public class RobotContainer {
                     drivetrain.applyRequest(() ->
                         drive.withVelocityX(Driver_Controller.SwerveXPassthrough) // Drive forward with negative Y (forward)
                             .withVelocityY(Driver_Controller.SwerveYPassthrough) // Drive left with negative X (left)
-                            .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn * ((Driver_Controller.SwerveCommandControl == false)?0.45:1)) // Drive counterclockwise with negative X (left)
+                            .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
                     )
                 );
         

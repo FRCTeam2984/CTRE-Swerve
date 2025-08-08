@@ -8,6 +8,8 @@
  */
 package frc.robot.subsystems;
 
+import java.lang.ModuleLayer.Controller;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,6 +46,19 @@ public class Driver_Controller {
     public static double SwerveCommandYValue;          // Command requested Y value for swervedrive
 
     public static void define_Controller(){
+    for(int i = 0; i < 3; ++i){
+        m_tempController = new XboxController(i);
+        if (m_tempController.getRawButton(14) == true){
+            m_Controller0 = new CommandXboxController(i);
+            m_Controller1 = new Joystick(i);
+        }
+        else if (m_tempController.getRawButton(13) == true){
+            m_Controller3 = m_tempController;
+        }
+        else{
+            m_Controller2 = m_tempController;
+        }
+    }/*
     for(int i=1; i<=4; i++) {
         switch (i) {
             case 1:
@@ -123,22 +138,22 @@ public class Driver_Controller {
         // m_Controller1 = new Joystick(1);
         // m_Controller2 = new XboxController(2);
         // m_Controller3 = new XboxController(3);
-    }
+    }*/
     //System.out.println(Driver_Controller.SwerveRotaryEncoderPort);
 }
 
 public static Boolean driverSwitch(){
-    return m_Controller1.getRawButton(5);}
+    return m_Controller1.getRawButton(6);}
 public static Boolean buttonReefAlign(){
     return m_Controller1.getRawButton(1);}
 public static Boolean buttonRotateToReef(){
-    return m_Controller1.getRawButton(2);}
-public static Boolean buttonResetIntake(){
-    return m_Controller1.getRawButton(7);}
-public static Boolean buttonHPSalign(){
     return m_Controller1.getRawButton(3);}
+public static Boolean buttonResetIntake(){
+    return false;}
+public static Boolean buttonHPSalign(){
+    return m_Controller1.getRawButton(2);}
 public static Boolean buttonRemoveAlign(){
-    return m_Controller1.getRawButton(4);}
+    return m_Controller1.getRawButton(5);}
     
 
 public static Boolean buttonExtendClimb(){
@@ -158,7 +173,7 @@ public static Boolean buttonTransportPivot(){
 public static Boolean buttonRemoveAlgae(){
     return m_Controller3.getRawButton(8);} 
 public static Boolean switchAlgaeIntake(){
-    return m_Controller3.getRawButton(9);}
+    return !(m_Controller3.getRawButton(9));}
 public static Boolean switchExtraOnOff(){
     return m_Controller3.getRawButton(10);}
         
@@ -174,9 +189,11 @@ public static Boolean buttonResetElevator(){
     return m_Controller2.getRawButton(5);}
       
 public static double ReefPosition(){
-    if (m_Controller2.getRawButton(10))
+    return (22-((m_Controller2.getRawButton(11))?1:0)-((m_Controller2.getRawButton(10))?2:0)-((m_Controller2.getRawButton(9))?3:0)-((m_Controller2.getRawButton(12))?6:0))%12;
+    //return (22-Math.round((m_Controller2.getRawAxis(3)+1)/2)-Math.round((m_Controller2.getRawAxis(1)+1))-Math.round((m_Controller2.getRawAxis(0)+1)*1.5)-Math.round((m_Controller2.getRawAxis(4)+1)*3))%12;
+    /*if (m_Controller2.getRawButton(10))
         return (((2-m_Controller2.getRawAxis(0))%3 + Math.round(m_Controller2.getRawAxis(1))*3)+5)%12+1;
-    return ((-m_Controller2.getRawAxis(0)+2)%3 + Math.round(m_Controller2.getRawAxis(1))*3+11)%12+1;
+    return ((-m_Controller2.getRawAxis(0)+2)%3 + Math.round(m_Controller2.getRawAxis(1))*3+11)%12+1;*/
 }
       
 public static int getLevel(){
@@ -198,8 +215,8 @@ public static void SwerveInputPeriodic(){
     }
     else{ //Controller Mode
         SwerveEncoderPassthrough = Rotary_Controller.RotaryJoystick(m_Controller1);
-        SwerveXPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[0]/4;
-        SwerveYPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[1]/4;
+        SwerveXPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[0];
+        SwerveYPassthrough = -RobotContainer.betterJoystickCurve(m_Controller0.getLeftX(), m_Controller0.getLeftY())[1];
         //SwerveXPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftY());
         //SwerveYPassthrough = -RobotContainer.joystick_curve(m_Controller0.getLeftX());
     }

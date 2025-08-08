@@ -36,7 +36,8 @@ import frc.robot.subsystems.LED;
 // import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 // {0.0, 15.0, 62.0, 116.0, 186.0};
 public class Robot extends TimedRobot {
-  Boolean schedule = false, lastPressed = false, lastSwitch = false;
+  Boolean elevatorEnabled = true;
+  Boolean schedule = false, lastPressed = false, lastSwitch = true;
   int scoringPos = (int) Driver_Controller.ReefPosition();
   // private static final String kDefaultAuto = "score + de-algae 1x";
   // private static final String kCustomAuto = "My Auto";
@@ -190,14 +191,16 @@ public class Robot extends TimedRobot {
     if (Driver_Controller.buttonL4()) Elevator.currentLevel = 4;
 
     // dealing with outtake
-    if (Driver_Controller.buttonL1()) Elevator.outtakeMotor.set(-0.5);
+    if (Driver_Controller.buttonL1()){
+      Elevator.outtakeMotor.set(-0.5);
+    }
     else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
     else if (Driver_Controller.buttonRemoveAlgae()) Elevator.outtakeMotor.set(0.2);
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
 
     // dealing with intake
-    if (Driver_Controller.switchAlgaeIntake() && !lastSwitch) Intake.powerFactor = 0.3;
-    if (Driver_Controller.switchAlgaeIntake() == false){
+    if (!Driver_Controller.switchAlgaeIntake() && lastSwitch) Intake.powerFactor = 0.3;
+    if (Driver_Controller.switchAlgaeIntake()){
       Intake.intakeState = "intake";
       if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.5);
       else Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, -Intake.powerFactor);
@@ -241,8 +244,8 @@ public class Robot extends TimedRobot {
         else AutoDriveFinal.driveToXYA(16.35, 1.13, 126.0+180, 2.0);
       }
     } else if (Driver_Controller.buttonRemoveAlign()){
-      AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[(scoringPos-1)/2][0]:AutoDriveFinal.algaeRemoveRed[(scoringPos-1)/2][0],
-                                (alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[(scoringPos-1)/2][1]:AutoDriveFinal.algaeRemoveRed[(scoringPos-1)/2][1],
+      AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[scoringPos/2][0]:AutoDriveFinal.algaeRemoveRed[scoringPos/2][0],
+                                (alliance == "blue")?AutoDriveFinal.algaeRemoveBlue[scoringPos/2][1]:AutoDriveFinal.algaeRemoveRed[scoringPos/2][1],
                                 AutoDriveFinal.scoringAngles[scoringPos]+((alliance == "blue")?180:0),
                                 2.0);
     }else if (autoDriveLastPressed){
@@ -253,15 +256,15 @@ public class Robot extends TimedRobot {
     }
     autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign());
 
-    Elevator.elevatorPeriodic();
+    if (elevatorEnabled) Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
 
     //fine adjustment for elevator
-    if (Driver_Controller.buttonExtendClimb()){
+    if (Driver_Controller.buttonExtendClimb() && elevatorEnabled){
       Elevator.elevatorMotor.set(0.15);
       Elevator.currentLevel = -2;
     }
-    if (Driver_Controller.buttonRetractClimb()){
+    if (Driver_Controller.buttonRetractClimb() && elevatorEnabled){
       Elevator.elevatorMotor.set(-0.15);
       Elevator.currentLevel = -2;
     }

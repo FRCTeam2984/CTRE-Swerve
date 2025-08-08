@@ -86,7 +86,7 @@ public class Elevator{
   // change the math for the units of distance, power at different positions, gravity compensation
   public static Boolean elevatorTo(Double destination){
     Double error = destination - currentPosition;
-    Double minPower = -0.9, maxPower = 0.9, power = 0.0;
+    Double minPower = -0.5, maxPower = 0.9, power = 0.0;
 		Integer maxError = 5;
 
     //use laserCan sensor to limit power going down when close
