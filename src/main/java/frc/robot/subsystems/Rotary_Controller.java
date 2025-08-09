@@ -21,52 +21,27 @@ public class Rotary_Controller {
             System.out.println("Angle reset called");
         }
         public static double RotaryJoystick(Joystick xboxController){
-            
-            // double x = xboxController.getRawAxis(0);
-            // double y = xboxController.getRawAxis(1);
-            // double z = xboxController.getRawAxis(2);
-            // //System.out.println(x);
-            // //System.out.println(y);
-            // //System.out.println(z);
-            // double _max = Math.max(x, Math.max(y, z));
-            // double _min = Math.min(x, Math.min(y, z));
-    
-            // if ((_max - _min) == 0){
-            //     System.out.println("Joystick is not connected or is misconfigured");
-            //     return 0;
-            // }
-            // else{
-            //     double mid = -1;
-            //     double angle = -1;
-            //     if ((x <= y) && (y <= z)){
-            //         mid = y;
-            //         angle = 60 - generate_angle_midmax(mid, _min, _max) * 60;
-            //     }
-            //     if ((y <= x) && (x <= z)){
-            //         mid = x;
-            //         angle = 60 + generate_angle_midmax(mid, _min, _max) * 60;
-            //     }
-            //     if ((y <= z) && (z <= x)){
-            //         mid = z;
-            //         angle = 180 - generate_angle_midmax(mid, _min, _max) * 60;
-            //     }
-            //     if ((z <= y) && (y <= x)){
-            //         mid = y;
-            //         angle = 180 + generate_angle_midmax(mid, _min, _max) * 60;
-            //     }
-            //     if ((z <= x) && (x <= y)){
-            //         mid = x;
-            //         angle = 300 - generate_angle_midmax(mid, _min, _max) * 60;
-            //     }
-            //     if ((x <= z) && (z <= y)){
-            //         mid = z;
-            //         angle = 300 + generate_angle_midmax(mid, _min, _max) * 60;
-            //     }
-            //     //angle += angle_offset;
-            double RawAxis = xboxController.getRawAxis(2);
-            RawAxis = (1-RawAxis) / 2;
-            double angle = RawAxis * 360;
-            return angle;
+            int fineAxis = (int)((1-xboxController.getRawAxis(5))*100), coarseAxis = 2400+(int)((1-xboxController.getRawAxis(2))*1200);
+            int coarseInterval = coarseAxis/200, closest = 10000;
+            for (int i = -1; i <= 1; ++i){
+                int newAngle = ((coarseInterval+i)*200+fineAxis);
+                if (Math.abs(newAngle-coarseAxis) < Math.abs(closest-coarseAxis))
+                    closest = newAngle;
+            }
+            return (((closest%2400)*3.0/20.0)-180);
+            /*
+            double rawAxis1 = xboxController.getRawAxis(2), rawAxis2 = xboxController.getRawAxis(3); // this is the wrong axis
+            double coarseResult = (3-rawAxis1)*180;
+            double fineAngle = rawAxis2*15+180.0; // might need to be inverted
+            double closest = 0.0;
+            for (closest = 0.0; fineAngle < 900.0; fineAngle += 30.0){
+                closest = Math.min(closest, Math.abs(coarseResult - fineAngle));
+            }
+            double angle = coarseResult;
+            if (Math.abs(closest-angle) < 5.0){
+                angle = closest;
+            }
+            return ((angle%360)-180);*/
     }
 
 }
