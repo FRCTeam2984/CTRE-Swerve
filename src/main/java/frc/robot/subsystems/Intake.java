@@ -24,7 +24,7 @@ public class Intake {
     public static Double[] rollerSpeed = new Double[historyLength], rollerCurrent = new Double[historyLength];
     public static Boolean retractedSwitchPressed, extendedSwitchPressed;
     public static String intakeState = "retract";
-    public static Double currentPosition, intakeGravity, desiredPosition, powerFactor = 1.0;
+    public static Double currentPosition, intakeGravity, desiredPosition, powerFactor = 1.0, upAdjust = 0.0;
 
     public static void intakePeriodic(){
         // updating values
@@ -45,7 +45,7 @@ public class Intake {
                 break;
             case "intake":
                 // 22;
-                desiredPosition = 22.2;
+                desiredPosition = Math.max(0, 22.2-upAdjust);
                 moveIntake();
                 break;
             case "retract":
@@ -103,7 +103,7 @@ public class Intake {
             minPower = 0.0;
             
         //power += (error > 0?0.1:-0.1);
-        if (Math.abs(error) < 1) power = intakeGravity;
+        if (Math.abs(error) < 0.5) power = intakeGravity;
         intakePivot.set(clamp(minPower, maxPower, power));
     }
 

@@ -36,7 +36,7 @@ public class Limelight {
         if (fiducials.length > 0)newAmbiguity = fiducials[fiducials.length-1].ambiguity;
         boolean withinAmbiguityRange = (newAmbiguity < 0.5);// && newAmbiguity != prevAmbiguity);
         if (withinAmbiguityRange) prevAmbiguity = newAmbiguity;
-        System.out.println(newAmbiguity);
+        //System.out.println(newAmbiguity);
 
         if (hasTarget && withinAmbiguityRange){
             Boolean resetNeeded = (Math.abs(LimelightGeneratedPose2d.getRotation().getDegrees()-RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()) > 5.0); 

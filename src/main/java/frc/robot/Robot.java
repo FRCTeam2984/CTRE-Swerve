@@ -171,6 +171,7 @@ public class Robot extends TimedRobot {
     schedule = false;
     Elevator.currentLevel = -1;
     alliance = (DriverStation.getAlliance().toString().charAt(9) == 'B')?"blue":"red"; // finds the alliance
+    Intake.upAdjust = 0.0;
   }
 
   @Override
@@ -199,7 +200,11 @@ public class Robot extends TimedRobot {
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
 
     // dealing with intake
-    if (!Driver_Controller.switchAlgaeIntake() && lastSwitch) Intake.powerFactor = 0.3;
+    if (!Driver_Controller.switchAlgaeIntake() && lastSwitch){
+      Intake.powerFactor = 0.3;
+      Intake.upAdjust = 0.0;
+    }
+    if (Driver_Controller.buttonCoralIntakeGround()) Intake.upAdjust += 0.05;
     if (Driver_Controller.switchAlgaeIntake()){
       Intake.intakeState = "intake";
       if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.5);
@@ -218,7 +223,7 @@ public class Robot extends TimedRobot {
     lastSwitch = Driver_Controller.switchAlgaeIntake();
 
     // handling auto align
-    scoringPos = (int)Driver_Controller.ReefPosition()-1;
+    scoringPos = (int)Driver_Controller.ReefPosition();
     // if the red button by the joystick is pressed, automatically drives to the position designated by the rotary controller on the operator panel
     if (Driver_Controller.buttonReefAlign()){
       AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.scoringPosBlue[scoringPos][0]:AutoDriveFinal.scoringPosRed[scoringPos][0],

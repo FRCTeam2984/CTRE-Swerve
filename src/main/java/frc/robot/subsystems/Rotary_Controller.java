@@ -28,7 +28,8 @@ public class Rotary_Controller {
                 if (Math.abs(newAngle-coarseAxis) < Math.abs(closest-coarseAxis))
                     closest = newAngle;
             }
-            return (((closest%2400)*3.0/20.0)-180);
+            double angle = (((closest%2400)*3.0/20.0)-180);
+            return angle;
             /*
             double rawAxis1 = xboxController.getRawAxis(2), rawAxis2 = xboxController.getRawAxis(3); // this is the wrong axis
             double coarseResult = (3-rawAxis1)*180;
