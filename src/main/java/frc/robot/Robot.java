@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AutoDriveFinal;
+import frc.robot.subsystems.NewAutoDrive;
 //import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Driver_Controller;
@@ -36,7 +37,7 @@ import frc.robot.subsystems.LED;
 // import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 // {0.0, 15.0, 62.0, 116.0, 186.0};
 public class Robot extends TimedRobot {
-  Boolean elevatorEnabled = true;
+  Boolean elevatorEnabled = true, useNewAutoDrive = true;
   Boolean schedule = false, lastPressed = false, lastSwitch = true;
   int scoringPos = (int) Driver_Controller.ReefPosition();
   // private static final String kDefaultAuto = "score + de-algae 1x";
@@ -163,6 +164,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    NewAutoDrive.setupAutoDrive();
     //Elevator.extendedOrRetracted = "retracted";
     Limelight.limelightInit();
     Driver_Controller.define_Controller();
@@ -224,6 +226,7 @@ public class Robot extends TimedRobot {
 
     // handling auto align
     scoringPos = (int)Driver_Controller.ReefPosition();
+    if (useNewAutoDrive == false){
     // if the red button by the joystick is pressed, automatically drives to the position designated by the rotary controller on the operator panel
     if (Driver_Controller.buttonReefAlign()){
       AutoDriveFinal.driveToXYA((alliance == "blue")?AutoDriveFinal.scoringPosBlue[scoringPos][0]:AutoDriveFinal.scoringPosRed[scoringPos][0],
@@ -258,6 +261,18 @@ public class Robot extends TimedRobot {
       Driver_Controller.SwerveCommandControl = false;
       Driver_Controller.SwerveInputPeriodic();
       RobotContainer.rotaryCalc(true);
+    }
+    }else{
+      if (Driver_Controller.buttonReefAlign())
+        NewAutoDrive.periodicDriveToLocation(true, "reef", scoringPos);
+      else if (Driver_Controller.buttonRotateToReef())
+        NewAutoDrive.periodicDriveToLocation(true, "orient", scoringPos);
+      else if (Driver_Controller.buttonHPSalign())
+        NewAutoDrive.periodicDriveToLocation(true, "hps", scoringPos);
+      else if (Driver_Controller.buttonRemoveAlign())
+        NewAutoDrive.periodicDriveToLocation(true, "remove", scoringPos);
+      if (false == (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign()))
+        NewAutoDrive.periodicDriveToLocation(false, "reef", -1);
     }
     autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign());
 
