@@ -58,9 +58,9 @@ public class NewAutoDrive{
             alliance = "blue";  // blue
         }
         for (int i = 0; i < 12; ++i){
-            double mult1 = Math.sin(Math.toRadians(scoringAngles[i])), mult2 = Math.cos(Math.toRadians(scoringAngles[i]));
-            scoringPosBlue[i][0] = reefXBlue+(robotOffsetBack+reefAltitude)*mult2 + (robotOffsetLeft*((i%2 == 0)?1:-1)-pillarOffset)*mult1;
-            scoringPosBlue[i][1] = reefY+(robotOffsetBack+reefAltitude)*mult1 + (robotOffsetLeft*((i%2 == 0)?1:-1)-pillarOffset)*mult2; 
+            // double mult1 = Math.sin(Math.toRadians(scoringAngles[i])), mult2 = Math.cos(Math.toRadians(scoringAngles[i]));
+            // scoringPosBlue[(i+6)%12][0] = reefXBlue+(robotOffsetBack+reefAltitude)*mult2 + (robotOffsetLeft - ((i%2 == 0)?1:-1) * pillarOffset)*mult2;
+            // scoringPosBlue[(i+6)%12][1] = reefY+(robotOffsetBack+reefAltitude)*mult1 + (robotOffsetLeft - ((i%2 == 0)?1:-1) * pillarOffset)*mult1; 
         }
         for (int i = 0; i < 12; ++i){
             scoringPosRed[i][0] = scoringPosBlue[(i+6)%12][0]+8.569469139;
@@ -74,8 +74,8 @@ public class NewAutoDrive{
         if (willDrive){
             switch(Location){
                 case "reef":
-                    driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]+Math.sin(Math.toRadians(scoringAngles[position])),
-                    ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position])),
+                    driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0], // +Math.sin(Math.toRadians(scoringAngles[position])),
+                    ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1], // +Math.cos(Math.toRadians(scoringAngles[position])),
                     scoringAngles[position], 2.0);
                     break;
                 case "hps":
@@ -94,19 +94,24 @@ public class NewAutoDrive{
                     }
                     break;
                 case "orient":
-                    double[] newArray1 = {RobotContainer.drivetrain.getState().Pose.getX()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0],
+                    driveToXYA(RobotContainer.drivetrain.getState().Pose.getX()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0],
                     RobotContainer.drivetrain.getState().Pose.getY()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1],
                     AutoDriveFinal.scoringAngles[position]+((alliance == "blue")?180:0),
-                    1.5};
+                    1.5);
+                    Driver_Controller.SwerveCommandEncoderValue = scoringAngles[position];
+                    Driver_Controller.SwerveXPassthrough = -RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0];
+                    Driver_Controller.SwerveYPassthrough = -RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1];
+
                     break;
                 case "remove":
-                    double[] newArray2 = {(alliance == "blue")?algaeRemoveBlue[position/2][0]:algaeRemoveRed[position/2][0],
+                    driveToXYA((alliance == "blue")?algaeRemoveBlue[position/2][0]:algaeRemoveRed[position/2][0],
                     (alliance == "blue")?algaeRemoveBlue[position/2][1]:algaeRemoveRed[position/2][1],
                     scoringAngles[position]+((alliance == "blue")?180:0),
-                    2.0};
+                    2.0);
                     break;
             }
-        }/*
+        }
+        Driver_Controller.SwerveCommandControl = willDrive;/*
         if (willDrive && goBehindReef && Math.abs(desiredPosition[0]-odox) < 0.1 && Math.abs(desiredPosition[1]-odoy) < 0.1){
             double[] newArray = {((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0],
             ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1],
