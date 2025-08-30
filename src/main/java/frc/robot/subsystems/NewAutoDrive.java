@@ -26,9 +26,6 @@ public class NewAutoDrive{
             Driver_Controller.SwerveCommandYValue = 0.0;
         }
         Driver_Controller.SwerveCommandEncoderValue = odoAngle*0 + angle;
-        System.out.print(Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.cos(driveAngle)/divideConstant);
-        System.out.print("  ");
-        System.out.println(Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.sin(driveAngle)/divideConstant);
     }
     public static double scoringAngles[] = {0, 0, -60, -60, -120, -120, -180, -180, -240, -240, -300, -300};
     public static double[][] scoringPosRed = new double[12][2], scoringPosBlue = new double[12][2];
@@ -58,9 +55,9 @@ public class NewAutoDrive{
             alliance = "blue";  // blue
         }
         for (int i = 0; i < 12; ++i){
-            // double mult1 = Math.sin(Math.toRadians(scoringAngles[i])), mult2 = Math.cos(Math.toRadians(scoringAngles[i]));
-            // scoringPosBlue[(i+6)%12][0] = reefXBlue+(robotOffsetBack+reefAltitude)*mult2 + (robotOffsetLeft - ((i%2 == 0)?1:-1) * pillarOffset)*mult2;
-            // scoringPosBlue[(i+6)%12][1] = reefY+(robotOffsetBack+reefAltitude)*mult1 + (robotOffsetLeft - ((i%2 == 0)?1:-1) * pillarOffset)*mult1; 
+            double mult1 = Math.sin(Math.toRadians(scoringAngles[i])), mult2 = Math.cos(Math.toRadians(scoringAngles[i]));
+            scoringPosBlue[(i+6)%12][0] = reefXBlue+(robotOffsetBack+reefAltitude)*mult2 + (robotOffsetLeft - ((i%2 == 0)?1:-1) * pillarOffset)*mult1;
+            scoringPosBlue[(i+6)%12][1] = reefY+(robotOffsetBack+reefAltitude)*mult1 - (robotOffsetLeft - ((i%2 == 0)?1:-1) * pillarOffset)*mult2; 
         }
         for (int i = 0; i < 12; ++i){
             scoringPosRed[i][0] = scoringPosBlue[(i+6)%12][0]+8.569469139;
@@ -70,13 +67,14 @@ public class NewAutoDrive{
     public static void periodicDriveToLocation(boolean willDrive, String Location, int position){
         Double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         Double odox = RobotContainer.drivetrain.getState().Pose.getX();
+        Double targetX = -100.0, targetY = -100.0;
         if (willDrive && !isDriving) goBehindReef = true;
         if (willDrive){
             switch(Location){
                 case "reef":
-                    driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0], // +Math.sin(Math.toRadians(scoringAngles[position])),
-                    ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1], // +Math.cos(Math.toRadians(scoringAngles[position])),
-                    scoringAngles[position], 2.0);
+                    targetX = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]-Math.sin(Math.toRadians(scoringAngles[position]+90));
+                    targetY = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position]+90));
+                    if (goBehindReef) driveToXYA(targetX, targetY, 180+scoringAngles[position], 3.0);
                     break;
                 case "hps":
                     if (alliance == "blue"){
@@ -111,13 +109,16 @@ public class NewAutoDrive{
                     break;
             }
         }
-        Driver_Controller.SwerveCommandControl = willDrive;/*
-        if (willDrive && goBehindReef && Math.abs(desiredPosition[0]-odox) < 0.1 && Math.abs(desiredPosition[1]-odoy) < 0.1){
-            double[] newArray = {((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0],
+        Driver_Controller.SwerveCommandControl = willDrive;
+
+        if (willDrive && (goBehindReef == false ||(willDrive && Math.abs(targetX-odox) < 0.5 && Math.abs(targetY-odoy) < 0.5))){
+            System.out.println("yes");
+            driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0],
             ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1],
-            scoringAngles[position], 2.0};
+            180+scoringAngles[position], 2.0);
             goBehindReef = false;
-        }*/
+        }
+        isDriving = willDrive;
     }
 
     
