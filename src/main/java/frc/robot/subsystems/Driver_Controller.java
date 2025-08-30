@@ -154,6 +154,8 @@ public static Boolean buttonHPSalign(){
     return m_Controller1.getRawButton(2);}
 public static Boolean buttonRemoveAlign(){
     return m_Controller1.getRawButton(5);}
+public static Boolean buttonLaserCan(){
+    return m_Controller1.getRawButton(4);}
     
 
 public static Boolean buttonExtendClimb(){

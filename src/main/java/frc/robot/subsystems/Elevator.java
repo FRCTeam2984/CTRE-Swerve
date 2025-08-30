@@ -27,7 +27,6 @@ public class Elevator{
                 enableOuttakeSensors;
   public static int currentLevel = 0;
   public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 15.0, 62.0, 116.0, 186.0}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
-
   public static void sensorInit(){
     try {
       laserSensor.setRangingMode(LaserCan.RangingMode.LONG);
@@ -37,9 +36,17 @@ public class Elevator{
   }
 
   public static void elevatorPeriodic(){
+    useLaserSensor=Driver_Controller.buttonLaserCan();
     bottomSwitchPressed = elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround";
     //currentPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10));
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
+    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+    Double laserCanOffset=(laserDist.distance_mm-200.0)/8.92327586207-currentPosition;
+    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && laserDist.distance_mm<500){
+      //System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
+      //double elevatorLaserHeightOffset=laserDist.distance_mm-200.0;
+      currentPosition+=laserCanOffset;
+    }
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
       if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
@@ -66,11 +73,6 @@ public class Elevator{
       outtakeMotor.set(0.0);
     }
     }
-
-    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
-    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
-      //System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
-    }
   }
 
   // function for keeping a variable between a lower and upper limit
@@ -94,7 +96,7 @@ public class Elevator{
     if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
       minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
     }*/
-			
+    
 		// set motor power based on error or set it to keep position
     power = error/30;
     if (Math.abs(error) < maxError){
