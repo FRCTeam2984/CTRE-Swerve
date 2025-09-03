@@ -214,9 +214,9 @@ public class Robot extends TimedRobot {
     }else{
       if (Driver_Controller.buttonCoralStationIntake()){
         Intake.intakeState = "remove";
-        Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, -0.3);
+        Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.3);
       } else{
-        Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, -0.0);
+        Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.0);
         if (Driver_Controller.buttonReverseCoral()){
           Intake.intakeState = "reset";
         }else Intake.intakeState = "retract";
