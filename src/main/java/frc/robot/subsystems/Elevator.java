@@ -41,11 +41,11 @@ public class Elevator{
     //currentPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10));
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
     LaserCan.Measurement laserDist = laserSensor.getMeasurement();
-    Double laserCanOffset=(laserDist.distance_mm-200.0)/8.92327586207-currentPosition;
-    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && laserDist.distance_mm<500){
+    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
       //System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
       //double elevatorLaserHeightOffset=laserDist.distance_mm-200.0;
-      currentPosition+=laserCanOffset;
+      Double laserCanOffset=(laserDist.distance_mm-200.0)/8.92327586207-currentPosition;
+      if (laserDist.distance_mm<500)currentPosition+=laserCanOffset;
     }
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){

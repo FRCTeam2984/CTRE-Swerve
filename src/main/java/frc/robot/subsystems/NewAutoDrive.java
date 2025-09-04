@@ -72,9 +72,9 @@ public class NewAutoDrive{
         if (willDrive){
             switch(Location){
                 case "reef":
-                    targetX = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]-Math.sin(Math.toRadians(scoringAngles[position]+90));
-                    targetY = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position]+90));
-                    if (goBehindReef) driveToXYA(targetX, targetY, 180+scoringAngles[position], 3.0);
+                    targetX = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]-Math.sin(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
+                    targetY = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
+                    if (goBehindReef) driveToXYA(targetX, targetY, scoringAngles[position]+((alliance == "blue")?0:180), 1.0);
                     break;
                 case "hps":
                     if (alliance == "blue"){
@@ -85,7 +85,7 @@ public class NewAutoDrive{
                         }
                     }else{
                         if (RobotContainer.drivetrain.getState().Pose.getY() > reefY){
-                            driveToXYA(16.37, 6.95, 234.0+180, 2.0);
+                            driveToXYA(16.37, 6.95, 234.0+180+123.6, 2.0);//+122.66-54, 2.0);
                         }else{
                             driveToXYA(16.35, 1.13, 126.0+180, 2.0);
                         }
@@ -115,7 +115,7 @@ public class NewAutoDrive{
             System.out.println("yes");
             driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0],
             ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1],
-            180+scoringAngles[position], 2.0);
+            scoringAngles[position]+((alliance == "blue")?0:180), 1.0);
             goBehindReef = false;
         }
         isDriving = willDrive;

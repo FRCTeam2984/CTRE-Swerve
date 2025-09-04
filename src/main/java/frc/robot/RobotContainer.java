@@ -141,10 +141,11 @@ public class RobotContainer {
                     }
                     else{
                         rotaryJoystickInput = Rotary_Controller.RotaryJoystick(Driver_Controller.m_Controller1);               // Get input from the rotary controller (ID from m_controller1)
-                        if (wasCommandAngle){
+                        if (wasCommandAngle || needToReset){
                             rotaryOffset = (pigeonYaw + (360 * 1000))% 360;
                             wasCommandAngle = false;
                             rotaryOffset = (rotaryOffset - rotaryJoystickInput);
+                            needToReset = false;
                         }
                         
                         rotaryJoystickInput = rotaryJoystickInput + rotaryOffset;
@@ -152,6 +153,14 @@ public class RobotContainer {
                     //Math to calculate the maximum turn speed
                     double diff = pigeonYaw - (rotaryJoystickInput);
                     double diffmod180 = ((diff + 360*1000 + 180)%360) - 180;
+                    if (resetToRobot){
+                        needToReset = true;
+                    }
+                    /*
+                    if (needToReset && Driver_Controller.SwerveCommandControl == false){
+                        robotOffset -= diffmod180;
+                        needToReset = false;
+                    }*/
                     double powerCurved = -diffmod180;
                     powerCurved = Math.max(-45,Math.min(45,powerCurved));
                     double angleDiff = ((pigeonYaw + (360 * 1000) + 180) % 180) - (rotaryJoystickInput - 180);
