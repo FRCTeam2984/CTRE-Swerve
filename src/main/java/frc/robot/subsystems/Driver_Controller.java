@@ -178,6 +178,10 @@ public static Boolean switchAlgaeIntake(){
     return !(m_Controller3.getRawButton(9));}
 public static Boolean switchExtraOnOff(){
     return m_Controller3.getRawButton(10);}
+
+public static Boolean buttonEBrake(){
+    return false;
+}
         
 public static Boolean buttonL4(){
     return m_Controller2.getRawButton(1);}

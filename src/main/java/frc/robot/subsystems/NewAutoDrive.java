@@ -3,6 +3,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Driver_Controller;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.AutoDriveFinal;
+import frc.robot.Robot;
 
 public class NewAutoDrive{
     public static Boolean isDriving = false, goBehindReef = true;
@@ -64,7 +65,8 @@ public class NewAutoDrive{
             scoringPosRed[i][1] = scoringPosBlue[(i+6)%12][1];
         }
     }
-    public static void periodicDriveToLocation(boolean willDrive, String Location, int position){
+    public static void periodicDriveToLocation(boolean willDrive, String Location){
+        int position = Robot.scoringPos;
         Double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         Double odox = RobotContainer.drivetrain.getState().Pose.getX();
         Double targetX = -100.0, targetY = -100.0;

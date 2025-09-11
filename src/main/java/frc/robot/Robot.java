@@ -39,7 +39,7 @@ import frc.robot.subsystems.LED;
 public class Robot extends TimedRobot {
   Boolean elevatorEnabled = true, useNewAutoDrive = true;
   Boolean schedule = false, lastPressed = false, lastSwitch = true;
-  int scoringPos = (int) Driver_Controller.ReefPosition();
+  public static int scoringPos = (int) Driver_Controller.ReefPosition();
   // private static final String kDefaultAuto = "score + de-algae 1x";
   // private static final String kCustomAuto = "My Auto";
   // private String m_autoSelected;
@@ -264,17 +264,26 @@ public class Robot extends TimedRobot {
     }
     }else{
       if (Driver_Controller.buttonReefAlign())
-        NewAutoDrive.periodicDriveToLocation(true, "reef", scoringPos);
+        NewAutoDrive.periodicDriveToLocation(true, "reef");
       else if (Driver_Controller.buttonRotateToReef())
-        NewAutoDrive.periodicDriveToLocation(true, "orient", scoringPos);
+        NewAutoDrive.periodicDriveToLocation(true, "orient");
       else if (Driver_Controller.buttonHPSalign())
-        NewAutoDrive.periodicDriveToLocation(true, "hps", scoringPos);
+        NewAutoDrive.periodicDriveToLocation(true, "hps");
       else if (Driver_Controller.buttonRemoveAlign())
-        NewAutoDrive.periodicDriveToLocation(true, "remove", scoringPos);
-      if (false == (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign()))
-        NewAutoDrive.periodicDriveToLocation(false, "reef", -1);
+        NewAutoDrive.periodicDriveToLocation(true, "remove");
+      else if (Driver_Controller.buttonEBrake())
+        NewAutoDrive.periodicDriveToLocation(true, "stay");
+      else
+        NewAutoDrive.periodicDriveToLocation(false, "reef");
     }
-    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign());
+    autoDriveLastPressed = (Driver_Controller.buttonReefAlign() || Driver_Controller.buttonRotateToReef() || Driver_Controller.buttonHPSalign() || Driver_Controller.buttonRemoveAlign() || Driver_Controller.buttonEBrake());
+
+    if (Driver_Controller.buttonEBrake()){
+      Elevator.currentLevel = -2;
+      Intake.intakeState = "hold";
+      Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.0);
+
+    }
 
     if (elevatorEnabled) Elevator.elevatorPeriodic();
     Intake.intakePeriodic();

@@ -50,8 +50,12 @@ public class Intake {
                 break;
             case "retract":
                 retract();
-                // might cause issues;
+                // might cause issues
                 desiredPosition = 22.0;
+                break;
+            case "hold":
+                desiredPosition = currentPosition;
+                moveIntake();
                 break;
         }
         controlRoller();
@@ -71,19 +75,18 @@ public class Intake {
 	public static void retract(){
         Double maxPower = 0.5, minPower = -0.5;
 
+        // calculate power, gravity compensation + more power for how far away
         Double power = intakeGravity+currentPosition/75;
         // using limit switches
         if (insideSwitch.isPressed()){
             maxPower = 0.0;
         }
-        if (outsideSwitch.isPressed()){
-            power = 0.0;
-        }if(Math.abs(currentPosition) < 2){
-            power = intakeGravity;
+        if (outsideSwitch.isPressed() || Math.abs(currentPosition) < 2){
+            power = 0.0; // sets power to 0 if close to inside limit switch
         }
 
-        power = intakeGravity+currentPosition/75;
-        if (outsideSwitch.isPressed() == false && currentPosition < 5) power -= 0.2;
+        // increase power if far from inside
+        if (outsideSwitch.isPressed() == false && currentPosition > 5) power -= 0.1;
         
         intakePivot.set(clamp(minPower, maxPower, power));
     }
