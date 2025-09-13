@@ -7,10 +7,11 @@ import frc.robot.Robot;
 
 public class NewAutoDrive{
     public static Boolean isDriving = false, goBehindReef = true;
+    public static Double accelFac = 0.0;
     public static String alliance = "red";
     public static void driveToXYA(Double x, Double y, Double angle, Double speed){
         Driver_Controller.SwerveControlSet(true);
-        Double odoAngle = ((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360) - 180;
+        Double odoAngle = ((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360);
         //((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
         Double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         Double odox = RobotContainer.drivetrain.getState().Pose.getX();
@@ -18,7 +19,7 @@ public class NewAutoDrive{
         // use pythagorean theorum to calculate distance and if it is close enough
         Double dist = Math.pow(Math.pow((odox-x), 2) + Math.pow((odoy-y), 2), 0.5); 
         Double driveAngle = Math.atan2(y - odoy, x - odox);
-        Double divideConstant = Math.max(1.0, Math.max(Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.cos(driveAngle), Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.sin(driveAngle)));
+        Double divideConstant = Math.max(1.0, Math.max(-speed*Math.cos(driveAngle), -speed*Math.sin(driveAngle)))/Math.min(dist+0.75, accelFac);
         if (dist > 0.05){
             Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.cos(driveAngle)/divideConstant;
             Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.sin(driveAngle)/divideConstant;
@@ -72,11 +73,12 @@ public class NewAutoDrive{
         Double targetX = -100.0, targetY = -100.0;
         if (willDrive && !isDriving) goBehindReef = true;
         if (willDrive){
+            accelFac = Math.min(1, 1.0);
             switch(Location){
                 case "reef":
                     targetX = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]-Math.sin(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
                     targetY = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
-                    if (goBehindReef) driveToXYA(targetX, targetY, scoringAngles[position]+((alliance == "blue")?0:180), 1.0);
+                    if (goBehindReef) driveToXYA(targetX, targetY, scoringAngles[position]+((alliance == "red")?0:180), 1.0);
                     break;
                 case "hps":
                     if (alliance == "blue"){
@@ -87,7 +89,7 @@ public class NewAutoDrive{
                         }
                     }else{
                         if (RobotContainer.drivetrain.getState().Pose.getY() > reefY){
-                            driveToXYA(16.37, 6.95, 234.0+180+123.6, 2.0);//+122.66-54, 2.0);
+                            driveToXYA(16.37, 6.95, 234.0+180, 2.0);//+122.66-54, 2.0);
                         }else{
                             driveToXYA(16.35, 1.13, 126.0+180, 2.0);
                         }
@@ -106,18 +108,18 @@ public class NewAutoDrive{
                 case "remove":
                     driveToXYA((alliance == "blue")?algaeRemoveBlue[position/2][0]:algaeRemoveRed[position/2][0],
                     (alliance == "blue")?algaeRemoveBlue[position/2][1]:algaeRemoveRed[position/2][1],
-                    scoringAngles[position]+((alliance == "blue")?180:0),
+                    scoringAngles[position]+((alliance == "red")?180:0),
                     2.0);
                     break;
             }
-        }
+        }else accelFac = 1.0;
         Driver_Controller.SwerveCommandControl = willDrive;
 
         if (willDrive && (goBehindReef == false ||(willDrive && Math.abs(targetX-odox) < 0.5 && Math.abs(targetY-odoy) < 0.5))){
             System.out.println("yes");
             driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0],
             ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1],
-            scoringAngles[position]+((alliance == "blue")?0:180), 1.0);
+            scoringAngles[position]+((alliance == "red")?0:180), 1.0);
             goBehindReef = false;
         }
         isDriving = willDrive;

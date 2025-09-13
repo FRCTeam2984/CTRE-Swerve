@@ -36,7 +36,7 @@ public class Intake {
         // moving the arm based on inputs
         switch(intakeState){
             case "remove":
-                desiredPosition = 12.0;
+                desiredPosition = 10.0;
                 moveIntake();
                 break;
             case "reset":
@@ -76,7 +76,7 @@ public class Intake {
         Double maxPower = 0.5, minPower = -0.5;
 
         // calculate power, gravity compensation + more power for how far away
-        Double power = intakeGravity+currentPosition/75;
+        Double power = intakeGravity+currentPosition/25-0.1;
         // using limit switches
         if (insideSwitch.isPressed()){
             maxPower = 0.0;

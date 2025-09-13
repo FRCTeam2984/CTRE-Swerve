@@ -32,6 +32,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LED;
+import au.grapplerobotics.CanBridge;
+import au.grapplerobotics.LaserCan;
 // import networktablesdesktopclient.NetworkTablesDesktopClient;
 // import com.ctre.phoenix6.swerve.*;
 // import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
   // String state = "drive past line";  // for setting autonomous state
 
   public Robot() {
+    CanBridge.runTCP();
     Elevator.sensorInit();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
     // double[] value = table.getEntry("robotPose")
@@ -67,6 +70,7 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {
+    SignalLogger.setPath("/media/sda/");
   }
 
   @Override
@@ -174,10 +178,12 @@ public class Robot extends TimedRobot {
     Elevator.currentLevel = -1;
     alliance = (DriverStation.getAlliance().toString().charAt(9) == 'B')?"blue":"red"; // finds the alliance
     Intake.upAdjust = 0.0;
+    Elevator.sensorInit();
   }
 
   @Override
   public void teleopPeriodic() {
+    RobotContainer.sliderAdjustment = Driver_Controller.upperDriverSlider()*0.45+0.55;
     if (Driver_Controller.driverSwitch()) {
       Limelight.limelightOdometryUpdate();
     }

@@ -53,6 +53,7 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
     // private final CommandSwerveDrivetrain m_commandSwerveDrivetrain = new CommandSwerveDrivetrain();
+    public static Double sliderAdjustment = 1.0;
     private final Driver_Controller m_driverController = new Driver_Controller();
     private final Elevator m_elevator = new Elevator();
     private final Intake m_intake = new Intake();
@@ -132,6 +133,7 @@ public class RobotContainer {
 
                 public static double rotaryCalc(Boolean resetToRobot){
                     double pigeonYaw = drivetrain.getPigeon2().getYaw().getValueAsDouble();    //Read from the pigeon (Gyro angle as a double)             // Grab the yaw value from the swerve drive IMU as a double
+                    pigeonYaw=((drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360);
                     double rotaryJoystickInput;    //Define the variable rotaryJoystickInput as a double
                     
                     // Determine if Command control is enabled
@@ -220,23 +222,23 @@ public class RobotContainer {
                 drivetrain.setDefaultCommand(
                     // Drivetrain will execute this command periodically
                     drivetrain.applyRequest(() ->
-                        drive.withVelocityX(Driver_Controller.SwerveXPassthrough) // Drive forward with negative Y (forward)
-                            .withVelocityY(Driver_Controller.SwerveYPassthrough) // Drive left with negative X (left)
-                            .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn) // Drive counterclockwise with negative X (left)
+                        drive.withVelocityX(Driver_Controller.SwerveXPassthrough * ((Driver_Controller.SwerveCommandControl)?1:sliderAdjustment)) // Drive forward with negative Y (forward)
+                            .withVelocityY(Driver_Controller.SwerveYPassthrough * ((Driver_Controller.SwerveCommandControl)?1:sliderAdjustment)) // Drive left with negative X (left)
+                            .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn * ((Driver_Controller.SwerveCommandControl == true)?0.45:1)) // Drive counterclockwise with negative X (left)
                     )
                 );
         
-                Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
-                Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->
-                    point.withModuleDirection(new Rotation2d(-Driver_Controller.m_Controller0.getLeftY(), -Driver_Controller.m_Controller0.getLeftX()))
-                ));
+                //Driver_Controller.m_Controller0.a().whileTrue(drivetrain.applyRequest(() -> brake));
+                //Driver_Controller.m_Controller0.b().whileTrue(drivetrain.applyRequest(() ->
+                //    point.withModuleDirection(new Rotation2d(-Driver_Controller.m_Controller0.getLeftY(), -Driver_Controller.m_Controller0.getLeftX()))
+                //));
         
                 // Run SysId routines when holding back/start and X/Y.
                 // Note that each routine should be run exactly once in a single log.
-                Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-                Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-                Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-                Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+                // Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+                // Driver_Controller.m_Controller0.back().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+                // Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+                // Driver_Controller.m_Controller0.start().and(Driver_Controller.m_Controller0.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         
                 // reset the field-centric heading on left bumper press
                 //Driver_Controller.m_Controller0.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));

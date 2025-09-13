@@ -45,12 +45,13 @@ public class Elevator{
       //System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
       //double elevatorLaserHeightOffset=laserDist.distance_mm-200.0;
       Double laserCanOffset=(laserDist.distance_mm-200.0)/8.92327586207-currentPosition;
+      System.out.println(laserDist.distance_mm-200.0);
       if (laserDist.distance_mm<500)currentPosition+=laserCanOffset;
     }
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
-      if (currentPosition > 3 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
-      else if (!bottomSwitchPressed) elevatorMotor.set(-0.3);
+      if (currentPosition > 15 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
+      else if (!bottomSwitchPressed) elevatorMotor.set(-0.2);
       else elevatorMotor.set(0.0);
     }else if (currentLevel == 1){
       elevatorTo(15.0);
