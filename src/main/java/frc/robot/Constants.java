@@ -28,7 +28,10 @@ public class Constants {
     public static final int elevatorMotorID = 18; 
     public static final int elevatorArmMotorID = 19;    
     static int ID_ROTARY_CONTROLLER = 1;
-
+public double pythagorian_theorum(double A, double B){
+    double ret = Math.sqrt(Math.pow((A), 2) + Math.pow((B), 2));
+return ret;
+}
     /* From PathPlanner */
     static int ID_OPERATOR_CONTROLLER = 0;
 
