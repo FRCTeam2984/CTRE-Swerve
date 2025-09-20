@@ -36,7 +36,9 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FileVersionException;
 
 import frc.robot.Constants;
-import frc.robot.generated.TunerConstants;
+
+
+
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 /* Import Subsystems */
 // import frc.robot.subsystems.Climb;
@@ -48,6 +50,8 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Rotary_Controller;
 
+import frc.robot.mainChassis.TunerConstants;
+//import frc.robot.testChassis.TunerConstants; 
 
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
