@@ -7,27 +7,38 @@ import frc.robot.Robot;
 
 public class NewAutoDrive{
     public static Boolean isDriving = false, goBehindReef = true;
-    public static Double accelFac = 0.0;
+    public static Double accelFac = 0.0, autoDriveMaxSpeed = 2.0;
     public static String alliance = "red";
-    public static void driveToXYA(Double x, Double y, Double angle, Double speed){
+    public static void driveToXYA(Double x, Double y, Double angle, Double speed, Double slowDownDist){
         Driver_Controller.SwerveControlSet(true);
         Double odoAngle = ((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360);
         //((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
         Double odoy = RobotContainer.drivetrain.getState().Pose.getY();
         Double odox = RobotContainer.drivetrain.getState().Pose.getX();
-        speed *= ((alliance == "red")?1:-1);
+
         // use pythagorean theorum to calculate distance and if it is close enough
         Double dist = Math.pow(Math.pow((odox-x), 2) + Math.pow((odoy-y), 2), 0.5); 
         Double driveAngle = Math.atan2(y - odoy, x - odox);
-        Double divideConstant = Math.max(1.0, Math.max(-speed*Math.cos(driveAngle), -speed*Math.sin(driveAngle)))/Math.min(dist+0.75, accelFac);
+        // limit max "speed" to autoDriveMaxSpeed
+        if (speed > autoDriveMaxSpeed) speed = autoDriveMaxSpeed;
+        if (speed < -autoDriveMaxSpeed) speed = -autoDriveMaxSpeed;
+
+        // accelerate power when starting and lower power when approaching the destination, add a bit to dist so it goes faster at the end
+        Double accelMult = Math.min(1.0, Math.min((dist+0.1)/slowDownDist, accelFac));
+        speed *= accelMult;
+        speed += 0.15; // add a little bit of speed to avoid dead spot
+        speed *= ((alliance == "red")?1:-1); // opposite directions if red vs blue
         if (dist > 0.05){
-            Driver_Controller.SwerveCommandXValue = Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.cos(driveAngle)/divideConstant;
-            Driver_Controller.SwerveCommandYValue = Intake.clamp(0.0, 1.0, dist*0.3+0.15)*-speed*Math.sin(driveAngle)/divideConstant;
+            Driver_Controller.SwerveCommandXValue = -speed*Math.cos(driveAngle);
+            Driver_Controller.SwerveCommandYValue = -speed*Math.sin(driveAngle);
         }else{
             Driver_Controller.SwerveCommandXValue = 0.0;
             Driver_Controller.SwerveCommandYValue = 0.0;
         }
         Driver_Controller.SwerveCommandEncoderValue = odoAngle*0 + angle;
+    }
+    public static void driveToXYA(Double x, Double y, Double angle, Double speed){
+        driveToXYA(x, y, angle, speed, 2.0);
     }
     public static double scoringAngles[] = {0, 0, -60, -60, -120, -120, -180, -180, -240, -240, -300, -300};
     public static double[][] scoringPosRed = new double[12][2], scoringPosBlue = new double[12][2];
@@ -73,25 +84,25 @@ public class NewAutoDrive{
         Double targetX = -100.0, targetY = -100.0;
         if (willDrive && !isDriving) goBehindReef = true;
         if (willDrive){
-            accelFac = Math.min(1, 1.0);
+            accelFac = Math.min(1, accelFac+0.05);
             switch(Location){
                 case "reef":
                     targetX = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]-Math.sin(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
                     targetY = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
-                    if (goBehindReef) driveToXYA(targetX, targetY, scoringAngles[position]+((alliance == "red")?0:180), 1.0);
+                    if (goBehindReef) driveToXYA(targetX, targetY, scoringAngles[position]+((alliance == "blue")?0:180), 1.0, 0.5);
                     break;
                 case "hps":
                     if (alliance == "blue"){
                         if (RobotContainer.drivetrain.getState().Pose.getY() > reefY){
-                            driveToXYA(1.18, 6.95, 306.0+180, 2.0);
+                            driveToXYA(1.18, 6.95, 306.0, 2.0);
                         }else{
-                            driveToXYA(1.18, 1.11, 54.0+180, 2.0);
+                            driveToXYA(1.18, 1.11, 54.0, 2.0);
                         }
                     }else{
                         if (RobotContainer.drivetrain.getState().Pose.getY() > reefY){
-                            driveToXYA(16.37, 6.95, 234.0+180, 2.0);//+122.66-54, 2.0);
+                            driveToXYA(16.37, 6.95, 234.0, 2.0);//+122.66-54, 2.0);
                         }else{
-                            driveToXYA(16.35, 1.13, 126.0+180, 2.0);
+                            driveToXYA(16.35, 1.13, 126.0, 2.0);
                         }
                     }
                     break;
@@ -112,14 +123,13 @@ public class NewAutoDrive{
                     2.0);
                     break;
             }
-        }else accelFac = 1.0;
+        }else accelFac = 0.0;
         Driver_Controller.SwerveCommandControl = willDrive;
 
-        if (willDrive && (goBehindReef == false ||(willDrive && Math.abs(targetX-odox) < 0.5 && Math.abs(targetY-odoy) < 0.5))){
-            System.out.println("yes");
+        if (willDrive && (goBehindReef == false ||(willDrive && Math.abs(targetX-odox) < 0.2 && Math.abs(targetY-odoy) < 0.2))){
             driveToXYA(((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0],
             ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1],
-            scoringAngles[position]+((alliance == "red")?0:180), 1.0);
+            scoringAngles[position]+((alliance == "blue")?0:180), 1.0);
             goBehindReef = false;
         }
         isDriving = willDrive;
