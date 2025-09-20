@@ -4,7 +4,7 @@ import frc.robot.subsystems.Driver_Controller;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.AutoDriveFinal;
 import frc.robot.Robot;
-
+import frc.robot.Constants;
 public class NewAutoDrive{
     public static Boolean isDriving = false, goBehindReef = true;
     public static Double accelFac = 0.0, autoDriveMaxSpeed = 2.0;
@@ -17,7 +17,8 @@ public class NewAutoDrive{
         Double odox = RobotContainer.drivetrain.getState().Pose.getX();
 
         // use pythagorean theorum to calculate distance and if it is close enough
-        Double dist = Math.pow(Math.pow((odox-x), 2) + Math.pow((odoy-y), 2), 0.5); 
+        
+        Double dist = Constants.pythagorian(odox-x,odoy-y);
         Double driveAngle = Math.atan2(y - odoy, x - odox);
         // limit max "speed" to autoDriveMaxSpeed
         if (speed > autoDriveMaxSpeed) speed = autoDriveMaxSpeed;
