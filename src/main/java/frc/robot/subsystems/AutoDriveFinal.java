@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 
@@ -97,7 +98,7 @@ public class AutoDriveFinal{
         //Double speedMult = 10.0*((alliance == "red")?-1:1);
         speed *= ((alliance == "red")?1:-1);
         // use pythagorean theorum to calculate distance and if it is close enough
-        Double dist = Math.pow(Math.pow((odox-x), 2) + Math.pow((odoy-y), 2), 0.5); 
+        Double dist = Constants.pythagorian(odox-x,odoy-y);
         if (dist > 0.05){
             //Driver_Controller.SwerveCommandXValue = speedMult*(x - odox) * Math.cos(odoAngle);
             //Driver_Controller.SwerveCommandYValue = speedMult*(y - odoy) *  Math.sin(((Math.PI/2)) - odoAngle);
