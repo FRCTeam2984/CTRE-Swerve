@@ -33,6 +33,16 @@ public static double pythagorian(double A, double B){
     double ret = Math.sqrt(Math.pow((A), 2) + Math.pow((B), 2));
 return ret;
 }
+public static double pythagorian(double A, double B, boolean use_radical){
+    double ret;
+    if (use_radical){
+     ret = Math.sqrt(Math.pow((A), 2) + Math.pow((B), 2));
+    } else{
+       ret = Math.pow((A), 2) + Math.pow((B), 2);
+    }
+    return ret;
+    
+}
     /* From PathPlanner */
     static int ID_OPERATOR_CONTROLLER = 0;
 
