@@ -28,7 +28,7 @@ public class Constants {
     public static final int elevatorMotorID = 18; 
     public static final int elevatorArmMotorID = 19;    
     static int ID_ROTARY_CONTROLLER = 1;
-
+public static final String aprilpath = "";
 
 public static double pythagorian(double A, double B, boolean use_radical){
     double ret;
