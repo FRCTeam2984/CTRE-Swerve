@@ -148,8 +148,6 @@ public static Boolean buttonReefAlign(){
     return m_Controller1.getRawButton(1);}
 public static Boolean buttonRotateToReef(){
     return m_Controller1.getRawButton(3);}
-public static Boolean buttonResetIntake(){
-    return false;}
 public static Boolean buttonHPSalign(){
     return m_Controller1.getRawButton(2);}
 public static Boolean buttonRemoveAlign(){
@@ -159,32 +157,35 @@ public static Boolean buttonLaserCan(){
 public static Double upperDriverSlider(){
     return m_Controller1.getRawAxis(3);}
     
-
-public static Boolean buttonExtendClimb(){
-    return m_Controller3.getRawButton(1);}
-public static Boolean buttonRetractClimb(){
-    return m_Controller3.getRawButton(2);}
 public static Boolean buttonScoreAlgae(){
     return m_Controller3.getRawButton(3);}
 public static Boolean buttonCoralStationIntake(){
     return m_Controller3.getRawButton(4);}
-public static Boolean buttonCoralIntakeGround(){
-    return m_Controller3.getRawButton(6);}
-public static Boolean buttonReverseCoral(){
+public static Boolean buttonIntakeAdjust(){
+    return m_Controller3.getRawButton(7);}
+public static Boolean buttonResetIntake(){
     return m_Controller3.getRawButton(5);}
 public static Boolean buttonTransportPivot(){
-    return m_Controller3.getRawButton(7);}
-public static Boolean buttonRemoveAlgae(){
-    return m_Controller3.getRawButton(8);} 
+    return m_Controller3.getRawButton(6);}
+public static Boolean buttonRevOuttake(){
+    return m_Controller3.getRawButton(8);}
 public static Boolean switchAlgaeIntake(){
-    return !(m_Controller3.getRawButton(9));}
-public static Boolean switchExtraOnOff(){
-    return m_Controller3.getRawButton(10);}
-
+    return !(m_Controller3.getRawButton(10));}
+public static Boolean switchLaserCan(){
+    return m_Controller3.getRawButton(9);}
 public static Boolean buttonEBrake(){
-    return false;
-}
+    return m_Controller2.getRawButton(1);}
+
+/*unused buttons: 
+    m_Controller2.getRawButton(8);
+    m_Controller3.getRawButton(2);
+    m_Controller3.getRawButton(12);
+*/
         
+public static Boolean buttonElevatorUp(){
+    return m_Controller2.getRawButton(6);}
+public static Boolean buttonElevatorDown(){
+    return m_Controller2.getRawButton(7);}
 public static Boolean buttonL4(){
     return m_Controller2.getRawButton(1);}
 public static Boolean buttonL3(){

@@ -193,7 +193,7 @@ public class Robot extends TimedRobot {
     //LED.sendData();
 
     // setting elevator position from controller inputs
-    Elevator.useLaserSensor = !Driver_Controller.switchExtraOnOff();
+    Elevator.useLaserSensor = !Driver_Controller.switchLaserCan();
     if (Driver_Controller.buttonResetElevator()) Elevator.currentLevel = 0;
     if (Driver_Controller.buttonL2()) Elevator.currentLevel = 2;
     if (Driver_Controller.buttonL3()) Elevator.currentLevel = 3;
@@ -204,7 +204,7 @@ public class Robot extends TimedRobot {
       Elevator.outtakeMotor.set(-0.5);
     }
     else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
-    else if (Driver_Controller.buttonRemoveAlgae()) Elevator.outtakeMotor.set(0.2);
+    else if (Driver_Controller.buttonRevOuttake()) Elevator.outtakeMotor.set(0.2);
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
 
     // dealing with intake
@@ -212,7 +212,7 @@ public class Robot extends TimedRobot {
       Intake.powerFactor = 0.3;
       Intake.upAdjust = 0.0;
     }
-    if (Driver_Controller.buttonCoralIntakeGround()) Intake.upAdjust += 0.05;
+    if (Driver_Controller.buttonIntakeAdjust()) Intake.upAdjust += 0.05;
     if (Driver_Controller.switchAlgaeIntake()){
       Intake.intakeState = "intake";
       if (Driver_Controller.buttonScoreAlgae()) Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.5);
@@ -223,7 +223,7 @@ public class Robot extends TimedRobot {
         Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.3);
       } else{
         Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.0);
-        if (Driver_Controller.buttonReverseCoral()){
+        if (Driver_Controller.buttonResetIntake()){
           Intake.intakeState = "reset";
         }else Intake.intakeState = "retract";
       }
@@ -295,11 +295,11 @@ public class Robot extends TimedRobot {
     Intake.intakePeriodic();
 
     //fine adjustment for elevator
-    if (Driver_Controller.buttonExtendClimb() && elevatorEnabled){
+    if (Driver_Controller.buttonElevatorUp() && elevatorEnabled){
       Elevator.elevatorMotor.set(0.15);
       Elevator.currentLevel = -2;
     }
-    if (Driver_Controller.buttonRetractClimb() && elevatorEnabled){
+    if (Driver_Controller.buttonElevatorDown() && elevatorEnabled){
       Elevator.elevatorMotor.set(-0.15);
       Elevator.currentLevel = -2;
     }
