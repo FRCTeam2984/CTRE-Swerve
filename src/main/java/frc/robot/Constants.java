@@ -53,5 +53,10 @@ public static double pythagorian(double A, double B){
     public static final String kV1Auto = "V1";
     public static final String kV2Auto = "V2";
     public static final String kV3Auto = "V3";
-    public static final String kSoftAndSlowAuto = "SoftAndSlow";
+    public static final String kV4Auto = "V4";
+    public static final String kV5Auto = "V5";
+    public static final String kV6Auto = "V6";
+    public static final String kV7Auto = "V7";
+    public static final String kV8Auto = "V8";
+    public static final String kV9Auto = "V9";
 }

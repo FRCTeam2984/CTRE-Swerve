@@ -97,16 +97,69 @@ public class RobotContainer {
 
         
 
-        PathPlannerAuto V1 = new PathPlannerAuto("15sec -- V1 (A2, A1, F2, F1)");
-        PathPlannerAuto V2 = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
-        PathPlannerAuto V3 = new PathPlannerAuto("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-        PathPlannerAuto SafeAndSlow = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
-
+        // PathPlannerAuto V1 = new PathPlannerAuto("15sec -- V1 (A2, A1, F2, F1)");
+        // PathPlannerAuto V2 = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
+        // PathPlannerAuto V3 = new PathPlannerAuto("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
+        // PathPlannerAuto SafeAndSlow = new PathPlannerAuto("Normal -- V2 (B1, A2, A1, F2, F1)");
+        
         public static Command ScheduleTestingPath = RobotContainer.schedulePathplannerMove("Testing path");
-        public static Command ScheduleV1 = RobotContainer.schedulePathplannerMove("15sec -- V1 (A2, A1, F2, F1)");
-        public static Command ScheduleV2 = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
-        public static Command ScheduleV3 = RobotContainer.schedulePathplannerMove("15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
-        public static Command ScheduleSafeAndSlow = RobotContainer.schedulePathplannerMove("Normal -- V2 (B1, A2, A1, F2, F1)");
+        
+        // autos for kV1Auto
+        // auto folder - USE - 1 piece, BLUE Side C1 and Stop
+        public static Command Schedule1 = RobotContainer.schedulePathplannerMove("E. Blue Side C1 and Stop");
+
+        // autos for kV2Auto
+        // auto folder - USE - 1 piece, BLUE Side C2 and Stop
+        public static Command Schedule2 = RobotContainer.schedulePathplannerMove("F. Blue Side C2 and Stop");
+
+        // autos for kV3Auto
+        // auto folder - USE - 1 piece, RED F2 and Stop
+        // FOLDER EMPTY - find autos - siena
+        //public static Command Schedule3 = RobotContainer.schedulePathplannerMove(SOMETHING);
+
+        // autos for kV4Auto
+        // auto folder - USE - 1 piece, RED Side F1 and Stop
+        public static Command Schedule4 = RobotContainer.schedulePathplannerMove("G. Red Side F1 and Stop");
+
+        // autos for kV5Auto
+        // auto folder - USE - 2 piece, BLUE Side A
+        // FOLDER EMPTY - find autos - siena
+        // public static Command Schedule5 = RobotContainer.schedulePathplannerMove(SOMETHING);
+
+        // autos for kV6Auto
+        // auto folder - USE - 4 piece, BLUE Sides A and B
+        public static Command Schedule6_1 = RobotContainer.schedulePathplannerMove("1. Blue Pos1 To B2");
+        public static Command Schedule6_2 = RobotContainer.schedulePathplannerMove("2. Blue B2 To HPS");
+        public static Command Schedule6_3 = RobotContainer.schedulePathplannerMove("3. Blue HPS To B1");
+        public static Command Schedule6_4 = RobotContainer.schedulePathplannerMove("4. Blue B1 To Hps");
+        public static Command Schedule6_5 = RobotContainer.schedulePathplannerMove("5. Blue HPS To A2");
+        public static Command Schedule6_6 = RobotContainer.schedulePathplannerMove("6. Blue A2 To HPS");
+        public static Command Schedule6_7 = RobotContainer.schedulePathplannerMove("7. Blue HPS To A1");
+
+        // autos for kV7Auto
+        // auto folder - USE - 4 piece, BLUE Sides D and E
+        public static Command Schedule7_1 = RobotContainer.schedulePathplannerMove("1. Blue Pos3 To D1");
+        public static Command Schedule7_2 = RobotContainer.schedulePathplannerMove("2. Blue D1 To HPS");
+        public static Command Schedule7_3 = RobotContainer.schedulePathplannerMove("3. Blue HPS to D2");
+        public static Command Schedule7_4 = RobotContainer.schedulePathplannerMove("4. Blue D2 To HPS");
+        public static Command Schedule7_5 = RobotContainer.schedulePathplannerMove("5. Blue HPS To E1");
+        public static Command Schedule7_6 = RobotContainer.schedulePathplannerMove("6. Blue E1 To HPS");
+        public static Command Schedule7_7 = RobotContainer.schedulePathplannerMove("7. Blue HPS To E2");
+
+        // autos for kV8Auto
+        // auto folder - USE - 4 piece, RED Sides A and B
+        // FOLDER EMPTY - find autos - siena
+        // public static Command Schedule8 = RobotContainer.schedulePathplannerMove(SOMETHING);
+
+        // autos for kV9Auto
+        // auto folder - USE - 4 piece, RED, Sides E and D
+        public static Command Schedule9_1 = RobotContainer.schedulePathplannerMove("1. Red Pos1 to E2");
+        public static Command Schedule9_2 = RobotContainer.schedulePathplannerMove("2. Red E2 To HPS");
+        public static Command Schedule9_3 = RobotContainer.schedulePathplannerMove("3. Red HPS To E1");
+        public static Command Schedule9_4 = RobotContainer.schedulePathplannerMove("4. Red E1 To HPS");
+        public static Command Schedule9_5 = RobotContainer.schedulePathplannerMove("5. Red HPS to D2");
+        public static Command Schedule9_6 = RobotContainer.schedulePathplannerMove("6. Red D2 To HPS");
+        public static Command Schedule9_7 = RobotContainer.schedulePathplannerMove("7. Red HPS To D1");
 
         public static final SendableChooser<String> autoChooser = new SendableChooser<>();
 
@@ -121,7 +174,12 @@ public class RobotContainer {
                     autoChooser.addOption("V1", Constants.kV1Auto);
                     autoChooser.addOption("V2", Constants.kV2Auto);
                     autoChooser.addOption("V3", Constants.kV3Auto);
-                    autoChooser.addOption("SoftAndSlow", Constants.kSoftAndSlowAuto);
+                    autoChooser.addOption("V4", Constants.kV4Auto);
+                    autoChooser.addOption("V5", Constants.kV5Auto);
+                    autoChooser.addOption("V6", Constants.kV6Auto);
+                    autoChooser.addOption("V7", Constants.kV7Auto);
+                    autoChooser.addOption("V8", Constants.kV8Auto);
+                    autoChooser.addOption("V9", Constants.kV9Auto);
                     // autoChooser.addOption("V3", "15 - Abs Ideal -- V3 (B1, A2, A1, F2, F1)");
                     // autoChooser = AutoBuilder.buildAutoChooser("Normal -- V2 (B1, A2, A1, F2, F1)");
         
