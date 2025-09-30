@@ -128,6 +128,7 @@ public class RobotContainer {
 
         // autos for kV6Auto
         // auto folder - USE - 4 piece, BLUE Sides A and B
+        // NOT WORKING AEURIOHAEUIORH
         public static Command Schedule6_1 = RobotContainer.schedulePathplannerMove("1. Blue Pos1 To B2");
         public static Command Schedule6_2 = RobotContainer.schedulePathplannerMove("2. Blue B2 To HPS");
         public static Command Schedule6_3 = RobotContainer.schedulePathplannerMove("3. Blue HPS To B1");
