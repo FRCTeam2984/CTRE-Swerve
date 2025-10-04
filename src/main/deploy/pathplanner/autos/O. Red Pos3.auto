@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "Red Pos3"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "USE - 0 piece, Leave zone autos",
+  "folder": "USE - Leave Autos",
   "choreoAuto": false
 }

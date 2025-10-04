@@ -79,7 +79,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Leave Autos",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0

@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Pos1 to A2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE A2 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE HPS TO A1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
