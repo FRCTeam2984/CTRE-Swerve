@@ -25,7 +25,7 @@ public class Elevator{
                 useLaserSensor = true,
                 moveCoral = false,
                 enableOuttakeSensors;
-  public static int currentLevel = 0;
+  public static int currentLevel = 0, counter = 0;
   public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 15.0, 62.0, 116.0, 186.0}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
   public static void sensorInit(){
     try {
@@ -36,18 +36,9 @@ public class Elevator{
   }
 
   public static void elevatorPeriodic(){
-    useLaserSensor=Driver_Controller.buttonLaserCan();
     bottomSwitchPressed = elevatorMotor.getReverseLimit().getValue().toString() == "ClosedToGround";
-    //currentPosition = Double.parseDouble(elevatorMotor.getRotorPosition().toString().substring(0, 10));
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
-    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
-    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
-      //System.out.println(laserDist.distance_mm);//minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
-      //double elevatorLaserHeightOffset=laserDist.distance_mm-200.0;
-      Double laserCanOffset=(laserDist.distance_mm-200.0)/8.92327586207-currentPosition;
-      System.out.println(laserDist.distance_mm-200.0);
-      if (laserDist.distance_mm<500)currentPosition+=laserCanOffset;
-    }
+    laserOffsetCalc();
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
     if (currentLevel == 0){
       if (currentPosition > 15 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
@@ -109,6 +100,26 @@ public class Elevator{
     power = clamp(minPower, maxPower, power);
     elevatorMotor.set(power);
     return false;
+  }
+
+  public static Integer historyLength = 12;
+  public static Double[] offset = new Double[historyLength];
+  public static void laserOffsetCalc(){
+    useLaserSensor=Driver_Controller.switchLaserCan();
+    LaserCan.Measurement laserDist = laserSensor.getMeasurement();
+    Double laserCanOffset = 0.0;
+    if (laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && laserDist.distance_mm<500){
+      laserCanOffset=(laserDist.distance_mm-5)/8.92327586207-currentPosition;
+      Double total = 0.0;
+      for (int i = 0; i < historyLength-1; ++i){
+        offset[i] = offset[i+1];
+        if (offset[i] != null)total += offset[i];
+      }
+      offset[historyLength-1] = laserCanOffset;
+      laserCanOffset = (total+laserCanOffset) / historyLength;
+      System.out.println(laserCanOffset*8.92327586207);
+    }
+    if (useLaserSensor)currentPosition+=laserCanOffset;
   }
 
   // extend or retract the small arm on the elevator

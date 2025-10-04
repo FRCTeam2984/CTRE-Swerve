@@ -147,16 +147,50 @@ public class Robot extends TimedRobot {
         RobotContainer.ScheduleTestingPath.schedule();
         break;
       case Constants.kV1Auto:
-        RobotContainer.ScheduleV1.schedule();
+        RobotContainer.Schedule1.schedule();
         break;
       case Constants.kV2Auto:
-        RobotContainer.ScheduleV2.schedule();
+        RobotContainer.Schedule2.schedule();
         break;
-      case Constants.kV3Auto:
-        RobotContainer.ScheduleV3.schedule();
+      case Constants.kV3Auto:  
+        // RobotContainer.ScheduleV3.schedule();
         break;
-      case Constants.kSoftAndSlowAuto:
-        RobotContainer.ScheduleSafeAndSlow.schedule();
+      case Constants.kV4Auto:
+        RobotContainer.Schedule4.schedule();
+        break;
+      case Constants.kV5Auto:
+        // RobotContainer.Schedule5.schedule();
+        break;
+      case Constants.kV6Auto:
+        RobotContainer.Schedule6_1.schedule();
+        RobotContainer.Schedule6_2.schedule();
+        RobotContainer.Schedule6_3.schedule();
+        RobotContainer.Schedule6_4.schedule();
+        RobotContainer.Schedule6_5.schedule();
+        RobotContainer.Schedule6_6.schedule();
+        RobotContainer.Schedule6_7.schedule();
+        break;
+      case Constants.kV7Auto:
+        RobotContainer.Schedule7_1.schedule();
+        RobotContainer.Schedule7_2.schedule();
+        RobotContainer.Schedule7_3.schedule();
+        RobotContainer.Schedule7_4.schedule();
+        RobotContainer.Schedule7_5.schedule();
+        RobotContainer.Schedule7_6.schedule();
+        RobotContainer.Schedule7_7.schedule();
+
+        break;
+      case Constants.kV8Auto:
+        // RobotContainer.Schedule8.schedule();
+        break;
+      case Constants.kV9Auto:
+        RobotContainer.Schedule9_1.schedule();
+        RobotContainer.Schedule9_2.schedule();
+        RobotContainer.Schedule9_3.schedule();
+        RobotContainer.Schedule9_4.schedule();
+        RobotContainer.Schedule9_5.schedule();
+        RobotContainer.Schedule9_6.schedule();
+        RobotContainer.Schedule9_7.schedule();
         break;
     }
   }
