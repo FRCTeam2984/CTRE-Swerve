@@ -16,6 +16,7 @@ import com.pathplanner.lib.controllers.PPLTVController;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.TimeUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -143,19 +144,19 @@ public class Robot extends TimedRobot {
       case Constants.kPassTheLine:
         driveSouthPastLine();
         break;
-      case Constants.kTestingPathAuto:
+      case Constants.kTestingPathAuto:// works
         RobotContainer.ScheduleTestingPath.schedule();
         break;
-      case Constants.kV1Auto:
+      case Constants.kV1Auto:// works
         RobotContainer.Schedule1.schedule();
         break;
-      case Constants.kV2Auto:
+      case Constants.kV2Auto:// works
         RobotContainer.Schedule2.schedule();
         break;
       case Constants.kV3Auto:  
-        // RobotContainer.ScheduleV3.schedule();
+        // RobotContainer.Schedule3.schedule();
         break;
-      case Constants.kV4Auto:
+      case Constants.kV4Auto:// works
         RobotContainer.Schedule4.schedule();
         break;
       case Constants.kV5Auto:
@@ -163,12 +164,27 @@ public class Robot extends TimedRobot {
         break;
       case Constants.kV6Auto:
         RobotContainer.Schedule6_1.schedule();
+        // System.out.println("1");
+        System.out.println("Coral dropped off");
+        // to do: HAVE KEVIN ADD CORAL DROP OFF CODE, add sensor code, then move on to next step
+        // try {  
+        //   Thread.sleep(3000);
+        // } catch (InterruptedException e) {
+        //   // TODO Auto-generated catch block
+        //   e.printStackTrace();
+        // }
         RobotContainer.Schedule6_2.schedule();
+        // System.out.println("2");
         RobotContainer.Schedule6_3.schedule();
+        // System.out.println("3");
         RobotContainer.Schedule6_4.schedule();
+        // System.out.println("4");
         RobotContainer.Schedule6_5.schedule();
+        // System.out.println("5");
         RobotContainer.Schedule6_6.schedule();
+        // System.out.println("6");
         RobotContainer.Schedule6_7.schedule();
+        // System.out.println("7");
         break;
       case Constants.kV7Auto:
         RobotContainer.Schedule7_1.schedule();
