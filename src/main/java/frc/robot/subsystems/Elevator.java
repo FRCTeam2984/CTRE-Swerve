@@ -14,7 +14,7 @@ import frc.robot.Constants;
 public class Elevator{
   public static LaserCan laserSensor = new LaserCan(Constants.elevatorLaserSensorID);
   public static TalonFX elevatorMotor = new TalonFX(Constants.elevatorMotorID);
-  public static SparkMax outtakeMotor = new SparkMax(Constants.elevatorArmMotorID, MotorType.kBrushless);
+  public static SparkMax outtakeMotor = new SparkMax(Constants.elevatorOuttakeMotorID, MotorType.kBrushless);
   public static SparkLimitSwitch lowerSensor = outtakeMotor.getReverseLimitSwitch();
   public static SparkLimitSwitch upperSensor = outtakeMotor.getForwardLimitSwitch();
   public static RelativeEncoder outtakeEncoder = outtakeMotor.getEncoder();
@@ -24,9 +24,9 @@ public class Elevator{
   public static Boolean bottomSwitchPressed,
                 useLaserSensor = true,
                 moveCoral = false,
-                enableOuttakeSensors;
+                enableOuttakeSensors = false;
   public static int currentLevel = 0, counter = 0;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 15.0, 62.0, 116.0, 186.0}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 15.0038, 68.5, 116.0, 188.1538}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
   public static void sensorInit(){
     try {
       laserSensor.setRangingMode(LaserCan.RangingMode.LONG);
@@ -53,18 +53,18 @@ public class Elevator{
     }
     else elevatorMotor.set(0.0);
 
-    // moving coral when intaked
+    /*/ moving coral when intaked
     if (enableOuttakeSensors){
     if (upperSensor.isPressed()){
       System.out.println("upper sensor");
       moveCoral = true;
-      outtakeMotor.set(-0.23);
+      outtakeMotor.set(0.23);
     }
     if (lowerSensor.isPressed() && moveCoral){
       moveCoral = false;
       outtakeMotor.set(0.0);
     }
-    }
+    }*/
   }
 
   // function for keeping a variable between a lower and upper limit
@@ -109,7 +109,7 @@ public class Elevator{
     LaserCan.Measurement laserDist = laserSensor.getMeasurement();
     Double laserCanOffset = 0.0;
     if (laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && laserDist.distance_mm<500){
-      laserCanOffset=(laserDist.distance_mm-5)/8.92327586207-currentPosition;
+      laserCanOffset=laserDist.distance_mm*0.1017127325+0.2260062079-currentPosition;
       Double total = 0.0;
       for (int i = 0; i < historyLength-1; ++i){
         offset[i] = offset[i+1];
@@ -117,7 +117,6 @@ public class Elevator{
       }
       offset[historyLength-1] = laserCanOffset;
       laserCanOffset = (total+laserCanOffset) / historyLength;
-      System.out.println(laserCanOffset*8.92327586207);
     }
     if (useLaserSensor)currentPosition+=laserCanOffset;
   }

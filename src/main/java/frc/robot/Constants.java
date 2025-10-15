@@ -26,7 +26,7 @@ public class Constants {
     public static final int intakePivotMotorID = 14; 
     public static final int intakeTransportPivotID = 15; 
     public static final int elevatorMotorID = 18; 
-    public static final int elevatorArmMotorID = 19;    
+    public static final int elevatorOuttakeMotorID = 19;    
     static int ID_ROTARY_CONTROLLER = 1;
 
 

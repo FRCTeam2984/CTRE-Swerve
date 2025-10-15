@@ -32,7 +32,7 @@ public class Intake {
         if (outsideSwitch.isPressed()){intakeEncoder.setPosition(0.0);}
         else if (insideSwitch.isPressed()){intakeEncoder.setPosition(48.64);}
         currentPosition = -intakeEncoder.getPosition();
-        intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-6)/105) * -0.04;
+        intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-4)/105) * -0.1;
         // moving the arm based on inputs
         switch(intakeState){
             case "remove":
@@ -54,8 +54,9 @@ public class Intake {
                 desiredPosition = 22.0;
                 break;
             case "hold":
-                desiredPosition = currentPosition;
-                moveIntake();
+                if(intakeEncoder.getPosition() > 3){
+                    intakePivot.set(intakeGravity);
+                }else intakePivot.set(0.0);
                 break;
         }
         controlRoller();

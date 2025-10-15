@@ -50,7 +50,7 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Rotary_Controller;
 
-import frc.robot.mainChassis.TunerConstants;
+import frc.robot.generated.TunerConstants;
 //import frc.robot.testChassis.TunerConstants; 
 
 public class RobotContainer {

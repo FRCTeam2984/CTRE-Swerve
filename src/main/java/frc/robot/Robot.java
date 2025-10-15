@@ -233,6 +233,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    System.out.println(Elevator.currentPosition);
+    //System.out.println(RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble()-((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360));
     RobotContainer.sliderAdjustment = Driver_Controller.upperDriverSlider()*0.45+0.55;
     if (Driver_Controller.driverSwitch()) {
       Limelight.limelightOdometryUpdate();
@@ -251,10 +253,10 @@ public class Robot extends TimedRobot {
 
     // dealing with outtake
     if (Driver_Controller.buttonL1()){
-      Elevator.outtakeMotor.set(-0.5);
+      Elevator.outtakeMotor.set(0.8);
     }
-    else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(-0.3);
-    else if (Driver_Controller.buttonRevOuttake()) Elevator.outtakeMotor.set(0.2);
+    else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(0.3);
+    else if (Driver_Controller.buttonRevOuttake()) Elevator.outtakeMotor.set(-0.2);
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
 
     // dealing with intake
@@ -319,16 +321,17 @@ public class Robot extends TimedRobot {
       RobotContainer.rotaryCalc(true);
     }
     }else{
-      if (Driver_Controller.buttonReefAlign())
+      if (Driver_Controller.buttonEBrake()){
+        NewAutoDrive.periodicDriveToLocation(true, "stay");
+      }else if (Driver_Controller.buttonReefAlign())
         NewAutoDrive.periodicDriveToLocation(true, "reef");
       else if (Driver_Controller.buttonRotateToReef())
         NewAutoDrive.periodicDriveToLocation(true, "orient");
-      else if (Driver_Controller.buttonHPSalign())
+      else if (Driver_Controller.buttonHPSalign()){
+        Elevator.currentLevel = 1;
         NewAutoDrive.periodicDriveToLocation(true, "hps");
-      else if (Driver_Controller.buttonRemoveAlign())
+      }else if (Driver_Controller.buttonRemoveAlign())
         NewAutoDrive.periodicDriveToLocation(true, "remove");
-      else if (Driver_Controller.buttonEBrake())
-        NewAutoDrive.periodicDriveToLocation(true, "stay");
       else
         NewAutoDrive.periodicDriveToLocation(false, "reef");
     }
@@ -336,24 +339,26 @@ public class Robot extends TimedRobot {
 
     if (Driver_Controller.buttonEBrake()){
       Elevator.currentLevel = -2;
+      Elevator.elevatorMotor.set(0.0);
       Intake.intakeState = "hold";
+      Elevator.outtakeMotor.set(0.0);
       Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.0);
-
     }
 
     if (elevatorEnabled) Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
 
     //fine adjustment for elevator
-    if (Driver_Controller.buttonElevatorUp() && elevatorEnabled){
-      Elevator.elevatorMotor.set(0.15);
-      Elevator.currentLevel = -2;
+    if (Driver_Controller.buttonEBrake() == false){
+      if (Driver_Controller.buttonElevatorUp() && elevatorEnabled){
+        Elevator.elevatorMotor.set(0.15);
+        Elevator.currentLevel = -2;
+      }
+      if (Driver_Controller.buttonElevatorDown() && elevatorEnabled){
+        Elevator.elevatorMotor.set(-0.15);
+        Elevator.currentLevel = -2;
+      }
     }
-    if (Driver_Controller.buttonElevatorDown() && elevatorEnabled){
-      Elevator.elevatorMotor.set(-0.15);
-      Elevator.currentLevel = -2;
-    }
-
     /*running a pathplanner path:
       the first if statement is to start running a path. schedule has to be called multiple times. idk why.
       the method schedulePathplannerMove() takes a string input, the name of an auto, and returns a command to schedule.

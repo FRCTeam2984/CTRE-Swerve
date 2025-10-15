@@ -156,6 +156,9 @@ public static Boolean buttonLaserCan(){
     return m_Controller1.getRawButton(4);}
 public static Double upperDriverSlider(){
     return m_Controller1.getRawAxis(3);}
+public static Double lowerDriverSlider(){
+    return m_Controller1.getRawAxis(4);}
+    
     
 public static Boolean buttonScoreAlgae(){
     return m_Controller3.getRawButton(3);}
@@ -174,10 +177,10 @@ public static Boolean switchAlgaeIntake(){
 public static Boolean switchLaserCan(){
     return m_Controller3.getRawButton(9);}
 public static Boolean buttonEBrake(){
-    return m_Controller2.getRawButton(1);}
+    return m_Controller3.getRawButton(1);}
 
 /*unused buttons: 
-    m_Controller2.getRawButton(8);
+    m_Controller2.getRawButton(5);
     m_Controller3.getRawButton(2);
     m_Controller3.getRawButton(12);
 */
@@ -195,7 +198,7 @@ public static Boolean buttonL2(){
 public static Boolean buttonL1(){
     return m_Controller2.getRawButton(4);}
 public static Boolean buttonResetElevator(){
-    return m_Controller2.getRawButton(5);}
+    return m_Controller2.getRawButton(8);}
       
 public static double ReefPosition(){
     return (22-((m_Controller2.getRawButton(11))?1:0)-((m_Controller2.getRawButton(10))?2:0)-((m_Controller2.getRawButton(9))?3:0)-((m_Controller2.getRawButton(12))?6:0))%12;

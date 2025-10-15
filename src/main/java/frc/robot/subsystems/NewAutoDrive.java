@@ -26,6 +26,8 @@ public class NewAutoDrive{
 
         // accelerate power when starting and lower power when approaching the destination, add a bit to dist so it goes faster at the end
         Double accelMult = Math.min(1.0, Math.min((dist+0.1)/slowDownDist, accelFac));
+        //adjust speed based on the slider
+        speed *= 1+Driver_Controller.lowerDriverSlider()*0.5;
         speed *= accelMult;
         speed += 0.15; // add a little bit of speed to avoid dead spot
         speed *= ((alliance == "red")?1:-1); // opposite directions if red vs blue
@@ -45,7 +47,7 @@ public class NewAutoDrive{
     public static double[][] scoringPosRed = new double[12][2], scoringPosBlue = new double[12][2];
     public static double reefY = 4.025908052, reefXBlue = (5.321056642+3.657607315)/2.0, reefXRed = (13.89052578+12.22733045)/2.0;
     public static double reefAltitude = Math.abs(3.657607315-reefXBlue);
-    public static double pillarOffset = 0.165, robotOffsetLeft = 0.249, robotOffsetBack = 0.435;
+    public static double pillarOffset = 0.165, robotOffsetLeft = 0.225, robotOffsetBack = 0.435;
     public static String lastLocation = "";
     public static double algaeRemoveRed[][] = { 
         {14.32552578, 3.725908052},
@@ -87,6 +89,9 @@ public class NewAutoDrive{
         if (willDrive){
             accelFac = Math.min(1, accelFac+0.05);
             switch(Location){
+                case "stay":
+                    driveToXYA(odox, odoy, ((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360), 0.0);
+                    break;
                 case "reef":
                     targetX = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][0]-Math.sin(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
                     targetY = ((alliance == "blue")?scoringPosBlue:scoringPosRed)[position][1]+Math.cos(Math.toRadians(scoringAngles[position]+((alliance == "blue")?90:-90)));
@@ -95,24 +100,24 @@ public class NewAutoDrive{
                 case "hps":
                     if (alliance == "blue"){
                         if (RobotContainer.drivetrain.getState().Pose.getY() > reefY){
-                            driveToXYA(1.18, 6.95, 306.0, 2.0);
+                            driveToXYA(1.18, 6.95, 306.0, 2.0, 3.0);
                         }else{
-                            driveToXYA(1.18, 1.11, 54.0, 2.0);
+                            driveToXYA(1.18, 1.11, 54.0, 2.0, 3.0);
                         }
                     }else{
                         if (RobotContainer.drivetrain.getState().Pose.getY() > reefY){
-                            driveToXYA(16.37, 6.95, 234.0, 2.0);//+122.66-54, 2.0);
+                            driveToXYA(16.37, 6.95, 234.0, 2.0, 3.0);//+122.66-54, 2.0);
                         }else{
-                            driveToXYA(16.35, 1.13, 126.0, 2.0);
+                            driveToXYA(16.35, 1.13, 126.0, 2.0, 3.0);
                         }
                     }
                     break;
                 case "orient":
                     driveToXYA(RobotContainer.drivetrain.getState().Pose.getX()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0],
                     RobotContainer.drivetrain.getState().Pose.getY()-RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1],
-                    AutoDriveFinal.scoringAngles[position]+((alliance == "blue")?180:0),
-                    1.5);
-                    Driver_Controller.SwerveCommandEncoderValue = scoringAngles[position];
+                    AutoDriveFinal.scoringAngles[position]+((alliance == "blue")?0:180),
+                    1.0);
+                    //Driver_Controller.SwerveCommandEncoderValue = scoringAngles[position];
                     Driver_Controller.SwerveXPassthrough = -RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[0];
                     Driver_Controller.SwerveYPassthrough = -RobotContainer.betterJoystickCurve(Driver_Controller.m_Controller0.getLeftX(), Driver_Controller.m_Controller0.getLeftY())[1];
 
@@ -121,7 +126,7 @@ public class NewAutoDrive{
                     driveToXYA((alliance == "blue")?algaeRemoveBlue[position/2][0]:algaeRemoveRed[position/2][0],
                     (alliance == "blue")?algaeRemoveBlue[position/2][1]:algaeRemoveRed[position/2][1],
                     scoringAngles[position]+((alliance == "red")?180:0),
-                    2.0);
+                    1.0);
                     break;
             }
         }else accelFac = 0.0;
