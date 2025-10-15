@@ -20,7 +20,8 @@ public class Elevator{
   public static RelativeEncoder outtakeEncoder = outtakeMotor.getEncoder();
   public static Double currentPosition,
                 armTimer = 0.0,
-                gravity = 0.03;
+                gravity = 0.03,
+                prevPower = 0.0;
   public static Boolean bottomSwitchPressed,
                 useLaserSensor = true,
                 moveCoral = false,
@@ -40,31 +41,21 @@ public class Elevator{
     currentPosition = elevatorMotor.getRotorPosition().getValueAsDouble();
     laserOffsetCalc();
     if (bottomSwitchPressed){elevatorMotor.setPosition(0.0);}
+
+    //calculate power
+    Double power = 0.0;
     if (currentLevel == 0){
-      if (currentPosition > 15 && Driver_Controller.buttonResetElevator()) elevatorTo(-99999.0);
+      if (currentPosition > 15 && Driver_Controller.buttonResetElevator()) power = elevatorTo(-99999.0);
       else if (!bottomSwitchPressed) elevatorMotor.set(-0.2);
       else elevatorMotor.set(0.0);
-    }else if (currentLevel == 1){
-      elevatorTo(15.0);
-    }else if (currentLevel > 1){
-      elevatorTo(levelPosition[currentLevel]);
+    }else if (currentLevel >= 1){
+      power = elevatorTo(levelPosition[currentLevel]);
     }else if (currentLevel == -2){
-      elevatorMotor.set(0.03);
+      power = 0.03;
     }
-    else elevatorMotor.set(0.0);
-
-    /*/ moving coral when intaked
-    if (enableOuttakeSensors){
-    if (upperSensor.isPressed()){
-      System.out.println("upper sensor");
-      moveCoral = true;
-      outtakeMotor.set(0.23);
-    }
-    if (lowerSensor.isPressed() && moveCoral){
-      moveCoral = false;
-      outtakeMotor.set(0.0);
-    }
-    }*/
+    power = clamp(-prevPower-0.01, 1.0, power);
+    prevPower = Math.abs(power);
+    elevatorMotor.set(power);
   }
 
   // function for keeping a variable between a lower and upper limit
@@ -76,30 +67,23 @@ public class Elevator{
     return input;
   }
   
-  // function for moving elevator (you can change function name, i don’t care)
-  // change the math for the units of distance, power at different positions, gravity compensation
-  public static Boolean elevatorTo(Double destination){
+  // function that returns the amount of power that should be used to move the elevator
+  public static Double elevatorTo(Double destination){
     Double error = destination - currentPosition;
     Double minPower = -0.5, maxPower = 0.9, power = 0.0;
 		Integer maxError = 5;
-
-    //use laserCan sensor to limit power going down when close
-    /*LaserCan.Measurement laserDist = laserSensor.getMeasurement();
-    if (useLaserSensor && laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
-      minPower = clamp(minPower, -0.2, (165.0-laserDist.distance_mm)/200-0.2);
-    }*/
     
-		// set motor power based on error or set it to keep position
-    power = error/30;
     if (Math.abs(error) < maxError){
-	    elevatorMotor.set(gravity);
-	    return true;
+	    return gravity;
     }
+
+    //set motor power based on error or set it to keep position
+    power = error/30+gravity;
+
     // Clamp power and use limit switches
     if (bottomSwitchPressed) minPower = 0.0;
     power = clamp(minPower, maxPower, power);
-    elevatorMotor.set(power);
-    return false;
+    return power;
   }
 
   public static Integer historyLength = 12;
@@ -110,6 +94,7 @@ public class Elevator{
     Double laserCanOffset = 0.0;
     if (laserDist != null && laserDist.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && laserDist.distance_mm<500){
       laserCanOffset=laserDist.distance_mm*0.1017127325+0.2260062079-currentPosition;
+      if (Math.abs(laserCanOffset) > 300*0.1017127325) return;
       Double total = 0.0;
       for (int i = 0; i < historyLength-1; ++i){
         offset[i] = offset[i+1];
@@ -120,76 +105,4 @@ public class Elevator{
     }
     if (useLaserSensor)currentPosition+=laserCanOffset;
   }
-
-  // extend or retract the small arm on the elevator
-  /*public static Boolean moveElevatorArm(String extendOrRetract){
-    Boolean done = false;
-    Double power;
-    if (extendOrRetract == "extend") power = 0.3; else power = -0.3;
-    armTimer += 0.02; // adding 20 millisecons per call
-    if (armTimer >= 0.25/Math.abs(power) || extendOrRetract.substring(0, 3) == extendedOrRetracted.substring(0, 3)){
-      if (armTimer >= 0.15/Math.abs(power) || extendedOrRetracted == "moving") power /= 3;
-      done = true;
-      power = 0.0;
-      armTimer = 0.0;
-      if (extendOrRetract == "extend") extendedOrRetracted = "extended"; else extendedOrRetracted = "retracted";
-    }else extendedOrRetracted = "moving";
-    outtakeMotor.set(power);
-    lastExtendOrRetract = extendOrRetract;
-    return done;
-    
-    Boolean done = false;
-    Double power = 0.3;
-    power *= (extendOrRetract == "extend"?1:-1);
-    if ((extendOrRetract == "extend" && outtakePosition > 20.0) || (extendOrRetract == "retract" && outtakePosition < 1.0)){
-      power = 0.0;
-      done = true;
-      extendedOrRetracted = (extendOrRetract == "extend"?"extended":"retracted");
-    }else extendedOrRetracted = "moving";
-    outtakeMotor.set(power);
-    return done;
-  }*/
-
-  // function to be constantly called and remove algae
-  /* public void removeAlgae(){
-    if (Driver_Controller.buttonL2()) recentLevel = 2;
-    if (Driver_Controller.buttonL3()) recentLevel = 3;
-    if (Driver_Controller.buttonRemoveAlgae()){
-      switch(state){
-        case "idle":
-          if (removeButtonLastPressed == false){
-            state = "preparing";
-          }
-          break;
-        case "preparing":
-          if (elevatorTo(15.0) && moveElevatorArm("extend")){ // making the elevator prepared to move up
-            state = "positioning";
-          }
-          break;
-        case "positioning":
-          if (AutoDriveTest.autoDrive()){ // automatically driving to the correct position
-            state = "removing";
-          }
-          break;
-        case "removing":
-          if (elevatorTo(removeAlgaeH[recentLevel-2])){ // raising elevator to knock off algae
-            state = "backing up";
-          }
-          break;
-        case "backing up":
-          drivetrain.back up; // back up idk how  SIENA FIND OUT
-          if (finished){
-            state = "finished";
-          }
-          break;
-        case "finished":
-          if (elevatorTo(bottomPosition) && moveElevatorArm("retract")){
-            state = "idle";
-          }
-          break;
-
-      }
-    }else state = "idle";
-    removeButtonLastPressed = Driver_Controller.buttonRemoveAlgae();
-  }*/ 
 }
