@@ -91,124 +91,24 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
-    Driver_Controller.SwerveControlSet(true);
     // init controllers???
     Driver_Controller.define_Controller();
     // init limelight
     Limelight.limelightInit();
     // reset robot orientation
     RobotContainer.rotaryCalc(true);
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    Driver_Controller.SwerveControlSet(true);
-    Driver_Controller.SwerveCommandEncoderValue=/*RobotContainer.robotOffset+*/RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();//Driver_Controller.SwerveCommandEncoderValue = 0;
-    Driver_Controller.SwerveCommandXValue = 0;
-    Driver_Controller.SwerveCommandYValue = 0;
-    
-    // m_autoSelected = m_chooser.getSelected();
-    // System.out.println("Auto selected: " + m_autoSelected);
-    // state = "drive past line";
 
-    m_autoSelected = RobotContainer.autoChooser.getSelected();
-    System.out.println("Auto selected: " + m_autoSelected);
+
 
   }
 
   @Override
   public void autonomousPeriodic() {
     
-    //driveSouthPastLine();
-    Driver_Controller.SwerveInputPeriodic();
-    //AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
-    //System.out.println(RobotContainer.drivetrain.getState().Pose.getX());
-    // AutoDriveTest.AutoDrive(0, 0, 0);
-    //System.out.println(RobotContainer.drivetrain.SwerveDriveState.Pose);
-
-    //Driver_Controller.SwerveCommandXValue = -0.5;
-    //Driver_Controller.SwerveCommandEncoderValue = 300;
-    // todo: drive 1m south (towards driver/operators)
-    // todo: reset rotary_joystick
-    // 4.07, 3.25
-    if (Driver_Controller.m_Controller2.getRawButton(4)){
-      System.out.println(Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY())));
-      Driver_Controller.SwerveControlSet(true);
-      Driver_Controller.SwerveCommandEncoderValue = Math.tan((4.07 - RobotContainer.drivetrain.getState().Pose.getX())/(3.25 - RobotContainer.drivetrain.getState().Pose.getY()));// * 180/3.14;
-    }
-    else{
-      Driver_Controller.SwerveControlSet(false);
-    }
-    // m_autoSelected = kDefaultAuto;
-
-    switch (m_autoSelected) {
-      case Constants.kPassTheLine:
-        driveSouthPastLine();
-        break;
-      case Constants.kTestingPathAuto:// works
-        RobotContainer.ScheduleTestingPath.schedule();
-        break;
-      case Constants.kV1Auto:// works
-        RobotContainer.Schedule1.schedule();
-        break;
-      case Constants.kV2Auto:// works
-        RobotContainer.Schedule2.schedule();
-        break;
-      case Constants.kV3Auto:  
-        // RobotContainer.Schedule3.schedule();
-        break;
-      case Constants.kV4Auto:// works
-        RobotContainer.Schedule4.schedule();
-        break;
-      case Constants.kV5Auto:
-        // RobotContainer.Schedule5.schedule();
-        break;
-      case Constants.kV6Auto:
-        RobotContainer.Schedule6_1.schedule();
-        // System.out.println("1");
-        System.out.println("Coral dropped off");
-        // to do: HAVE KEVIN ADD CORAL DROP OFF CODE, add sensor code, then move on to next step
-        // try {  
-        //   Thread.sleep(3000);
-        // } catch (InterruptedException e) {
-        //   // TODO Auto-generated catch block
-        //   e.printStackTrace();
-        // }
-        RobotContainer.Schedule6_2.schedule();
-        // System.out.println("2");
-        RobotContainer.Schedule6_3.schedule();
-        // System.out.println("3");
-        RobotContainer.Schedule6_4.schedule();
-        // System.out.println("4");
-        RobotContainer.Schedule6_5.schedule();
-        // System.out.println("5");
-        RobotContainer.Schedule6_6.schedule();
-        // System.out.println("6");
-        RobotContainer.Schedule6_7.schedule();
-        // System.out.println("7");
-        break;
-      case Constants.kV7Auto:
-        RobotContainer.Schedule7_1.schedule();
-        RobotContainer.Schedule7_2.schedule();
-        RobotContainer.Schedule7_3.schedule();
-        RobotContainer.Schedule7_4.schedule();
-        RobotContainer.Schedule7_5.schedule();
-        RobotContainer.Schedule7_6.schedule();
-        RobotContainer.Schedule7_7.schedule();
-
-        break;
-      case Constants.kV8Auto:
-        // RobotContainer.Schedule8.schedule();
-        break;
-      case Constants.kV9Auto:
-        RobotContainer.Schedule9_1.schedule();
-        RobotContainer.Schedule9_2.schedule();
-        RobotContainer.Schedule9_3.schedule();
-        RobotContainer.Schedule9_4.schedule();
-        RobotContainer.Schedule9_5.schedule();
-        RobotContainer.Schedule9_6.schedule();
-        RobotContainer.Schedule9_7.schedule();
-        break;
-    }
   }
 
   @Override

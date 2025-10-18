@@ -1,6 +1,9 @@
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
+
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -49,7 +52,7 @@ public static double pythagorian(double A, double B){
 
     // auto's
     public static final String kPassTheLine = "Pass the Line";
-    public static final String kTestingPathAuto = "Testing Path";
+    public static final Command TestPath = new PathPlannerAuto("Testing path");
     public static final String kV1Auto = "V1";
     public static final String kV2Auto = "V2";
     public static final String kV3Auto = "V3";
