@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 16.118364448051906,
-        "y": 0.848336038959236
+        "x": 16.138,
+        "y": 0.9
       },
       "prevControl": {
-        "x": 15.384740259740083,
-        "y": 1.8312499999971759
+        "x": 15.404375811688178,
+        "y": 1.88291396103794
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "HPS",
+      "name": "hps2",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null

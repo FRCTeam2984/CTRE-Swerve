@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.407356268977518,
-        "y": 2.692480661742802
+        "x": 14.89328327922078,
+        "y": 2.4794034090909087
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 16.089874188310144,
-        "y": 0.8198457792231534
+        "x": 16.138,
+        "y": 0.9
       },
       "prevControl": {
-        "x": 15.520068993504951,
-        "y": 1.4822443181841924
+        "x": 15.568194805194809,
+        "y": 1.562398538961039
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "HPS",
+      "name": "hps3",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null

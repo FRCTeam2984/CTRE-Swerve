@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.58413149350351,
-        "y": 2.8932687218606645
+        "x": 14.467113478690708,
+        "y": 6.3163644920053335
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.824641371026773,
-        "y": 2.8250411701403744
+        "x": 14.31711347869071,
+        "y": 6.116364492005333
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 12.362793872140784,
-        "y": 2.8932687218606645
+        "x": 13.765336702841271,
+        "y": 5.16426352547229
       },
       "prevControl": {
-        "x": 12.037134740256755,
-        "y": 2.1090300324710345
+        "x": 13.903699383629784,
+        "y": 5.372484006129252
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7970479704797047,
+      "minWaypointRelativePos": 0.8531317494600428,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.25,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 0.2,
+        "maxAcceleration": 0.2,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,29 +47,35 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "",
+      "name": "L4",
+      "waypointRelativePos": 0.5010799136069097,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "scoretest",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 0.5,
     "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Red Pos3 To...",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

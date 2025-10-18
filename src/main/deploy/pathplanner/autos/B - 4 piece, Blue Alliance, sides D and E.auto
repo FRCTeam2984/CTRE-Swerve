@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RED E1 TO HPS"
+            "pathName": "Blue Pos3 to D1"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "USE - 4 piece, RED, Sides E and D",
+  "folder": "USE - B - 4 piece, BLUE Sides D and E",
   "choreoAuto": false
 }
