@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -108,8 +109,8 @@ public class RobotContainer {
                 public RobotContainer() {
                     // Configure the trigger bindings
                     configureBindings();
-
-
+                    new EventTrigger("L4").onTrue(Triggers.move());
+                    new EventTrigger("SCORE").onTrue(Triggers.move1());
 
                     autoChooser = AutoBuilder.buildAutoChooser();
                     //autoChooser.addOption("Testing Path", Constants.TestPath);

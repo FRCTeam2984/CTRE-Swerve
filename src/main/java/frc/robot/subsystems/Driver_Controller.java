@@ -184,7 +184,9 @@ public static Boolean buttonEBrake(){
     m_Controller3.getRawButton(2);
     m_Controller3.getRawButton(12);
 */
-        
+public static Boolean buttonTestTrigger(){
+    return m_Controller3.getRawButton(2);
+}     
 public static Boolean buttonElevatorUp(){
     return m_Controller2.getRawButton(6);}
 public static Boolean buttonElevatorDown(){
