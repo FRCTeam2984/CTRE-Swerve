@@ -13,7 +13,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Don't use - Test Paths",
   "choreoAuto": false
 }
