@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red Pos3 To F2"
+            "pathName": "Elevator and Score Auto Test"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "USE - H - 1 piece, RED F2 and Stop",
+  "folder": "Don't use - Test Paths",
   "choreoAuto": false
 }

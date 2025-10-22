@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BLUE HPS TO D2"
+            "pathName": "Elevator and Score Auto Test"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
-  "folder": "USE - 4 piece, BLUE Sides D and E",
+  "resetOdom": false,
+  "folder": "Don't use - Test Paths",
   "choreoAuto": false
 }

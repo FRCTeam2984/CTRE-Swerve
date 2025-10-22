@@ -7,49 +7,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red (BPos1) to A1"
+            "pathName": "Red Pos1 to E2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED A1 TO HPS"
+            "pathName": "RED E2 TO HPS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED HPS TO A2"
+            "pathName": "RED HPS TO E1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED A2 TO HPS"
+            "pathName": "RED E1 TO HPS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED HPS TO B1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RED B1 TO HPS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RED HPS TO B2"
+            "pathName": "RED HPS TO D2"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Don't use - compiled paths",
   "choreoAuto": false
 }

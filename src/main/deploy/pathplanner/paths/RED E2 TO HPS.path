@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 14.487297077923238,
-        "y": 2.5577516233736017
+        "y": 2.557751623373602
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,8 +47,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "hps1",
+      "name": "hps",
       "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "end2",
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }

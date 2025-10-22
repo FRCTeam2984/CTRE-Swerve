@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue Pos1 to A2"
+            "pathName": "Red Pos3 To D2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BLUE A2 TO HPS"
+            "pathName": "E - RED D2 TO HPS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BLUE HPS TO A1"
+            "pathName": "E - RED HPS TO D1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BLUE A1 TO HPS"
+            "pathName": "RED D1 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED HPS TO C2"
           }
         }
       ]

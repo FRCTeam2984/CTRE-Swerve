@@ -7,43 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red Pos1 to E2"
+            "pathName": "Red (BPos1) to A1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED E2 TO HPS"
+            "pathName": "RED A1 TO HPS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED HPS TO E1"
+            "pathName": "RED HPS TO A2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED E1 TO HPS"
+            "pathName": "RED A2 TO HPS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RED HPS TO D2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RED D2 TO HPS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RED HPS TO D1"
+            "pathName": "RED HPS TO B1"
           }
         }
       ]

@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red Pos3 To F1"
+            "pathName": "Red Pos1 to E2"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "USE - 1 piece, RED Side F1 and Stop",
+  "folder": "USE - A - 3 piece, RED, Side E and D2",
   "choreoAuto": false
 }
