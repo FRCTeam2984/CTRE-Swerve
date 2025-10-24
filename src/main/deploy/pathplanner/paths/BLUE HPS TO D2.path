@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5210000000000001,
-        "y": 0.7977499999999997
+        "x": 1.481,
+        "y": 0.827
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1833985389610397,
-        "y": 1.474393668831169
+        "x": 2.143392711774832,
+        "y": 1.5036493732906355
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 2.6911197722726796
       },
       "prevControl": {
-        "x": 5.826258116883116,
-        "y": 1.3113027597402596
+        "x": 6.071158536585366,
+        "y": 0.9822865853658527
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0.8548585485854848,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.25,
+        "maxVelocity": 0.8,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -47,8 +47,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "",
-      "waypointRelativePos": 0.979089790897909,
+      "name": "L4",
+      "waypointRelativePos": 0.75,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "score",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "end24",
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }

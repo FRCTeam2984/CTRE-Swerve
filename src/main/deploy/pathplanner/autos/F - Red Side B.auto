@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Red (BPos1) to B1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED B1 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED HPS TO B2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED B2 TO HPS"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Don't use - compiled paths",
+  "choreoAuto": false
+}

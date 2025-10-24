@@ -47,8 +47,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "hps6",
-      "waypointRelativePos": 0.0,
+      "name": "hps",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "end19",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     }

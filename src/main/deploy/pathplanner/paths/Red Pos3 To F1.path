@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "L4",
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.5,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -81,7 +81,7 @@
   "folder": "Red Pos3 To...",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.60486295749251
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -7,31 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue Pos3 to D1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLUE D1 TO HPS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLUE HPS TO D2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLUE D2 TO HPS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLUE HPS TO E1"
+            "pathName": "Blue (RPos2) To E1"
           }
         },
         {
@@ -44,6 +20,18 @@
           "type": "path",
           "data": {
             "pathName": "BLUE HPS TO E2 FROM BOTTOM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE E2 TO HPS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE HPS TO F1 FROM BOTTOM"
           }
         }
       ]

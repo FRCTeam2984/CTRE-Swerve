@@ -53,7 +53,13 @@
       "command": null
     },
     {
-      "name": "score8",
+      "name": "score",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "end20",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null

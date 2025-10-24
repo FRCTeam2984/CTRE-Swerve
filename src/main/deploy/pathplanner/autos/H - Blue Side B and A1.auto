@@ -33,23 +33,11 @@
           "data": {
             "pathName": "BLUE HPS TO A2"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLUE A2 TO HPS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLUE HPS TO A1"
-          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Don't use - compiled paths",
   "choreoAuto": false
 }
