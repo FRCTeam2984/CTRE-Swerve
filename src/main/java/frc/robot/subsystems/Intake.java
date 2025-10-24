@@ -28,37 +28,39 @@ public class Intake {
 
     public static void intakePeriodic(){
         // updating values
-        retractedSwitchPressed = outsideSwitch.isPressed(); extendedSwitchPressed = insideSwitch.isPressed();
-        if (outsideSwitch.isPressed()){intakeEncoder.setPosition(0.0);}
-        else if (insideSwitch.isPressed()){intakeEncoder.setPosition(48.64);}
-        currentPosition = -intakeEncoder.getPosition();
-        intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-4)/105) * -0.1;
+        retractedSwitchPressed = !outsideSwitch.isPressed(); extendedSwitchPressed = !insideSwitch.isPressed();
+        if (retractedSwitchPressed){intakeEncoder.setPosition(0.0);}
+        else if (extendedSwitchPressed){intakeEncoder.setPosition(42.0);}
+        currentPosition = intakeEncoder.getPosition();
+        if (currentPosition < 0)intakeEncoder.setPosition(0.0);
+        currentPosition = intakeEncoder.getPosition();
+        intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-4)/105) * -0.02;
         // moving the arm based on inputs
+        Double motorPower = 0.0;
         switch(intakeState){
             case "remove":
                 desiredPosition = 10.0;
-                moveIntake();
+                motorPower = moveIntake();
                 break;
             case "reset":
-                if (outsideSwitch.isPressed()) intakePivot.set(0);
-                else intakePivot.set(-0.3);
+                if (!outsideSwitch.isPressed()) motorPower = 0.0;
+                else motorPower = -0.3;
                 break;
             case "intake":
                 // 22;
                 desiredPosition = Math.max(0, 22.2-upAdjust);
-                moveIntake();
+                motorPower = moveIntake();
                 break;
             case "retract":
-                retract();
-                // might cause issues
-                desiredPosition = 22.0;
+                motorPower = retract();
                 break;
             case "hold":
                 if(intakeEncoder.getPosition() > 3){
-                    intakePivot.set(intakeGravity);
-                }else intakePivot.set(0.0);
+                    motorPower = intakeGravity;
+                }else motorPower = 0.0;
                 break;
         }
+        intakePivot.set(motorPower);
         controlRoller();
     }
     
@@ -73,42 +75,41 @@ public class Intake {
 
     // function for retracting the intake for algae and coral
 	// change gravityComp and power limits/scaling
-	public static void retract(){
+	public static Double retract(){
         Double maxPower = 0.5, minPower = -0.5;
 
         // calculate power, gravity compensation + more power for how far away
-        Double power = intakeGravity+currentPosition/25-0.1;
+        Double power = intakeGravity-currentPosition/25-0.1;
         // using limit switches
-        if (insideSwitch.isPressed()){
+        if (extendedSwitchPressed){
             maxPower = 0.0;
         }
-        if (outsideSwitch.isPressed() || Math.abs(currentPosition) < 2){
+        if (retractedSwitchPressed){
             power = 0.0; // sets power to 0 if close to inside limit switch
         }
 
         // increase power if far from inside
-        if (outsideSwitch.isPressed() == false && currentPosition > 5) power -= 0.1;
-        
-        intakePivot.set(clamp(minPower, maxPower, power));
+        if (retractedSwitchPressed == false && currentPosition > 5) power -= 0.1;
+        return(clamp(minPower, maxPower, power));
     }
 
     //function to bring intake to a position
     //constants prob not right
-    public static void moveIntake(){
+    public static Double moveIntake(){
         // processing the input string to find the correct destination
-        Double error = desiredPosition+currentPosition;
+        Double error = (desiredPosition-currentPosition);
         Double maxPower = 0.5, minPower = -0.5;
-        Double power = (error)/10+intakeGravity;
+        Double power = (error)/25+intakeGravity;
 
         // using limit switches
-        if (insideSwitch.isPressed())
+        if (extendedSwitchPressed)
             maxPower = 0.0;
-        if (outsideSwitch.isPressed())
+        if (retractedSwitchPressed)
             minPower = 0.0;
             
         //power += (error > 0?0.1:-0.1);
         if (Math.abs(error) < 0.5) power = intakeGravity;
-        intakePivot.set(clamp(minPower, maxPower, power));
+        return(clamp(minPower, maxPower, power));
     }
 
     public static void controlRoller(){

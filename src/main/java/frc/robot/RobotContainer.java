@@ -60,6 +60,7 @@ public class RobotContainer {
     // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
     // private final CommandSwerveDrivetrain m_commandSwerveDrivetrain = new CommandSwerveDrivetrain();
     public static Double sliderAdjustment = 1.0;
+    public static Double autoDriveMultiplier = 1.0;
     private final Driver_Controller m_driverController = new Driver_Controller();
     private final Elevator m_elevator = new Elevator();
     private final Intake m_intake = new Intake();
@@ -110,7 +111,7 @@ public class RobotContainer {
                     // Configure the trigger bindings
                     configureBindings();
                     new EventTrigger("L4").onTrue(Triggers.move());
-                    new EventTrigger("SCORE").onTrue(Triggers.move1());
+                    new EventTrigger("scoretest").onTrue(Triggers.move1());
 
                     autoChooser = AutoBuilder.buildAutoChooser();
                     //autoChooser.addOption("Testing Path", Constants.TestPath);
@@ -213,8 +214,8 @@ public class RobotContainer {
                 drivetrain.setDefaultCommand(
                     // Drivetrain will execute this command periodically
                     drivetrain.applyRequest(() ->
-                        drive.withVelocityX(Driver_Controller.SwerveXPassthrough * ((Driver_Controller.SwerveCommandControl)?1:sliderAdjustment)) // Drive forward with negative Y (forward)
-                            .withVelocityY(Driver_Controller.SwerveYPassthrough * ((Driver_Controller.SwerveCommandControl)?1:sliderAdjustment)) // Drive left with negative X (left)
+                        drive.withVelocityX(Driver_Controller.SwerveXPassthrough * ((Driver_Controller.SwerveCommandControl)?autoDriveMultiplier:sliderAdjustment)) // Drive forward with negative Y (forward)
+                            .withVelocityY(Driver_Controller.SwerveYPassthrough * ((Driver_Controller.SwerveCommandControl)?autoDriveMultiplier:sliderAdjustment)) // Drive left with negative X (left)
                             .withRotationalRate(rotaryCalc(false) * MaxAngularRate * TurnModifier * drivingOn * ((Driver_Controller.SwerveCommandControl == true)?0.45:1)) // Drive counterclockwise with negative X (left)
                     )
                 );
