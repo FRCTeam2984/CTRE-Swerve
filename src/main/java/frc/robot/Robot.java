@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.TimeUnit;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,6 +57,7 @@ public class Robot extends TimedRobot {
   // String state = "drive past line";  // for setting autonomous state
 
   public Robot() {
+    NewAutoDrive.setupAutoDrive();
     CanBridge.runTCP();
     Elevator.sensorInit();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashboard");
@@ -88,8 +90,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledExit() {}
 
+  int mustDriveXYA = 1;
   @Override
   public void autonomousInit() {
+    Elevator.currentLevel = -1;
+    mustDriveXYA = 1;
     // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
     // init controllers???
     Driver_Controller.define_Controller();
@@ -97,18 +102,42 @@ public class Robot extends TimedRobot {
     Limelight.limelightInit();
     // reset robot orientation
     RobotContainer.rotaryCalc(true);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-
-
-
+    RobotContainer.sliderAdjustment = 1.0;
+    Intake.intakeState = "retract";
+    RobotContainer.autoDriveMultiplier = 3.0;
   }
-
+  Double outtakeTimer = 0.0;
   @Override
   public void autonomousPeriodic() {
-    
+    Elevator.elevatorPeriodic();
+    Intake.intakePeriodic();
+    Limelight.limelightOdometryUpdate();
+    if (mustDriveXYA == 1){
+      if (NewAutoDrive.driveToXYA(14.467, 6.316, -126.870, 2.0)) mustDriveXYA = 2;
+      Driver_Controller.SwerveInputPeriodic();
+    }else if (mustDriveXYA == 2) {
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+      if (m_autonomousCommand != null) {
+        //m_autonomousCommand.schedule();
+      }
+      Elevator.currentLevel = 2;
+      if ((Elevator.currentPosition-Elevator.levelPosition[2]) < Elevator.maxError && NewAutoDrive.driveToXYA(NewAutoDrive.scoringPosRed[10][0], NewAutoDrive.scoringPosRed[10][1], NewAutoDrive.scoringAngles[10]+180, 0.5)){
+        mustDriveXYA = 3;
+        outtakeTimer = 0.0;
+      }
+    }else if (mustDriveXYA == 3){
+      NewAutoDrive.periodicDriveToLocation(false, "stay");
+      outtakeTimer += 0.02;
+      if (outtakeTimer > 0.2){
+        Elevator.outtakeMotor.set(0.8);
+      }
+      if (outtakeTimer > 0.2+0.5){
+        mustDriveXYA = 4;
+        outtakeTimer = 0.0;
+        Elevator.outtakeMotor.set(0.0);
+      }
+    }
+
   }
 
   @Override
@@ -129,11 +158,12 @@ public class Robot extends TimedRobot {
     alliance = (DriverStation.getAlliance().toString().charAt(9) == 'B')?"blue":"red"; // finds the alliance
     Intake.upAdjust = 0.0;
     Elevator.sensorInit();
+    RobotContainer.autoDriveMultiplier = 1.0;
   }
 
   @Override
   public void teleopPeriodic() {
-    System.out.println(Elevator.currentPosition);
+    //System.out.println(Intake.currentPosition);
     //System.out.println(RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble()-((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360));
     RobotContainer.sliderAdjustment = Driver_Controller.upperDriverSlider()*0.45+0.55;
     if (Driver_Controller.driverSwitch()) {

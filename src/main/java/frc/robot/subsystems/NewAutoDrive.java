@@ -9,7 +9,7 @@ public class NewAutoDrive{
     public static Boolean isDriving = false, goBehindReef = true;
     public static Double accelFac = 0.0, autoDriveMaxSpeed = 2.0;
     public static String alliance = "red";
-    public static void driveToXYA(Double x, Double y, Double angle, Double speed, Double slowDownDist){
+    public static Boolean driveToXYA(Double x, Double y, Double angle, Double speed, Double slowDownDist){
         Driver_Controller.SwerveControlSet(true);
         Double odoAngle = ((RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees()+ 360*1000 + 180)%360);
         //((RobotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble() + 360*1000 + 180)%360) - 180;
@@ -39,15 +39,16 @@ public class NewAutoDrive{
             Driver_Controller.SwerveCommandYValue = 0.0;
         }
         Driver_Controller.SwerveCommandEncoderValue = odoAngle*0 + angle;
+        return !(dist > 0.05);
     }
-    public static void driveToXYA(Double x, Double y, Double angle, Double speed){
-        driveToXYA(x, y, angle, speed, 2.0);
+    public static Boolean driveToXYA(Double x, Double y, Double angle, Double speed){
+        return driveToXYA(x, y, angle, speed, 2.0);
     }
     public static double scoringAngles[] = {0, 0, -60, -60, -120, -120, -180, -180, -240, -240, -300, -300};
     public static double[][] scoringPosRed = new double[12][2], scoringPosBlue = new double[12][2];
     public static double reefY = 4.025908052, reefXBlue = (5.321056642+3.657607315)/2.0, reefXRed = (13.89052578+12.22733045)/2.0;
     public static double reefAltitude = Math.abs(3.657607315-reefXBlue);
-    public static double pillarOffset = 0.165, robotOffsetLeft = 0.225, robotOffsetBack = 0.435;
+    public static double pillarOffset = 0.165, robotOffsetLeft = 0.225, robotOffsetBack = 0.435+0.1;
     public static String lastLocation = "";
     public static double algaeRemoveRed[][] = { 
         {14.32552578, 3.725908052},

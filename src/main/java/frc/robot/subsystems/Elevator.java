@@ -26,7 +26,7 @@ public class Elevator{
                 useLaserSensor = true,
                 moveCoral = false,
                 enableOuttakeSensors = false;
-  public static int currentLevel = 0, counter = 0;
+  public static int currentLevel = 0, counter = 0, maxError = 5;
   public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 15.0038, 68.5, 116.0, 188.1538}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
   public static void sensorInit(){
     try {
@@ -46,14 +46,14 @@ public class Elevator{
     Double power = 0.0;
     if (currentLevel == 0){
       if (currentPosition > 15 && Driver_Controller.buttonResetElevator()) power = elevatorTo(-99999.0);
-      else if (!bottomSwitchPressed) elevatorMotor.set(-0.2);
-      else elevatorMotor.set(0.0);
+      else if (!bottomSwitchPressed) power = -0.2;
+      else power = 0.0;
     }else if (currentLevel >= 1){
       power = elevatorTo(levelPosition[currentLevel]);
     }else if (currentLevel == -2){
       power = 0.03;
     }
-    power = clamp(-prevPower-0.01, 1.0, power);
+    power = clamp(-prevPower-0.03, 1.0, power);
     prevPower = Math.abs(power);
     elevatorMotor.set(power);
   }
@@ -71,7 +71,6 @@ public class Elevator{
   public static Double elevatorTo(Double destination){
     Double error = destination - currentPosition;
     Double minPower = -0.5, maxPower = 0.9, power = 0.0;
-		Integer maxError = 5;
     
     if (Math.abs(error) < maxError){
 	    return gravity;
