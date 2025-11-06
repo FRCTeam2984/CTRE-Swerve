@@ -19,7 +19,6 @@ public class Triggers extends Command{
     static int targetLevel = 2;
 
     public static void Score1(){
-        //go up to l4
         Elevator.currentLevel = targetLevel;
         if ((Elevator.currentPosition-lastPosition) < 0.01 &&//maybe change
         Math.abs(Elevator.currentPosition-Elevator.levelPosition[targetLevel]) < Elevator.maxError){//} && NewAutoDrive.driveToXYA(NewAutoDrive.scoringPosRed[10][0], NewAutoDrive.scoringPosRed[10][1], NewAutoDrive.scoringAngles[10]+180, 0.5)){//check if elevator is basically stopped and at l4

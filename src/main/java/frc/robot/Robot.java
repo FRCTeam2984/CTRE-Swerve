@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {
-    SignalLogger.setPath("/media/sda/");
+    SignalLogger.setPath("/home/lvuser/logs");
   }
 
   @Override
@@ -91,11 +91,14 @@ public class Robot extends TimedRobot {
   public void disabledExit() {}
 
   int mustDriveXYA = 1;
+  int scoringPosition = 10;
+  int scoringLevel = 2;
+  Double outtakeTimer = 0.0, delayTimer = 0.0;
   @Override
   public void autonomousInit() {
     Elevator.currentLevel = -1;
-    mustDriveXYA = 1;
-    // AutoDriveFinal.AutoDriveFinal(0, 0, 0, 0);
+    mustDriveXYA = 0;
+    alliance = (DriverStation.getAlliance().toString().charAt(9) == 'B')?"blue":"red"; // finds the alliance
     // init controllers???
     Driver_Controller.define_Controller();
     // init limelight
@@ -104,39 +107,50 @@ public class Robot extends TimedRobot {
     RobotContainer.rotaryCalc(true);
     RobotContainer.sliderAdjustment = 1.0;
     Intake.intakeState = "retract";
-    RobotContainer.autoDriveMultiplier = 3.0;
+    scoringPos = Integer.parseInt(RobotContainer.reefPositionChooser.getSelected());
+    scoringLevel = Integer.parseInt(RobotContainer.reefLevelChooser.getSelected());
+    outtakeTimer = 0.0; delayTimer = 0.0;
   }
-  Double outtakeTimer = 0.0;
+  
   @Override
   public void autonomousPeriodic() {
     Elevator.elevatorPeriodic();
     Intake.intakePeriodic();
     Limelight.limelightOdometryUpdate();
-    if (mustDriveXYA == 1){
-      if (NewAutoDrive.driveToXYA(14.467, 6.316, -126.870, 2.0)) mustDriveXYA = 2;
-      Driver_Controller.SwerveInputPeriodic();
-    }else if (mustDriveXYA == 2) {
+    if (mustDriveXYA == 0){
+      RobotContainer.autoDriveMultiplier = 0.0;
+      delayTimer += 0.02;
+      if (delayTimer >= 4.0){
+        ++mustDriveXYA;
+      }
+    }else if (mustDriveXYA == 1){
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
       if (m_autonomousCommand != null) {
-        //m_autonomousCommand.schedule();
+        m_autonomousCommand.schedule();
       }
-      Elevator.currentLevel = 2;
-      if ((Elevator.currentPosition-Elevator.levelPosition[2]) < Elevator.maxError && NewAutoDrive.driveToXYA(NewAutoDrive.scoringPosRed[10][0], NewAutoDrive.scoringPosRed[10][1], NewAutoDrive.scoringAngles[10]+180, 0.5)){
-        mustDriveXYA = 3;
+    }/*else if (mustDriveXYA == 1) {
+      RobotContainer.autoDriveMultiplier = 1.0;
+      if (NewAutoDrive.periodicDriveToLocation(true, "reef")){
+        Elevator.currentLevel = scoringLevel;
+        ++mustDriveXYA;
+      }
+    }else if (mustDriveXYA == 2){
+      RobotContainer.autoDriveMultiplier = 0.0;
+      if (Math.abs(Elevator.currentPosition-Elevator.levelPosition[scoringLevel]) < Elevator.maxError){
+        ++mustDriveXYA;
         outtakeTimer = 0.0;
       }
     }else if (mustDriveXYA == 3){
-      NewAutoDrive.periodicDriveToLocation(false, "stay");
       outtakeTimer += 0.02;
       if (outtakeTimer > 0.2){
         Elevator.outtakeMotor.set(0.8);
       }
       if (outtakeTimer > 0.2+0.5){
-        mustDriveXYA = 4;
+        ++mustDriveXYA;
         outtakeTimer = 0.0;
         Elevator.outtakeMotor.set(0.0);
       }
-    }
+    }*/
 
   }
 
@@ -183,9 +197,9 @@ public class Robot extends TimedRobot {
 
     // dealing with outtake
     if (Driver_Controller.buttonL1()){
-      Elevator.outtakeMotor.set(0.8);
+      Elevator.outtakeMotor.set(0.5);
     }
-    else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(0.3);
+    else if (Driver_Controller.buttonTransportPivot()) Elevator.outtakeMotor.set(0.25);
     else if (Driver_Controller.buttonRevOuttake()) Elevator.outtakeMotor.set(-0.2);
     else if (Elevator.moveCoral == false)Elevator.outtakeMotor.set(0.0);
 
@@ -269,7 +283,6 @@ public class Robot extends TimedRobot {
 
     if (Driver_Controller.buttonEBrake()){
       Elevator.currentLevel = -2;
-      Elevator.elevatorMotor.set(0.0);
       Intake.intakeState = "hold";
       Elevator.outtakeMotor.set(0.0);
       Intake.bottomIntake.set(TalonSRXControlMode.PercentOutput, 0.0);
@@ -279,7 +292,7 @@ public class Robot extends TimedRobot {
     Intake.intakePeriodic();
 
     //fine adjustment for elevator
-    if (Driver_Controller.buttonEBrake() == false){
+    if (Driver_Controller.buttonEBrake() == false && elevatorEnabled){
       if (Driver_Controller.buttonElevatorUp() && elevatorEnabled){
         Elevator.elevatorMotor.set(0.15);
         Elevator.currentLevel = -2;
@@ -288,6 +301,7 @@ public class Robot extends TimedRobot {
         Elevator.elevatorMotor.set(-0.15);
         Elevator.currentLevel = -2;
       }
+      
     }
     /*running a pathplanner path:
       the first if statement is to start running a path. schedule has to be called multiple times. idk why.

@@ -27,7 +27,7 @@ public class Elevator{
                 moveCoral = false,
                 enableOuttakeSensors = false;
   public static int currentLevel = 0, counter = 0, maxError = 5;
-  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 15.0038, 68.5, 116.0, 188.1538}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
+  public static Double[] removeAlgaeH = {20.0, 30.0}, levelPosition = {0.0, 13.001538, 68.5, 116.0, 188.1538}; // change l4 // Modified on other branch{0.0, 15.0, 62.0, 116.0, 186.0};
   public static void sensorInit(){
     try {
       laserSensor.setRangingMode(LaserCan.RangingMode.LONG);
@@ -70,7 +70,7 @@ public class Elevator{
   // function that returns the amount of power that should be used to move the elevator
   public static Double elevatorTo(Double destination){
     Double error = destination - currentPosition;
-    Double minPower = -0.5, maxPower = 0.9, power = 0.0;
+    Double minPower = -0.7, maxPower = 0.9, power = 0.0;
     
     if (Math.abs(error) < maxError){
 	    return gravity;

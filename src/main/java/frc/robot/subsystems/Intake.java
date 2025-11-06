@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+
 //import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLimitSwitch;
@@ -17,8 +19,9 @@ public class Intake {
     public static SparkMax intakePivot = new SparkMax(Constants.intakePivotMotorID, MotorType.kBrushless);
     public static RelativeEncoder intakeEncoder = intakePivot.getEncoder();
     //public static RelativeEncoder rollerEncoder = bottomIntake.getEncoder();
-    public static SparkLimitSwitch insideSwitch = intakePivot.getReverseLimitSwitch();
-    public static SparkLimitSwitch outsideSwitch = intakePivot.getForwardLimitSwitch();
+    public static DigitalInput insideSwitch = new DigitalInput(1);//extended
+    public static DigitalInput outsideSwitch = new DigitalInput(2);//retracted
+    public static DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
 
     public static Integer historyLength = 12;
     public static Double[] rollerSpeed = new Double[historyLength], rollerCurrent = new Double[historyLength];
@@ -28,12 +31,13 @@ public class Intake {
 
     public static void intakePeriodic(){
         // updating values
-        retractedSwitchPressed = !outsideSwitch.isPressed(); extendedSwitchPressed = !insideSwitch.isPressed();
-        if (retractedSwitchPressed){intakeEncoder.setPosition(0.0);}
-        else if (extendedSwitchPressed){intakeEncoder.setPosition(42.0);}
-        currentPosition = intakeEncoder.getPosition();
-        if (currentPosition < 0)intakeEncoder.setPosition(0.0);
-        currentPosition = intakeEncoder.getPosition();
+        retractedSwitchPressed = outsideSwitch.get(); extendedSwitchPressed = insideSwitch.get();
+        // if (retractedSwitchPressed){intakeEncoder.setPosition(0.0);}
+        // else if (extendedSwitchPressed){intakeEncoder.setPosition(42.0);}
+        // currentPosition = intakeEncoder.getPosition();
+        // if (currentPosition < 0)intakeEncoder.setPosition(0.0);
+        // currentPosition = intakeEncoder.getPosition();
+        currentPosition = ((10.4-armEncoder.get())%1+0.304-0.4)*42/(.17+.304);
         intakeGravity = Math.sin(360.0*(Math.PI/180.0)*(currentPosition-4)/105) * -0.02;
         // moving the arm based on inputs
         Double motorPower = 0.0;
@@ -43,13 +47,14 @@ public class Intake {
                 motorPower = moveIntake();
                 break;
             case "reset":
-                if (!outsideSwitch.isPressed()) motorPower = 0.0;
+                if (retractedSwitchPressed) motorPower = 0.0;
                 else motorPower = -0.3;
                 break;
             case "intake":
                 // 22;
-                desiredPosition = Math.max(0, 22.2-upAdjust);
+                desiredPosition = Math.max(0, 21.0-upAdjust);
                 motorPower = moveIntake();
+                System.out.println(motorPower);
                 break;
             case "retract":
                 motorPower = retract();
@@ -60,7 +65,8 @@ public class Intake {
                 }else motorPower = 0.0;
                 break;
         }
-        intakePivot.set(motorPower);
+        //System.out.println(motorPower);
+        //intakePivot.set(motorPower);
         controlRoller();
     }
     
@@ -79,17 +85,16 @@ public class Intake {
         Double maxPower = 0.5, minPower = -0.5;
 
         // calculate power, gravity compensation + more power for how far away
-        Double power = intakeGravity-currentPosition/25-0.1;
+        Double power = intakeGravity-(currentPosition/25)-0.1;
         // using limit switches
         if (extendedSwitchPressed){
             maxPower = 0.0;
         }
+        // increase power if far from inside
+        if (currentPosition > 5) power -= 0.1;
         if (retractedSwitchPressed){
             power = 0.0; // sets power to 0 if close to inside limit switch
         }
-
-        // increase power if far from inside
-        if (retractedSwitchPressed == false && currentPosition > 5) power -= 0.1;
         return(clamp(minPower, maxPower, power));
     }
 
@@ -102,10 +107,12 @@ public class Intake {
         Double power = (error)/25+intakeGravity;
 
         // using limit switches
-        if (extendedSwitchPressed)
+        if (extendedSwitchPressed){
             maxPower = 0.0;
-        if (retractedSwitchPressed)
+        }
+        if (retractedSwitchPressed){
             minPower = 0.0;
+        }
             
         //power += (error > 0?0.1:-0.1);
         if (Math.abs(error) < 0.5) power = intakeGravity;
