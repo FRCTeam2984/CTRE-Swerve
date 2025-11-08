@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Driver_Controller;
+
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.AutoDriveFinal;
 import frc.robot.Robot;
@@ -141,6 +144,11 @@ public class NewAutoDrive{
         isDriving = willDrive;
         return false;
     }
-
+    ArrayList<Integer> Xpos = new ArrayList<Integer>();
+    ArrayList<Integer> Ypos = new ArrayList<Integer>();
+    static int progress = 0;
+    public static void setSpline(Double destX, Double destY, Double srcX, Double srcY, Double endX, Double endY, Double points){
+        progress = 0;
+    }
     
 }
